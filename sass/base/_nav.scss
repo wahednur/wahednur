@@ -197,7 +197,7 @@
         margin: 0 12px;
         margin-bottom: 12px;
         display: none;
-        position: absolute;
+        position: fixed;
         bottom: 70px;
         left: 0;
 
@@ -318,6 +318,9 @@
 }
 
 @media(max-width:540px) {
+    .mobile-search{
+        bottom: 60px;
+    }
     .menu-search {
         .mobile-nav {
             width: 100%;
