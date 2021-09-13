@@ -702,10 +702,40 @@ header .slider__scroll-action .scroll-text a:hover {
   }
   header .slider__content .info {
     width: calc(100% - 30px);
-    margin-top: -200px;
+    margin-top: -250px;
   }
   header .slider__content .info__title {
-    font-size: 30px;
+    font-size: 36px;
+  }
+  header .slider__content .info__title::after {
+    width: calc(100% - 90px);
+    bottom: -3px;
+    left: 45px;
+    height: 3px;
+  }
+  header .slider__content .info__full-stak {
+    font-size: 20px;
+    letter-spacing: 5px;
+  }
+}
+
+@media (max-width: 375px) {
+  header .slider__img {
+    background-size: 300px;
+    background-position: center bottom;
+  }
+  header .slider__content .info {
+    width: calc(100% - 30px);
+    margin-top: -220px;
+  }
+  header .slider__content .info__title {
+    font-size: 35px;
+  }
+  header .slider__content .info__title::after {
+    width: calc(100% - 65px);
+    bottom: -3px;
+    left: 35px;
+    height: 3px;
   }
   header .slider__content .info__full-stak {
     font-size: 20px;
@@ -720,10 +750,16 @@ header .slider__scroll-action .scroll-text a:hover {
   }
   header .slider__content .info {
     width: calc(100% - 30px);
-    margin-top: -200px;
+    margin-top: -220px;
   }
   header .slider__content .info__title {
-    font-size: 30px;
+    font-size: 36px;
+  }
+  header .slider__content .info__title::after {
+    width: calc(100% - 40px);
+    bottom: -3px;
+    left: 20px;
+    height: 3px;
   }
   header .slider__content .info__full-stak {
     font-size: 20px;
@@ -741,7 +777,13 @@ header .slider__scroll-action .scroll-text a:hover {
     margin-top: -200px;
   }
   header .slider__content .info__title {
-    font-size: 30px;
+    font-size: 36px;
+  }
+  header .slider__content .info__title::after {
+    width: 100%;
+    bottom: -3px;
+    left: 0px;
+    height: 3px;
   }
   header .slider__content .info__full-stak {
     font-size: 20px;

@@ -37,10 +37,49 @@
             &__content {
                 .info {
                     width: calc(100% - 30px);
-                    margin-top: -200px;
+                    margin-top: -250px;
 
                     &__title {
-                        font-size: 30px;
+                        font-size: 36px;
+                        &::after {
+                            width: calc(100% - 90px);
+                            bottom: -3px;
+                            left: 45px;
+                            height: 3px;
+                        }
+                    }
+
+                    &__full-stak {
+                        font-size: 20px;
+                        letter-spacing: 5px;
+                    }
+                }
+            }
+        }
+    }
+}
+@media (max-width:375px) {
+    header {
+        .slider {
+            &__img {
+                background-size: 300px;
+                background-position: center bottom;
+            }
+
+            &__content {
+                .info {
+                    width: calc(100% - 30px);
+                    margin-top: -220px;
+
+                    &__title {
+                        font-size: 35px;
+
+                        &::after {
+                            width: calc(100% - 65px);
+                            bottom: -3px;
+                            left: 35px;
+                            height: 3px;
+                        }
                     }
 
                     &__full-stak {
@@ -63,10 +102,16 @@
             &__content {
                 .info {
                     width: calc(100% - 30px);
-                    margin-top: -200px;
+                    margin-top: -220px;
 
                     &__title {
-                        font-size: 30px;
+                        font-size: 36px;
+                        &::after{
+                            width: calc(100% - 40px);
+                            bottom: -3px;
+                            left: 20px;
+                            height: 3px;
+                        }
                     }
 
                     &__full-stak {
@@ -92,7 +137,13 @@
                     margin-top: -200px;
 
                     &__title {
-                        font-size: 30px;
+                        font-size: 36px;
+                        &::after {
+                            width: 100%;
+                            bottom: -3px;
+                            left: 0px;
+                            height: 3px;
+                        }
                     }
 
                     &__full-stak {
