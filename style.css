@@ -695,6 +695,42 @@ header .slider__scroll-action .scroll-text a:hover {
   }
 }
 
+@media (max-width: 414px) {
+  header .slider__img {
+    background-size: 300px;
+    background-position: center bottom;
+  }
+  header .slider__content .info {
+    width: calc(100% - 30px);
+    margin-top: -200px;
+  }
+  header .slider__content .info__title {
+    font-size: 30px;
+  }
+  header .slider__content .info__full-stak {
+    font-size: 20px;
+    letter-spacing: 5px;
+  }
+}
+
+@media (max-width: 360px) {
+  header .slider__img {
+    background-size: 300px;
+    background-position: center bottom;
+  }
+  header .slider__content .info {
+    width: calc(100% - 30px);
+    margin-top: -200px;
+  }
+  header .slider__content .info__title {
+    font-size: 30px;
+  }
+  header .slider__content .info__full-stak {
+    font-size: 20px;
+    letter-spacing: 5px;
+  }
+}
+
 @media (max-width: 320px) {
   header .slider__img {
     background-size: 300px;
@@ -702,7 +738,7 @@ header .slider__scroll-action .scroll-text a:hover {
   }
   header .slider__content .info {
     width: calc(100% - 30px);
-    margin-top: -250px;
+    margin-top: -200px;
   }
   header .slider__content .info__title {
     font-size: 30px;
