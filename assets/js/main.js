@@ -38,22 +38,31 @@ mobileMenuBtn.forEach((item, indx) => {
     item.addEventListener('click', () => {
         removeActive()
         mobileMenuItem[indx].classList.add('active')
+        mobileSearch.classList.remove('active')
+        dMenu.classList.remove('active')
         
     })
 })
 
 function removeActive(){
     mobileMenuItem.forEach(item => item.classList.remove('active'));
-    showMenu.classList.remove('active');
+    
+    
 }
-const showMenuBtn = document.getElementById('showMenu');
-const showMenu = document.querySelector('.mobile-menu');
+const showMenuBtn = document.querySelector('.showBtnmenu');
+const dMenu = document.querySelector('.mobile-menu');
 showMenuBtn.addEventListener('click', () => {
-    showMenu.classList.toggle('active');
+    dMenu.classList.toggle('active');
+    
    
 })
 
-
+const mobileSearch = document.querySelector('.mobile-search');
+const mobileSearchBtn = document.querySelector('.msearchBtn');
+mobileSearchBtn.addEventListener('click', () => {
+    mobileSearch.classList.toggle('active');
+    
+})
 
 
 /* Mobile active menu function end  */

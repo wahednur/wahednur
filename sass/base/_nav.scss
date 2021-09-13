@@ -115,6 +115,7 @@
     }
     .menu-search {
         .mobile-menu{
+            
             position: absolute;
             width: 300px;
             height: 306px;
@@ -146,6 +147,46 @@
             
         }
         .mobile-nav {
+            .mobile-search {
+                width: calc(100% - 24px);
+                display: flex;
+                justify-content: center;
+                margin: 0 auto;
+                margin-bottom: 12px;
+                display: none;
+
+                .input-control {
+                    width: 100%;
+                    height: 40px;
+                    border-radius: 40px;
+                    border: 1px solid $secondary-color;
+                    background: rgba($color: $white-color, $alpha: 0.50);
+                    padding: 5px 10px;
+                    position: relative;
+                    color: $primary-color;
+                    &:focus{
+                        outline: none;
+                    }
+                }
+                .mobile-search-btn{
+                    background-color: $secondary-color;
+                    width: 34px;
+                    height: 34px;
+                    border-radius: 34px;
+                    position: absolute;
+                    right: 15px;
+                    top: 3px;
+                    color: $white-color;
+                    border: 1px solid $secondary-color;
+                    &:hover{
+                        background-color: $primary-color;
+                    }
+                    
+                }
+            }
+            .mobile-search.active{
+                display: block;
+            }
             position: fixed;
             bottom: 0px;
             left: 0px;
