@@ -1,0 +1,150 @@
+/* --------------------------  */
+/*Home Slider Responsive start*/
+/* Home Slider Midea query start*/
+/* Mobile device */
+
+@media (max-width:540px) {
+    header{
+        .slider{
+            &__img{
+                background-size: 300px;
+                background-position: center bottom;
+            }
+            &__content{
+                .info{
+                    width: calc(100% - 30px);
+                    margin-top: -420px;
+                    &__title{
+                        font-size: 38px;
+                    }
+                    &__full-stak{
+                        font-size: 20px;
+                        letter-spacing: 5px;
+                    }
+                }
+            }
+        }
+    }
+}
+@media (max-width:320px) {
+    header {
+        .slider {
+            &__img {
+                background-size: 300px;
+                background-position: center bottom;
+            }
+
+            &__content {
+                .info {
+                    width: calc(100% - 30px);
+                    margin-top: -250px;
+
+                    &__title {
+                        font-size: 30px;
+                    }
+
+                    &__full-stak {
+                        font-size: 20px;
+                        letter-spacing: 5px;
+                    }
+                }
+            }
+        }
+    }
+}
+/* Tab device */
+@media (min-width:768px) {
+    header {
+        .slider {
+            &__img {
+                background-size: 500px;
+                background-position: center bottom;
+            }
+
+            &__content {
+                
+                .info {
+                    width: 600px;
+                    margin-top: -400px;
+
+                    &__title {
+                        font-size: 75px;
+                    }
+
+                    &__full-stak {
+                        font-size: 45px;
+                        letter-spacing: 8px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+/*Laptop/deskto*/
+
+@media (min-width:1200px) {
+    header {
+        .slider {
+            &__img {
+                background-size: 500px;
+                background-position: right bottom;
+            }
+
+            &__content {
+
+                .info {
+                    width: 600px;
+                    margin-top: 0px;
+
+                    &__title {
+                        font-size: 75px;
+                    }
+
+                    &__full-stak {
+                        font-size: 45px;
+                        letter-spacing: 8px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media (min-width:1400px) {
+    header {
+        .slider {
+            &__img {
+                background-size: 800px;
+                background-position: right bottom;
+            }
+
+            &__content {
+
+                .info {
+                    width: 800px;
+                    margin-top: 0px;
+
+                    &__title {
+                        font-size: 100px;
+                    }
+
+                    &__full-stak {
+                        font-size: 65px;
+                        letter-spacing: 10px;
+                    }
+                }
+            }
+        }
+    }
+}
+/* Home Slider Midea query end*/
+
+/*Home Slider Responsive end*/
+
+/* Desktop menu */
+@media(max-width:768px){
+    .desk-nav{
+        display: none !important;
+    }
+}

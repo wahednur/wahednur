@@ -1,0 +1,25 @@
+/* Mixing CSS Start */
+@mixin section-heading($size, $weight) {
+    font-size: $size;
+    font-weight: $weight;
+    color: $primary-color;
+    position: relative;
+    &::after{
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100px;
+        height: 3px;
+        margin: 0 auto;
+    }
+
+}
+
+@mixin gradient-bar($width, $height) {
+    width: $width;
+    height: $height;
+    background:linear-gradient(90deg, $secondary-color, $red-color)
+}
+
+/* Mixing CSS end */
