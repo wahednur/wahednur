@@ -181,6 +181,12 @@ ul {
   cursor: pointer;
 }
 
+.menu-search .desk-nav__desk-search .search-group__icon .btn-none {
+  background: none;
+  border: none;
+  color: #AF52DE;
+}
+
 .desk-nav__menu-item.active::after {
   width: 100% !important;
 }

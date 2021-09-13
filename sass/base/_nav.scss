@@ -89,6 +89,11 @@
                     right: 3px;
                     top: -2px;
                     cursor: pointer;
+                    .btn-none{
+                        background: none;
+                        border: none;
+                        color: $secondary-color;
+                    }
                 }
             }
         }
