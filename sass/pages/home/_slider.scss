@@ -1,183 +1,151 @@
-
-
-/* --------------------------  */
-
-/* Slider CSS start */
 header{
-    height: 100vh;
-    position: relative;
-    z-index: -3;
-    .slider{
-        background-image: url('assets/images/slider-bg.jpg');
-        height: 100%;
+    .slider{}
+    .slider-bg{
+        background: url('assets/images/slider-bg.jpg');
         background-size: cover;
         background-repeat: no-repeat;
         position: relative;
-        z-index: -2;
-        &::before{
-            position: absolute;
-            content: '';
-            background-color: rgba($color: #000000, $alpha: 0.80);
+        height: 100vh;
+        .overlay{
+            background-color: rgba($color: #000, $alpha: 0.77);
             width: 100%;
             height: 100%;
-            top: 0;
-            left: 0;
-            z-index: -1;
+            .slider-content {
+                background: url('assets/images/wahednur.png');
+                width: 100%;
+                height: 100%;
+                background-repeat: no-repeat;
+                background-position: bottom right;
+                background-size: 800px;
+                .text-content {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    width: 100%;
+                    height: 100%;
+                    .center{
+                        .name-title {
+                            .name {
+                                font-size: 100px;
+                                font-weight: 900;
+                                background: linear-gradient(90deg, $primary-color, $secondary-color, $red-color,  orange, purple, lightgreen, blue, $primary-color);
+                                background-size: 400% 400%;
+                                -webkit-background-clip: text;
+                                -webkit-text-fill-color: transparent;
+                                animation: wahednur 20s linear infinite;
+                                -webkit-animation: wahednur 20s linear infinite;
+                                position: relative;
+                                &::after{
+                                    content: '';
+                                    width: 100%;
+                                    height: 3px;
+                                    bottom: 0;
+                                    left: 0;
+                                    background: linear-gradient(90deg, $secondary-color, $red-color);
+                                    position: absolute;
+                                }
+                                
+                            }
 
+                            .title {
+                                font-size: 60px;
+                                font-weight: 700;
+                                letter-spacing: 12px;
+                                background: linear-gradient(45deg, $secondary-color, $red-color);
+                                background-size: 100% 100%;
+                                -webkit-background-clip: text;
+                                -webkit-text-fill-color: transparent;
+                                text-transform: capitalize;
+                            }
+                        }
 
-        }
-        &__img{
-            background-image: url('assets/images/wahednur.png');
-            height: 100%;
-            background-repeat: no-repeat;
-            background-position: bottom right;
-            width: 100%;
-        }
-        &__content{
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            margin: 0 auto;
-            height: 100%;
-            text-align: center;
-            .info{
-                width: 800px;
-                margin: 0 auto;
-                &__title{
-                    font-size: 100px;
-                    font-weight: 900;
-                    background: -webkit-linear-gradient(0deg, $primary-color, $secondary-color, $red-color, orange, purple, lightgreen, $primary-color);
-                    -webkit-background-clip: text;
-                    -webkit-text-fill-color: transparent;
-                    animation: wahednur 10s linear infinite;
-                    -webkit-animation: wahednur 20s linear infinite;
-                    background-size: 400% 400%;
-                    position: relative;
-                    &::after{
-                        content: '';
-                        @include gradient-bar(100%, 5px);
-                        left: 0;
-                        bottom: 0;
-                        position: absolute;
+                        .action-btn {
+                            margin-top: 20px;
+                            .btn-group {
+                                display: flex;
+                                width: 300px;
+                                justify-content: space-between;
+                                align-items: center;
+                                .hire-portfolio {
+                                    font-size: 25px;
+                                    background: linear-gradient(45deg, var(--c1, $primary-color), var(--c2, $secondary-color) 51%, var(--c1, $red-color)) var(--x, 0)/ 200%;
+                                    padding: 5px 20px;
+                                    border-radius: 3px;
+                                    transition: all ease-in-out .5s;
+                                    a{
+                                        color: $white-color;
+                                    }
+                                    &:hover{
+                                        --x: 100%;
+                                    }
+                                }
+                            }
+
+                            .buy-service {
+                                margin-top: 20px;
+                                display: block;
+                                font-size: 25px;
+                                width: 300px;
+                                background: linear-gradient(45deg, var(--c1, $primary-color), var(--c2, $secondary-color) 51%, var(--c1, $red-color)) var(--x, 0)/ 200%;
+                                padding: 5px 20px;
+                                border-radius: 3px;
+                                transition: all ease-in-out .5s;
+                                color: $white-color;
+                                &:hover{
+                                    --x: 100%;
+                                }
+                            }
+                        }
+
+                        .scroll-action {
+                            margin-top: 100px;
+                            .mouse {
+                                width: 25px;
+                                height: 35px;
+                                border: 2px solid $secondary-color;
+                                border-radius: 30px;
+                                .scroll {
+                                    background: $secondary-color;
+                                    height: 8px;
+                                    width: 3px;
+                                    margin-top: 5px;
+                                    animation: mouse 5s linear infinite;
+                                    -webkit-animation: mouse 5s linear infinite;
+                                }
+                            }
+
+                            .scroll-link {
+                                font-size: 18px;
+                                color: $secondary-color;
+                                margin-top: 20px;
+                                display: block;
+                            }
+                        }
                     }
-                }
-                &__full-stak{
-                    font-size: 65px;
-                    letter-spacing: 10px;
-                    font-weight: 700;
-                    background: -webkit-linear-gradient(0deg, $red-color, $secondary-color, $primary-color);
-                    -webkit-background-clip: text;
-                    -webkit-text-fill-color: transparent;
-                }
-            }
-            
-        }
-        &__action-btn {
-            margin-top: 30px;
-            width: 300px;
-            text-transform: capitalize;
-            .hireme-cv {
-                background: linear-gradient(90deg, var(--c1, $primary-color), var(--c2, $secondary-color) 51%, var(--c1, $red-color)) var(--x, 0)/ 200%;
-                padding: 10px 20px;
-                cursor: pointer;
-                font-size: 20px;
-                color: $white-color;
-                margin: 0px 10px;
-                border-radius: 5px;
-                transition: all ease-in-out 0.5s;
-                background-size: 200%;
-                &:hover{
-                    --x: 100%;
                     
                 }
-                
-            }
-            .buy-service-btn{
-                width: 250px;
-                text-align: center;
-                display: block;
-                margin-top: 30px;
-                background: linear-gradient(90deg, var(--c1, $primary-color), var(--c2, $secondary-color) 51%, var(--c1, $red-color)) var(--x, 0)/ 200%;
-                padding: 10px 20px;
-                cursor: pointer;
-                font-size: 20px;
-                color: $white-color;
-                margin: 30px 25px;
-                border-radius: 5px;
-                transition: all ease-in-out 0.5s;
-                background-size: 200%;
-                
-                &:hover {
-                    --x: 100%;
-
-                }
-
             }
         }
-        &__scroll-action {
-            position: absolute;
-            left: 0;
-            bottom: 100px;
-            color: $primary-color;
-            text-align: center;
-            width: 100%;
-            .mouse{
-                width: 30px;
-                height: 40px;
-                border: 1px solid $secondary-color;
-                margin: 0 auto;
-                border-radius: 25px;
-                display: block;
-            
-                .scroll{
-                    width: 2px;
-                    height: 8px;
-                    background-color: $primary-color;
-                    // margin-top: 5px;
-                    align-items: center;
-                    margin-left: 45%;
-                     animation: mouse 3s linear infinite;
-                }
-                
-            }
-            .scroll-text {
-               margin-top: 20px;
-               a{
-                   color: $primary-color;
-                   transition: all ease-in-out .3s;
-                   &:hover{
-                       color: $secondary-color;
-                   }
-               }
-            }
-        }
+        
     }
 }
-
 @keyframes wahednur {
     0% {
         background-position: 0%;
     }
-
     100% {
         background-position: 400% 50%;
     }
 }
-
 @keyframes mouse {
-    0% {
-        margin-top: 4px;
+    0%{
+        margin-top: 5px;
     }
-
-    50% {
+    50%{
         margin-top: 10px;
     }
-
-    100% {
-        margin-top: 4px;
+    100%{
+        margin-top: 5px;
     }
 }
-
-/* Slider CSS end */

@@ -1,253 +1,107 @@
 /* --------------------------  */
 /*Home Slider Responsive start*/
-/* Home Slider Midea query start*/
-/* Mobile device */
-
-@media (max-width:540px) {
-    header{
-        .slider{
-            &__img{
-                background-size: 300px;
-                background-position: center bottom;
-            }
-            &__content{
-                .info{
-                    width: calc(100% - 30px);
-                    margin-top: -420px;
-                    &__title{
-                        font-size: 38px;
-                    }
-                    &__full-stak{
-                        font-size: 20px;
-                        letter-spacing: 5px;
-                    }
-                }
-            }
-        }
-    }
-}
-@media (max-width:414px) {
-    header {
-        .slider {
-            &__img {
-                background-size: 300px;
-                background-position: center bottom;
-            }
-
-            &__content {
-                .info {
-                    width: calc(100% - 30px);
-                    margin-top: -250px;
-
-                    &__title {
-                        font-size: 36px;
-                        &::after {
-                            width: calc(100% - 90px);
-                            bottom: -3px;
-                            left: 45px;
-                            height: 3px;
+/* iPad 768p */
+@media(max-width:768px){
+    .slider{
+        .slider-bg{
+            .overlay{
+                .slider-content{
+                    background-size: 600px !important;
+                    background-position: center bottom;
+                    .text-content{
+                        .center{
+                        .name-title{
+                            margin-bottom: 100px;
+                            display: inline-block;
+                            height: 250px;
+                            .name{
+                                font-size: 80px;
+                            }
+                            .title{
+                                font-size: 45px;
+                            }
                         }
-                    }
-
-                    &__full-stak {
-                        font-size: 20px;
-                        letter-spacing: 5px;
-                    }
-                }
-            }
-        }
-    }
-}
-@media (max-width:375px) {
-    header {
-        .slider {
-            &__img {
-                background-size: 300px;
-                background-position: center bottom;
-            }
-
-            &__content {
-                .info {
-                    width: calc(100% - 30px);
-                    margin-top: -220px;
-
-                    &__title {
-                        font-size: 35px;
-
-                        &::after {
-                            width: calc(100% - 65px);
-                            bottom: -3px;
-                            left: 35px;
-                            height: 3px;
-                        }
-                    }
-
-                    &__full-stak {
-                        font-size: 20px;
-                        letter-spacing: 5px;
-                    }
-                }
-            }
-        }
-    }
-}
-@media (max-width:360px) {
-    header {
-        .slider {
-            &__img {
-                background-size: 300px;
-                background-position: center bottom;
-            }
-
-            &__content {
-                .info {
-                    width: calc(100% - 30px);
-                    margin-top: -220px;
-
-                    &__title {
-                        font-size: 36px;
-                        &::after{
-                            width: calc(100% - 40px);
-                            bottom: -3px;
-                            left: 20px;
-                            height: 3px;
-                        }
-                    }
-
-                    &__full-stak {
-                        font-size: 20px;
-                        letter-spacing: 5px;
-                    }
-                }
-            }
-        }
-    }
-}
-@media (max-width:320px) {
-    header {
-        .slider {
-            &__img {
-                background-size: 300px;
-                background-position: center bottom;
-            }
-
-            &__content {
-                .info {
-                    width: calc(100% - 30px);
-                    margin-top: -200px;
-
-                    &__title {
-                        font-size: 36px;
-                        &::after {
+                        .action-btn{
+                            display: block;
                             width: 100%;
-                            bottom: -3px;
-                            left: 0px;
-                            height: 3px;
+                            margin: 50px auto;
+                        } 
                         }
                     }
-
-                    &__full-stak {
-                        font-size: 20px;
-                        letter-spacing: 5px;
+                }
+            }
+        }
+    }
+}
+/* Mobile 540p */
+@media(max-width:540px){
+    .slider{
+        .slider-bg{
+            .overlay{
+                .slider-content{
+                    background-size: 400px !important;
+                    background-position: center bottom;
+                    .text-content{
+                        .center{
+                            margin-top: 60px;
+                        .name-title{
+                            margin-bottom: 0px;
+                            display: inline-block;
+                            height: 150px;
+                            .name{
+                                font-size: 60px;
+                            }
+                            .title{
+                                font-size: 40px;
+                                letter-spacing: 5px;
+                            }
+                        }
+                        .action-btn{
+                            display: block;
+                            width: 100%;
+                            margin-top: 0px !important;
+                        } 
+                        }
                     }
                 }
             }
         }
     }
 }
-/* Tab device */
-@media (min-width:768px) {
-    header {
-        .slider {
-            &__img {
-                background-size: 500px;
-                background-position: center bottom;
-            }
-
-            &__content {
-                
-                .info {
-                    width: 600px;
-                    margin-top: -400px;
-
-                    &__title {
-                        font-size: 75px;
-                    }
-
-                    &__full-stak {
-                        font-size: 45px;
-                        letter-spacing: 8px;
-                    }
-                }
-            }
-        }
-    }
-}
-
-/*Laptop/deskto*/
-
-@media (min-width:1200px) {
-    header {
-        .slider {
-            &__img {
-                background-size: 500px;
-                background-position: right bottom;
-            }
-
-            &__content {
-
-                .info {
-                    width: 600px;
-                    margin-top: 0px;
-
-                    &__title {
-                        font-size: 75px;
-                    }
-
-                    &__full-stak {
-                        font-size: 45px;
-                        letter-spacing: 8px;
+@media(max-width:414px){
+    .slider{
+        .slider-bg{
+            .overlay{
+                .slider-content{
+                    background-size: 250px !important;
+                    background-position: center bottom;
+                    .text-content{
+                        .center{
+                            margin-top: 60px;
+                        .name-title{
+                            margin-bottom: 0px;
+                            display: inline-block;
+                            height: 150px;
+                            .name{
+                                font-size: 36px;
+                            }
+                            .title{
+                                font-size: 25px;
+                                letter-spacing: 2px;
+                            }
+                        }
+                        .action-btn{
+                            display: block;
+                            width: 100%;
+                            margin-top: 0px !important;
+                        } 
+                        }
                     }
                 }
             }
         }
     }
 }
-
-@media (min-width:1400px) {
-    header {
-        .slider {
-            &__img {
-                background-size: 800px;
-                background-position: right bottom;
-            }
-
-            &__content {
-
-                .info {
-                    width: 800px;
-                    margin-top: 0px;
-
-                    &__title {
-                        font-size: 100px;
-                    }
-
-                    &__full-stak {
-                        font-size: 65px;
-                        letter-spacing: 10px;
-                    }
-                }
-            }
-        }
-    }
-}
-/* Home Slider Midea query end*/
 
 /*Home Slider Responsive end*/
-
-/* Desktop menu */
-@media(max-width:768px){
-    .desk-nav{
-        display: none !important;
-    }
-}
+/* --------------------------  */
