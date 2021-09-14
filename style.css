@@ -172,7 +172,7 @@ ul {
 /* Desktop Navigation and Search css end */
 /* ------------------------  */
 /* Navigation reponsive start */
-@media (max-width: 1024px) {
+@media (min-width: 1024px) {
   .desktop-nav {
     display: block;
   }
@@ -180,7 +180,7 @@ ul {
     width: 15% !important;
   }
   .mobile-nav {
-    display: none;
+    display: none !important;
   }
 }
 
@@ -193,9 +193,9 @@ ul {
     bottom: 0;
     left: 0;
     display: block;
-    background: #AF52DE;
   }
   .mobile-nav nav .mbl-nav {
+    background: #AF52DE;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
@@ -236,6 +236,66 @@ ul {
   .mobile-nav nav .mbl-nav__mbl-link .text {
     display: block;
   }
+  .mobile-nav .mbl-submenu {
+    background: #00C7BE;
+    display: block;
+    width: 200px;
+    color: #fff;
+    list-style: none;
+    text-decoration: none;
+    border-top-right-radius: 5px;
+    overflow: hidden;
+    display: none;
+    transition: all ease-in-out .3s;
+  }
+  .mobile-nav .mbl-submenu.active {
+    display: block;
+  }
+  .mobile-nav .mbl-submenu__sub-link {
+    color: #fff;
+    display: block;
+    width: 100%;
+    padding: 5px 20px;
+    text-transform: capitalize;
+  }
+  .mobile-nav .mbl-submenu__sub-link:hover {
+    background-color: #AF52DE;
+  }
+  .mobile-nav .mbl-search {
+    width: calc(100% - 24px);
+    display: none;
+    margin: 10px auto;
+    position: relative;
+    transition: all ease-in-out .3s;
+  }
+  .mobile-nav .mbl-search.active {
+    display: block;
+  }
+  .mobile-nav .mbl-search .input-ctr {
+    width: 100%;
+    height: 46px;
+    border-radius: 40px;
+    border: 1px solid #AF52DE;
+    padding: 5px 15px;
+    background-color: rgba(255, 255, 255, 0.8);
+  }
+  .mobile-nav .mbl-search .mbl-src-btn {
+    position: absolute;
+    right: 3px;
+    top: 3px;
+    width: 39px;
+    height: 39px;
+    border-radius: 39px;
+    border: 1px solid #AF52DE;
+    color: #fff;
+    background: #AF52DE;
+    transition: all ease-in-out .3s;
+  }
+  .mobile-nav .mbl-search .mbl-src-btn:hover, .mobile-nav .mbl-search .mbl-src-btn.active {
+    background: #fff;
+    cursor: pointer;
+    color: #AF52DE;
+  }
 }
 
 @media (max-width: 768px) {
@@ -243,6 +303,8 @@ ul {
     position: fixed;
     bottom: 0;
     left: 0;
+  }
+  .mobile-nav nav {
     background: #AF52DE;
   }
   .mobile-nav nav .mbl-nav {
@@ -346,6 +408,32 @@ ul {
 
 /* Navigation reponsive end */
 /* Titile/heading CSS start */
+/*  Section title start */
+.title-section {
+  text-align: center;
+  margin: 50px auto;
+}
+
+.title-section .title {
+  font-size: 100px;
+  font-weight: 900;
+  position: relative;
+}
+
+.title-section .title::after {
+  content: '';
+  position: absolute;
+  height: 4px;
+  width: 200px;
+  margin: 5px auto;
+  background: linear-gradient(90deg, #AF52DE, #FF2D55);
+  left: calc(50% - 100px);
+  bottom: 0;
+}
+
+/*  Section title end */
+/*  content title start */
+/*  content title end */
 /* Titile/heading CSS end */
 /* Header CSS start */
 /* Header CSS end */
@@ -507,6 +595,8 @@ header .slider-bg .overlay .slider-content .text-content .center .scroll-action 
 
 /* Home page CSS start */
 /* Home page CSS end */
+/*  About me section css start */
+/*  About me section css end */
 /* Button CSS start */
 /* Button CSS end */
 /*Animation Transition CSS start*/

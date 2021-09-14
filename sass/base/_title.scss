@@ -1,4 +1,30 @@
 /* Titile/heading CSS start */
+/*  Section title start */
+.title-section{
+    text-align: center;
+    margin: 50px auto;
+    .title{
+        font-size: 100px;
+        font-weight: 900;
+        position: relative;
+        &::after{
+            content: '';
+            position: absolute;
+            height: 4px;
+            width: 200px;
+            margin: 5px auto;
+            background: linear-gradient(90deg, $secondary-color, $red-color);
+            left: calc(50% - 100px);
+            bottom: 0;
+        }
+    }
+}
+/*  Section title end */
+/*  content title start */
+.content-title{
+    
+}
+/*  content title end */
 
 
 /* Titile/heading CSS end */

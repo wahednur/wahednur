@@ -95,7 +95,8 @@
 /* ------------------------  */
 
 /* Navigation reponsive start */
-@media(max-width:1024px){
+
+@media(min-width:1024px){
     .desktop-nav{
         display: block;
     }
@@ -104,9 +105,11 @@
         
     }
     .mobile-nav{
-        display: none;
+        display: none !important;
     }
+    
 }
+
 @media(max-width:800px){
     .desktop-nav{
         display: none;
@@ -116,9 +119,10 @@
         bottom: 0;
         left: 0;
         display: block;
-        background: $secondary-color;
+        
         nav{
             .mbl-nav{
+                background: $secondary-color;
                 display: flex;
                 flex-wrap: wrap;
                 justify-content: space-around;
@@ -159,6 +163,69 @@
                 }
             }
         }
+        .mbl-submenu{
+            background: $primary-color;
+            display: block;
+            width: 200px;
+            color: $white-color;
+            list-style: none;
+            text-decoration: none;
+            border-top-right-radius: 5px;
+            overflow: hidden;
+            display: none;
+            transition: all ease-in-out .3s;
+            &.active{
+                display: block;
+            }
+            &__sub-list{
+                
+            }
+            &__sub-link{
+                color: $white-color;
+                display: block;
+                width: 100%;
+                padding: 5px 20px;
+                text-transform: capitalize;
+                &:hover{
+                    background-color: $secondary-color;
+                }
+            }
+        }
+        .mbl-search{
+            width: calc(100% - 24px);
+            display: none;
+            margin: 10px auto;
+            position: relative;
+            transition: all ease-in-out .3s;
+            &.active{
+                display: block;
+            }
+            .input-ctr{
+                width: 100%;
+                height: 46px;
+                border-radius: 40px;
+                border: 1px solid $secondary-color;
+                padding: 5px 15px;
+                background-color: rgba($color: $white-color, $alpha: 0.8);
+            }
+            .mbl-src-btn{
+                position: absolute;
+                right: 3px;
+                top: 3px;
+                width: 39px;
+                height: 39px;
+                border-radius: 39px;
+                border: 1px solid $secondary-color;
+                color: $white-color;
+                background: $secondary-color;
+                transition: all ease-in-out .3s;
+                &:hover, &.active{
+                    background: $white-color;
+                    cursor: pointer;
+                    color: $secondary-color;
+                }
+            }
+        }
     }
 }
 
@@ -171,8 +238,9 @@
         position: fixed;
         bottom: 0;
         left: 0;
-        background: $secondary-color;
+        
         nav{
+            background: $secondary-color;
             .mbl-nav{
                 display: flex;
                 flex-wrap: wrap;

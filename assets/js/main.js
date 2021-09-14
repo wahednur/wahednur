@@ -32,9 +32,38 @@ mblNavBtn.forEach((item, indx) =>{
     item.addEventListener('click', () => {
         removeBmlNavActive();
         mblNavActive[indx].classList.add('active');
+       
+        mblSubActive.classList.remove('active');
+        
     });
 });
 function removeBmlNavActive(){
-    mblNavActive.forEach(item => item.classList.remove('active'))
+    mblNavActive.forEach(item => item.classList.remove('active'));
+    
+    mblSubActive.classList.remove('active');
+    mblSearch.classList.remove('active');
+    
 }
 /* Mobile menu on clik active javascript end */
+
+/** Mobile sub menu active javascript start */
+const mblSubBtn = document.querySelector('.sub-mbtn');
+const mblSubActive = document.querySelector('.mbl-submenu');
+
+mblSubBtn.addEventListener('click', () => {
+    mblSubActive.classList.toggle('active');
+    mblSearch.classList.remove('active');
+    
+})
+
+
+
+
+/** Mobile sub menu active javascript end */
+
+
+const mblSearchBtn = document.querySelector('.mobile-search');
+const mblSearch = document.querySelector('.mbl-search');
+mblSearchBtn.addEventListener('click', () => {
+    mblSearch.classList.toggle('active');
+})
