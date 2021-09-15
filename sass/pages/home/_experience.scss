@@ -1,0 +1,13 @@
+/* Experience section CSS start */
+.experience{
+    .degi-time{
+        color: $gray-color;
+    }
+    .border-bottom{
+        margin-bottom: 15px;
+        &:last-child{
+            border-bottom: 0px !important;
+        }
+    }
+}
+/* Experience section CSS end */

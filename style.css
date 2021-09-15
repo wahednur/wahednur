@@ -41,6 +41,7 @@ body {
   font-family: 'Roboto', sans-serif;
   font-size: 16px;
   font-weight: 400;
+  background: #F1F1F1;
 }
 
 a {
@@ -488,8 +489,14 @@ ul {
 
 /*  content title end */
 /* Titile/heading CSS end */
+/* Company name title */
+.comapny-name {
+  font-size: 18px;
+}
+
 /* Header CSS start */
 /* Header CSS end */
+/* Home page CSS start */
 header .slider-bg {
   background: url("assets/images/slider-bg.jpg");
   background-size: cover;
@@ -646,9 +653,14 @@ header .slider-bg .overlay .slider-content .text-content .center .scroll-action 
   }
 }
 
-/* Home page CSS start */
-/* Home page CSS end */
 /*  About me section css start */
+.about .container {
+  background: #fff;
+  border-radius: 5px;
+  padding: 50px 24px;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.16);
+}
+
 .about p {
   margin-bottom: 11px;
   line-height: 19px;
@@ -768,6 +780,21 @@ header .slider-bg .overlay .slider-content .text-content .center .scroll-action 
 }
 
 /*  About me section css end */
+/* Experience section CSS start */
+.experience .degi-time {
+  color: #8E8E93;
+}
+
+.experience .border-bottom {
+  margin-bottom: 15px;
+}
+
+.experience .border-bottom:last-child {
+  border-bottom: 0px !important;
+}
+
+/* Experience section CSS end */
+/* Home page CSS end */
 /* Button CSS start */
 /* Button CSS end */
 /*Animation Transition CSS start*/
