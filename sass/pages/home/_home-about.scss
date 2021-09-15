@@ -115,7 +115,7 @@
             top: -65px;
             right: -550px;
             z-index: 3;
-            background: linear-gradient(135deg, $secondary-color, $red-color);
+            background: linear-gradient(135deg, $primary-color, $secondary-color);
             padding: 12px;
             border-radius: 5px;
             transition: all ease-in-out .3s;
@@ -124,7 +124,7 @@
                 width: 35px;
                 height: 35px;
                 border-radius: 35px;
-                border: 1px solid $primary-color;
+                border: 1px solid $secondary-color;
                 position: absolute;
                 top: -18px;
                 right: -18px;
@@ -155,7 +155,7 @@
                 }
                 .input-box{
                     width: calc(100% - 30px);
-                    border: 1px solid $primary-color;
+                    border: 1px solid $secondary-color;
                     height: 30px;
                     padding: 5px 10px;
                     border-radius: 3px !important;
@@ -165,12 +165,12 @@
                         outline: none;
                     }
                     &:hover{
-                        border-color: $green;
+                        border-color: $red-color;
                     }
                 }
                 .msg-input{
                     width: calc(100% - 30px);
-                    border: 1px solid $primary-color;
+                    border: 1px solid $secondary-color;
                     padding: 5px 10px;
                     border-radius: 3px !important;
                     transition: all ease-in-out .3s;
@@ -178,7 +178,7 @@
                         outline: none;
                     }
                     &:hover{
-                        border-color: $green;
+                        border-color: $red-color;
                     }
                 }
                 

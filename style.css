@@ -783,7 +783,7 @@ header .slider-bg .overlay .slider-content .text-content .center .scroll-action 
   top: -65px;
   right: -550px;
   z-index: 3;
-  background: linear-gradient(135deg, #AF52DE, #FF2D55);
+  background: linear-gradient(135deg, #00C7BE, #AF52DE);
   padding: 12px;
   border-radius: 5px;
   transition: all ease-in-out .3s;
@@ -794,7 +794,7 @@ header .slider-bg .overlay .slider-content .text-content .center .scroll-action 
   width: 35px;
   height: 35px;
   border-radius: 35px;
-  border: 1px solid #00C7BE;
+  border: 1px solid #AF52DE;
   position: absolute;
   top: -18px;
   right: -18px;
@@ -831,7 +831,7 @@ header .slider-bg .overlay .slider-content .text-content .center .scroll-action 
 
 .about .persional-info .popup-msg-box .input-group .input-box {
   width: calc(100% - 30px);
-  border: 1px solid #00C7BE;
+  border: 1px solid #AF52DE;
   height: 30px;
   padding: 5px 10px;
   border-radius: 3px !important;
@@ -844,12 +844,12 @@ header .slider-bg .overlay .slider-content .text-content .center .scroll-action 
 }
 
 .about .persional-info .popup-msg-box .input-group .input-box:hover {
-  border-color: #34C759;
+  border-color: #FF2D55;
 }
 
 .about .persional-info .popup-msg-box .input-group .msg-input {
   width: calc(100% - 30px);
-  border: 1px solid #00C7BE;
+  border: 1px solid #AF52DE;
   padding: 5px 10px;
   border-radius: 3px !important;
   transition: all ease-in-out .3s;
@@ -860,7 +860,7 @@ header .slider-bg .overlay .slider-content .text-content .center .scroll-action 
 }
 
 .about .persional-info .popup-msg-box .input-group .msg-input:hover {
-  border-color: #34C759;
+  border-color: #FF2D55;
 }
 
 .about .persional-info .popup-msg-box .msg-btn {
