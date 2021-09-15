@@ -67,3 +67,14 @@ const mblSearch = document.querySelector('.mbl-search');
 mblSearchBtn.addEventListener('click', () => {
     mblSearch.classList.toggle('active');
 })
+
+
+const msgBtn = document.querySelector('.msg-box');
+const closeBtn = document.querySelector('.close-btn');
+const activeMsgBox = document.querySelector('.popup-msg-box');
+msgBtn.addEventListener('click', () => {
+    activeMsgBox.classList.toggle('active');
+})
+closeBtn.addEventListener('click', () => {
+    activeMsgBox.classList.remove('active');
+})

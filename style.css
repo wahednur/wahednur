@@ -659,6 +659,7 @@ header .slider-bg .overlay .slider-content .text-content .center .scroll-action 
   border-radius: 5px;
   padding: 50px 24px;
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.16);
+  overflow: hidden;
 }
 
 .about p {
@@ -750,6 +751,10 @@ header .slider-bg .overlay .slider-content .text-content .center .scroll-action 
   display: inline-block;
 }
 
+.about .persional-info {
+  position: relative;
+}
+
 .about .persional-info .p-info {
   font-weight: 700;
   color: #8E8E93;
@@ -771,6 +776,110 @@ header .slider-bg .overlay .slider-content .text-content .center .scroll-action 
 
 .about .persional-info .msg-box:hover {
   --x: 100%;
+}
+
+.about .persional-info .popup-msg-box {
+  position: absolute;
+  top: -65px;
+  right: -550px;
+  z-index: 3;
+  background: linear-gradient(135deg, #AF52DE, #FF2D55);
+  padding: 12px;
+  border-radius: 5px;
+  transition: all ease-in-out .3s;
+}
+
+.about .persional-info .popup-msg-box .close-btn {
+  background-color: rgba(255, 255, 255, 0.8);
+  width: 35px;
+  height: 35px;
+  border-radius: 35px;
+  border: 1px solid #00C7BE;
+  position: absolute;
+  top: -18px;
+  right: -18px;
+  transition: all ease-in-out .3s;
+}
+
+.about .persional-info .popup-msg-box .close-btn:hover {
+  background-color: #AF52DE;
+  color: #fff;
+}
+
+.about .persional-info .popup-msg-box.active {
+  right: 0;
+}
+
+.about .persional-info .popup-msg-box .msg-head {
+  color: #fff;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 21px;
+}
+
+.about .persional-info .popup-msg-box .input-group {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.about .persional-info .popup-msg-box .input-group .label {
+  color: #fff;
+}
+
+.about .persional-info .popup-msg-box .input-group .input-box {
+  width: calc(100% - 30px);
+  border: 1px solid #00C7BE;
+  height: 30px;
+  padding: 5px 10px;
+  border-radius: 3px !important;
+  background: rgba(255, 255, 255, 0.5);
+  transition: all ease-in-out .3s;
+}
+
+.about .persional-info .popup-msg-box .input-group .input-box:focus {
+  outline: none;
+}
+
+.about .persional-info .popup-msg-box .input-group .input-box:hover {
+  border-color: #34C759;
+}
+
+.about .persional-info .popup-msg-box .input-group .msg-input {
+  width: calc(100% - 30px);
+  border: 1px solid #00C7BE;
+  padding: 5px 10px;
+  border-radius: 3px !important;
+  transition: all ease-in-out .3s;
+}
+
+.about .persional-info .popup-msg-box .input-group .msg-input:focus {
+  outline: none;
+}
+
+.about .persional-info .popup-msg-box .input-group .msg-input:hover {
+  border-color: #34C759;
+}
+
+.about .persional-info .popup-msg-box .msg-btn {
+  background: linear-gradient(45deg, var(--c1, #00C7BE), var(--c2, #AF52DE) 51%, var(--c1, #FF2D55)) var(--x, 0)/200%;
+  padding: 5px 20px;
+  border-radius: 5px;
+  transition: all ease-in-out .5s;
+  color: #fff;
+  border: 1px solid #AF52DE;
+  display: block;
+  width: 100%;
+}
+
+.about .persional-info .popup-msg-box .msg-btn:hover {
+  --x: 100%;
+}
+
+.about .persional-info .popup-msg-box .msg-btn span {
+  margin-left: 12px;
 }
 
 @media (max-width: 540px) {
