@@ -19,10 +19,51 @@
         }
     }
 }
+
+@media(max-width:768px){
+    .title-section{
+        .title{
+            font-size: 80px;
+        }
+    }
+    .pro-title{
+        font-size: 17px;
+    }
+}
+
+@media(max-width:540px){
+    .title-section{
+        margin: 30px auto;
+        .title{
+            font-size: 50px;
+            &::after{
+            height: 2px;
+            width: 100px;
+            margin: 5px auto;
+            left: calc(50% - 50px);
+
+        }
+        }
+    }
+    .pro-title{
+        font-size: 15.5px;
+    }
+}
 /*  Section title end */
 /*  content title start */
 .content-title{
-    
+    font-size: 20px;
+    position: relative;
+    display: inline-block;
+    &::after{
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: -3px;
+        height: 2px;
+        width: 100%;
+        background: linear-gradient(90deg, $secondary-color, $red-color);
+    }
 }
 /*  content title end */
 

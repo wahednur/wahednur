@@ -25,6 +25,7 @@ Tags: WS, Wahed Nur, Boilerplate, HTML5, CSS,
   --hover:#40C8E0;
   --white-color: #fff;
   --light-white-color: #FBF7F7;
+  --green: #34C759;
 }
 
 /* Variable CSS end */
@@ -38,6 +39,8 @@ Tags: WS, Wahed Nur, Boilerplate, HTML5, CSS,
 body {
   color: #48484A;
   font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
 }
 
 a {
@@ -66,6 +69,12 @@ ul {
   padding-right: 0px !important;
   padding-bottom: 0px !important;
   margin-bottom: 0px !important;
+}
+
+@media (max-width: 540px) {
+  .mbl-mt-20 {
+    margin-top: 20px;
+  }
 }
 
 /*Reset CSS End */
@@ -193,6 +202,7 @@ ul {
     bottom: 0;
     left: 0;
     display: block;
+    z-index: 999999 !important;
   }
   .mobile-nav nav .mbl-nav {
     background: #AF52DE;
@@ -431,8 +441,51 @@ ul {
   bottom: 0;
 }
 
+@media (max-width: 768px) {
+  .title-section .title {
+    font-size: 80px;
+  }
+  .pro-title {
+    font-size: 17px;
+  }
+}
+
+@media (max-width: 540px) {
+  .title-section {
+    margin: 30px auto;
+  }
+  .title-section .title {
+    font-size: 50px;
+  }
+  .title-section .title::after {
+    height: 2px;
+    width: 100px;
+    margin: 5px auto;
+    left: calc(50% - 50px);
+  }
+  .pro-title {
+    font-size: 15.5px;
+  }
+}
+
 /*  Section title end */
 /*  content title start */
+.content-title {
+  font-size: 20px;
+  position: relative;
+  display: inline-block;
+}
+
+.content-title::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  height: 2px;
+  width: 100%;
+  background: linear-gradient(90deg, #AF52DE, #FF2D55);
+}
+
 /*  content title end */
 /* Titile/heading CSS end */
 /* Header CSS start */
@@ -596,6 +649,124 @@ header .slider-bg .overlay .slider-content .text-content .center .scroll-action 
 /* Home page CSS start */
 /* Home page CSS end */
 /*  About me section css start */
+.about p {
+  margin-bottom: 11px;
+  line-height: 19px;
+  font-weight: 300;
+}
+
+.about .sec-wrap {
+  background: rgba(0, 199, 190, 0.18);
+  padding: 16px;
+  margin-right: -24px;
+}
+
+.about .sec-wrap .pro {
+  width: 100%;
+  display: block;
+  position: relative;
+  border: 1px solid #AF52DE;
+}
+
+.about .sec-wrap .pro .pro-title {
+  position: absolute;
+  left: 12px;
+  top: -15px;
+  background: #d1f5f3;
+  padding: 0px 12px;
+  color: #AF52DE;
+}
+
+.about .sec-wrap .pro .icon-gellary {
+  margin-top: 20px;
+  padding: 12px;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-gap: 10px;
+  grid-row: 27px;
+  text-align: center;
+}
+
+.about .sec-wrap .pro .icon-gellary .item .img-fluid {
+  height: 27px !important;
+  width: auto !important;
+}
+
+.about .sec-wrap .pro .icon-gellary .django-rest {
+  grid-column: 3 / span 2;
+  grid-row: 4;
+}
+
+.about .sec-wrap .pro .icon-gellary .jquery {
+  grid-column: 1 / span 2;
+  grid-row: 4;
+}
+
+.about .sec-wrap .design {
+  margin-top: 20px;
+  border: 1px solid #AF52DE;
+  padding: 12px;
+  position: relative;
+  padding-top: 30px;
+}
+
+.about .sec-wrap .design .pro-title {
+  position: absolute;
+  left: 12px;
+  top: -15px;
+  background: #d1f5f3;
+  padding: 5px 12px;
+  color: #AF52DE;
+}
+
+.about .sec-wrap .design .icon {
+  display: flex;
+}
+
+.about .sec-wrap .design .icon .item {
+  width: 25px;
+  margin-right: 20px;
+}
+
+.about .social-link .social {
+  height: 20px !important;
+  padding-right: 12px;
+}
+
+.about .social-link .social img {
+  height: 20px;
+  display: inline-block;
+}
+
+.about .persional-info .p-info {
+  font-weight: 700;
+  color: #8E8E93;
+}
+
+.about .persional-info .p-info .p-title {
+  color: #48484A;
+  margin-left: 5px;
+}
+
+.about .persional-info .msg-box {
+  background: linear-gradient(45deg, var(--c1, #00C7BE), var(--c2, #AF52DE) 51%, var(--c1, #FF2D55)) var(--x, 0)/200%;
+  padding: 5px 20px;
+  border-radius: 5px;
+  transition: all ease-in-out .5s;
+  color: #fff;
+  border: 1px solid #AF52DE;
+}
+
+.about .persional-info .msg-box:hover {
+  --x: 100%;
+}
+
+@media (max-width: 540px) {
+  .about .sec-wrap {
+    margin-right: 0px !important;
+  }
+}
+
 /*  About me section css end */
 /* Button CSS start */
 /* Button CSS end */
