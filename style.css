@@ -786,7 +786,7 @@ header .slider-bg .overlay .slider-content .text-content .center .scroll-action 
   background: linear-gradient(135deg, #00C7BE, #AF52DE);
   padding: 12px;
   border-radius: 5px;
-  transition: all ease-in-out .3s;
+  transition: all ease-in-out .5s;
 }
 
 .about .persional-info .popup-msg-box .close-btn {
