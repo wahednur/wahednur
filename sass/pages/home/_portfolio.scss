@@ -49,12 +49,17 @@
                         }
                         &__link{
                             .port__card{
-                                
+
                             }
                         }
                     }
                 }
             }
         }
+    }
+}
+@media(max-width:1440px){
+    .portfolio .container-fluid{
+        width: 100%;
     }
 }

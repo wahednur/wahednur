@@ -953,6 +953,12 @@ header .slider-bg .overlay .slider-content .text-content .center .scroll-action 
   z-index: 0;
 }
 
+@media (max-width: 1440px) {
+  .portfolio .container-fluid {
+    width: 100%;
+  }
+}
+
 /* Home page CSS end */
 /* Button CSS start */
 /* Button CSS end */
