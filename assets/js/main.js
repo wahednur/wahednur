@@ -78,3 +78,20 @@ msgBtn.addEventListener('click', () => {
 closeBtn.addEventListener('click', () => {
     activeMsgBox.classList.remove('active');
 })
+
+
+/*Portfolio tab start */
+const tabBtn = document.querySelectorAll('.tab-btn-container .tab-btn');
+const tabContainer = document.querySelectorAll('.portfolio-container .tab-wrap .tab-container');
+tabBtn.forEach((item, indx) => {
+    item.addEventListener('click', () =>{
+        removeTabActive();
+        tabContainer[indx].classList.add('active');
+        tabBtn[indx].classList.add('active');
+    })
+})
+
+function removeTabActive(){
+    tabContainer.forEach(item => item.classList.remove('active'));
+    tabBtn.forEach(item => item.classList.remove('active'));
+}
