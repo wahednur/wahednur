@@ -55,6 +55,7 @@
     font-size: 20px;
     position: relative;
     display: inline-block;
+    transition: all ease-in-out .3s;
     &::after{
         content: '';
         position: absolute;
