@@ -903,20 +903,20 @@ header .slider-bg .overlay .slider-content .text-content .center .scroll-action 
 }
 
 /* Experience section CSS end */
-.portfolio {
+.sec-portfolio {
   background: rgba(0, 199, 190, 0.19);
   padding-bottom: 50px;
 }
 
-.portfolio .container-fluid {
+.sec-portfolio .container-fluid {
   width: calc(100% - 200px);
 }
 
-.portfolio .container-fluid .portfolio-container .tab-btn-container {
+.sec-portfolio .container-fluid .portfolio-container .tab-btn-container {
   display: flex;
 }
 
-.portfolio .container-fluid .portfolio-container .tab-btn-container .tab-btn {
+.sec-portfolio .container-fluid .portfolio-container .tab-btn-container .tab-btn {
   background: #fff;
   border: 1px solid #00C7BE;
   padding: 5px 10px;
@@ -927,16 +927,21 @@ header .slider-bg .overlay .slider-content .text-content .center .scroll-action 
   margin-right: 5px;
 }
 
-.portfolio .container-fluid .portfolio-container .tab-btn-container .tab-btn.active {
+.sec-portfolio .container-fluid .portfolio-container .tab-btn-container .tab-btn.active {
   border-top: 3px solid #AF52DE !important;
   margin-top: -8px;
   border: 1px solid #AF52DE;
   border-bottom: 3px solid #fff !important;
   position: relative;
   z-index: 1;
+  transition: all ease-in-out .3s;
 }
 
-.portfolio .container-fluid .portfolio-container .tab-wrap .tab-container {
+.sec-portfolio .container-fluid .portfolio-container .tab-wrap {
+  width: 100%;
+}
+
+.sec-portfolio .container-fluid .portfolio-container .tab-wrap .tab-container {
   display: none;
   transition: all ease-in-out .3s;
   border-bottom-left-radius: 5px;
@@ -944,13 +949,94 @@ header .slider-bg .overlay .slider-content .text-content .center .scroll-action 
   padding: 12px;
   background: #fff;
   margin-top: -1px;
+  width: 100%;
 }
 
-.portfolio .container-fluid .portfolio-container .tab-wrap .tab-container.active {
+.sec-portfolio .container-fluid .portfolio-container .tab-wrap .tab-container.active {
   display: block;
   border: 1px solid #AF52DE;
   position: relative;
   z-index: 0;
+  width: 100%;
+  transition: all ease-in-out .3s;
+}
+
+.sec-portfolio .container-fluid .portfolio-container .tab-wrap .tab-container .portfolio {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 24px;
+}
+
+.sec-portfolio .container-fluid .portfolio-container .tab-wrap .tab-container .portfolio .item {
+  border: 1px solid #00C7BE;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.sec-portfolio .container-fluid .portfolio-container .tab-wrap .tab-container .portfolio .item .port-card .card-title {
+  margin-bottom: 0px !important;
+  height: 60px;
+  overflow: hidden;
+}
+
+.sec-portfolio .container-fluid .portfolio-container .tab-wrap .tab-container .portfolio .item .port-card .card-title .port-title {
+  background: #00C7BE;
+  color: #fff;
+  display: block;
+  padding: 5px 12px;
+  transition: all ease-in-out .3s;
+  height: 100%;
+}
+
+.sec-portfolio .container-fluid .portfolio-container .tab-wrap .tab-container .portfolio .item .port-card .card-title .port-title:hover {
+  background: #AF52DE;
+}
+
+.sec-portfolio .container-fluid .portfolio-container .tab-wrap .tab-container .portfolio .item .port-card .card-img {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0px;
+}
+
+.sec-portfolio .container-fluid .portfolio-container .tab-wrap .tab-container .portfolio .item .port-card .card-img .detail {
+  position: absolute;
+  right: -100px;
+  bottom: 0;
+  background: #00C7BE;
+  color: #fff;
+  padding: 5px 10px;
+  border-top-left-radius: 5px;
+  transition: all ease-in-out .3s;
+}
+
+.sec-portfolio .container-fluid .portfolio-container .tab-wrap .tab-container .portfolio .item .port-card .card-img .detail:hover {
+  background: #AF52DE;
+}
+
+.sec-portfolio .container-fluid .portfolio-container .tab-wrap .tab-container .portfolio .item .port-card .card-img:hover .detail {
+  right: 0px;
+}
+
+.sec-portfolio .container-fluid .portfolio-container .tab-wrap .tab-container .portfolio .item .port-card .card-body {
+  width: 100%;
+  display: block;
+}
+
+.sec-portfolio .container-fluid .portfolio-container .tab-wrap .tab-container .portfolio .item .port-card .card-body .tech-body {
+  display: flex;
+}
+
+.sec-portfolio .container-fluid .portfolio-container .tab-wrap .tab-container .portfolio .item .port-card .card-body .tech-title .title {
+  font-size: 16px;
+}
+
+.sec-portfolio .container-fluid .portfolio-container .tab-wrap .tab-container .portfolio .item .port-card .card-body .tech-icon {
+  margin-left: 12px;
+}
+
+.sec-portfolio .container-fluid .portfolio-container .tab-wrap .tab-container .portfolio .item .port-card .card-body .tech-icon .tech-img {
+  height: 20px;
 }
 
 @media (max-width: 1440px) {
