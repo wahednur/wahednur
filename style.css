@@ -1215,6 +1215,21 @@ header .slider-bg .overlay .slider-content .text-content .center .scroll-action 
   right: -25px;
 }
 
+@media (max-width: 800px) {
+  .feedback-sec .title-section .title {
+    font-size: 50px;
+  }
+}
+
+@media (max-width: 540px) {
+  .feedback-sec .title-section .title {
+    font-size: 30px;
+  }
+  .slick-arrow {
+    display: none !important;
+  }
+}
+
 /*  Feedback section CSS end  */
 /* Skill section CSS start */
 .sec-skill {

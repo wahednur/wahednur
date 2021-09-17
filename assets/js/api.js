@@ -22,6 +22,7 @@ $('.feedback').slick({
     },
     {
       breakpoint: 600,
+      arrows:false,
       settings: {
         slidesToShow: 2,
         slidesToScroll: 2
@@ -29,6 +30,7 @@ $('.feedback').slick({
     },
     {
       breakpoint: 480,
+      arrows:false,
       settings: {
         slidesToShow: 1,
         slidesToScroll: 1
