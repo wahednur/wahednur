@@ -1,0 +1,56 @@
+/*  Feedback section CSS start  */
+.feedback-sec{
+    padding-bottom: 50px;
+    background-color: rgba($color: $primary-color, $alpha: 0.17);
+    .title-section{
+        .title{
+            font-size: 80px;
+        }
+    }
+    .feedback{
+
+       .feedbak-item{
+           background: $white-color;
+           margin: 10px;
+           height: 300px;
+           padding: 12px;
+           border-radius: 5px;
+           box-shadow: 0px 0px 8px rgba($color: #000000, $alpha: 0.19);
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           .client{
+               .name{
+                   font-size: 18px;
+                   margin-bottom: 0px;
+               }
+               .degi{
+                   color: rgba($color: $secondary-color, $alpha: 0.80);
+                   font-size: 12px;
+               }
+           }
+           .comment{
+               margin: 30px 20px;
+               position: relative;
+               .icon-left, .icon-right{
+                   position: absolute;
+                   font-size: 25px;
+                   color: $secondary-color;
+               }
+               .icon-left{
+                   top: -10px;
+                   left: -25px;
+
+               }
+               .icon-right{
+                   bottom: -10px;
+                   right: -25px;
+               }
+           }
+       }
+    }
+
+
+}
+
+/*  Feedback section CSS end  */

@@ -1,0 +1,17 @@
+/* Skill section CSS start */
+.sec-skill{
+    padding-bottom: 50px;
+    .skill-title{
+        color: $secondary-color;
+        font-size: 18px;
+        font-weight: 700;
+    }
+    .skill-name{
+        color: $primary-color;
+        .skill-item{
+            margin-left: 12px;
+            color: $text-color;
+        }
+    }
+}
+/* Skill section CSS end */

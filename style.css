@@ -440,7 +440,7 @@ ul {
   margin: 5px auto;
   background: linear-gradient(90deg, #AF52DE, #FF2D55);
   left: calc(50% - 100px);
-  bottom: 0;
+  bottom: -10px;
 }
 
 @media (max-width: 768px) {
@@ -1162,6 +1162,81 @@ header .slider-bg .overlay .slider-content .text-content .center .scroll-action 
 }
 
 /*  Service section CSS start   */
+/*  Feedback section CSS start  */
+.feedback-sec {
+  padding-bottom: 50px;
+  background-color: rgba(0, 199, 190, 0.17);
+}
+
+.feedback-sec .title-section .title {
+  font-size: 80px;
+}
+
+.feedback-sec .feedback .feedbak-item {
+  background: #fff;
+  margin: 10px;
+  height: 300px;
+  padding: 12px;
+  border-radius: 5px;
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.19);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.feedback-sec .feedback .feedbak-item .client .name {
+  font-size: 18px;
+  margin-bottom: 0px;
+}
+
+.feedback-sec .feedback .feedbak-item .client .degi {
+  color: rgba(175, 82, 222, 0.8);
+  font-size: 12px;
+}
+
+.feedback-sec .feedback .feedbak-item .comment {
+  margin: 30px 20px;
+  position: relative;
+}
+
+.feedback-sec .feedback .feedbak-item .comment .icon-left, .feedback-sec .feedback .feedbak-item .comment .icon-right {
+  position: absolute;
+  font-size: 25px;
+  color: #AF52DE;
+}
+
+.feedback-sec .feedback .feedbak-item .comment .icon-left {
+  top: -10px;
+  left: -25px;
+}
+
+.feedback-sec .feedback .feedbak-item .comment .icon-right {
+  bottom: -10px;
+  right: -25px;
+}
+
+/*  Feedback section CSS end  */
+/* Skill section CSS start */
+.sec-skill {
+  padding-bottom: 50px;
+}
+
+.sec-skill .skill-title {
+  color: #AF52DE;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.sec-skill .skill-name {
+  color: #00C7BE;
+}
+
+.sec-skill .skill-name .skill-item {
+  margin-left: 12px;
+  color: #48484A;
+}
+
+/* Skill section CSS end */
 /* Home page CSS end */
 /* Button CSS start */
 /* Button CSS end */
