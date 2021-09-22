@@ -95,3 +95,35 @@ function removeTabActive(){
     tabContainer.forEach(item => item.classList.remove('active'));
     tabBtn.forEach(item => item.classList.remove('active'));
 }
+
+
+// Shop Slider 
+const slPrevtBtn = document.querySelector('.prev');
+const slNextBtn = document.querySelector('.next');
+const images = document.querySelectorAll('.ga-img');
+const feImg = document.querySelector('.fe-img')
+
+let slide = 0;
+
+slNextBtn.addEventListener('click', () => {
+    slide++
+    if(slide>images.length -1){
+        slide = 0
+    }
+    feImg.src = images[slide].src;
+    
+
+    
+  
+})
+
+slPrevtBtn.addEventListener('click', () => {
+    slide--
+    if(slide < 0){
+        slide = images.length -1
+    }
+    feImg.src = images[slide].src;
+    
+})
+
+

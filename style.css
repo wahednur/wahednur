@@ -15,7 +15,7 @@ Tags: WS, Wahed Nur, Boilerplate, HTML5, CSS,
 /* Variable CSS start */
 :root {
   --primary-color: #00C7BE;
-  --secondary-color: #66D4CF;
+  --secondary-color: #AF52DE;
   --hover-color:#52E1DA;
   --red-color:#FF2D55;
   --black-color:#1C1C1E;
@@ -212,6 +212,9 @@ ul {
     flex-wrap: wrap;
     justify-content: space-around;
     align-items: center;
+  }
+  .mobile-nav nav .mbl-nav__mbl-item {
+    height: 60px;
   }
   .mobile-nav nav .mbl-nav__mbl-link {
     padding: 15px 41px;
@@ -1231,6 +1234,322 @@ header .slider-bg .overlay .slider-content .text-content .center .scroll-action 
 }
 
 /*  Feedback section CSS end  */
+/* Shop section CSS start */
+.sec-shop {
+  padding-bottom: 50px;
+  background-color: #fff;
+}
+
+.sec-shop .service-shop {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 24px;
+  grid-template-rows: 512px 512px;
+}
+
+.sec-shop .service-shop .service-item {
+  border: 1px solid #00C7BE;
+  border-radius: 5px;
+  height: 512px;
+  overflow: hidden;
+  transition: all ease-in-out .5s;
+  position: relative;
+  background: #fff;
+}
+
+.sec-shop .service-shop .service-item:hover, .sec-shop .service-shop .service-item.active {
+  height: 625px;
+  z-index: 5;
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
+  border: 1px solid #AF52DE;
+}
+
+.sec-shop .service-shop .service-item .service-card {
+  height: 100%;
+  display: block;
+  overflow: hidden;
+}
+
+.sec-shop .service-shop .service-item .service-card .service-img {
+  position: relative;
+  border-radius: 3px;
+  max-width: 430px;
+  max-height: 286px !important;
+  object-fit: cover;
+  object-position: top center;
+}
+
+.sec-shop .service-shop .service-item .service-card .service-img .featured {
+  position: relative;
+  object-fit: cover;
+  overflow: hidden;
+}
+
+.sec-shop .service-shop .service-item .service-card .service-img .featured .fe-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  border-radius: 3px;
+  width: 430px !important;
+  height: 286px !important;
+  overflow: hidden;
+  opacity: 1;
+}
+
+.sec-shop .service-shop .service-item .service-card .service-img .img-gallery {
+  max-width: 430px;
+  max-height: 338px !important;
+}
+
+.sec-shop .service-shop .service-item .service-card .service-img .img-gallery img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  height: 286px !important;
+  transition: all ease .3s;
+  opacity: 0;
+  display: none;
+}
+
+.sec-shop .service-shop .service-item .service-card .service-img .sl-btn {
+  width: 40px;
+  height: 40px;
+  padding: 5px 0px !important;
+  position: absolute;
+  border: none;
+  font-weight: 900;
+  top: 50%;
+  background-color: #fff;
+  transition: all ease .3s;
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.2);
+  z-index: 5;
+}
+
+.sec-shop .service-shop .service-item .service-card .service-img .sl-btn:hover {
+  background: #00C7BE;
+  color: #fff;
+}
+
+.sec-shop .service-shop .service-item .service-card .service-img .prev {
+  left: -60px;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  transition: all ease .3s;
+}
+
+.sec-shop .service-shop .service-item .service-card .service-img .next {
+  right: -60px;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  transition: all ease .3s;
+}
+
+.sec-shop .service-shop .service-item .service-card .service-img:hover .prev {
+  left: 0;
+}
+
+.sec-shop .service-shop .service-item .service-card .service-img:hover .next {
+  right: 0;
+}
+
+.sec-shop .service-shop .service-item .service-card .service-img .userimg {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  bottom: -15px;
+  left: 15px;
+  border: 4px solid #fff;
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  background: linear-gradient(49deg, #AF52DE, #FF2D55);
+}
+
+.sec-shop .service-shop .service-item .service-card .service-img .userimg .img-fluid {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.sec-shop .service-shop .service-item .service-card .service-img .userimg .online {
+  background: #fff;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  z-index: 2 !important;
+  position: absolute;
+  right: -10px;
+  bottom: 0;
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.2);
+}
+
+.sec-shop .service-shop .service-item .service-card .service-img .userimg .online .online-active {
+  width: 14px;
+  height: 14px;
+  background: #34C759;
+  border-radius: 50%;
+  padding: 3px;
+  margin-top: 3px;
+  margin-left: 3px;
+}
+
+.sec-shop .service-shop .service-item .service-card .service-body {
+  width: 100%;
+  overflow: hidden;
+}
+
+.sec-shop .service-shop .service-item .service-card .service-body .serive-title {
+  font-size: 18px;
+  font-weight: 500;
+  width: 100%;
+  display: block;
+  height: 60px;
+  margin-top: 20px;
+  cursor: pointer;
+  padding: 5px 12px;
+  overflow: hidden;
+}
+
+.sec-shop .service-shop .service-item .service-card .service-body .price-delivery {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  padding: 10px 12px;
+}
+
+.sec-shop .service-shop .service-item .service-card .service-body .price-delivery .price .str-pric {
+  color: #8E8E93;
+  font-weight: 700;
+}
+
+.sec-shop .service-shop .service-item .service-card .service-body .price-delivery .price .str-pric .base-price {
+  color: #00C7BE;
+  margin-left: 5px;
+}
+
+.sec-shop .service-shop .service-item .service-card .service-body .price-delivery .delivery .deli {
+  color: #00C7BE;
+}
+
+.sec-shop .service-shop .service-item .service-card .service-body .price-delivery .delivery .deli .deli-time {
+  color: #8E8E93;
+  margin-left: 10px;
+}
+
+.sec-shop .service-shop .service-item .service-card .service-body .raging-save {
+  width: 100%;
+  border-top: 1px solid #C7C7CC;
+  border-bottom: 1px solid #C7C7CC;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 12px;
+  line-height: 19px;
+  align-items: center;
+}
+
+.sec-shop .service-shop .service-item .service-card .service-body .raging-save .rating p {
+  margin-bottom: 0px !important;
+  padding: 10px 0px;
+}
+
+.sec-shop .service-shop .service-item .service-card .service-body .raging-save .rating p .fa-star {
+  color: #00C7BE;
+}
+
+.sec-shop .service-shop .service-item .service-card .service-body .raging-save .rating p .total {
+  margin-left: 5px;
+}
+
+.sec-shop .service-shop .service-item .service-card .service-body .raging-save .save .favo {
+  background: none;
+  border: none;
+  color: #00C7BE;
+}
+
+.sec-shop .service-shop .service-item .service-card .service-body .raging-save .save .favo:hover, .sec-shop .service-shop .service-item .service-card .service-body .raging-save .save .favo.active {
+  color: #AF52DE;
+}
+
+.sec-shop .service-shop .service-item .service-card .service-body .tech-icon {
+  padding: 10px 12px;
+}
+
+.sec-shop .service-shop .service-item .service-card .service-body .tech-icon .tech-img {
+  height: 16px;
+  margin-right: 5px;
+}
+
+.sec-shop .service-shop .service-item .service-card .service-body .details {
+  width: 100%;
+  text-align: center;
+  display: block;
+  padding: 10px 20px;
+  background: #00C7BE;
+  color: #fff;
+  font-weight: 700;
+}
+
+.sec-shop .service-shop .service-item .service-card .service-body .details:hover {
+  background: #AF52DE;
+}
+
+@media (max-width: 1200px) {
+  .sec-shop .service-shop {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 24px;
+    grid-template-rows: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 1024px) {
+  .sec-shop .service-shop {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 800px) {
+  .sec-shop {
+    padding-bottom: 50px;
+    background-color: #fff;
+  }
+  .sec-shop .service-shop {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 24px !important;
+    grid-template-rows: repeat(2, 1fr) !important;
+  }
+  .sec-shop .service-item {
+    height: 486px !important;
+  }
+  .sec-shop .service-item:nth-child(n + 5) {
+    display: none !important;
+  }
+}
+
+@media (max-width: 540px) {
+  .sec-shop {
+    padding-bottom: 50px;
+    background-color: #fff;
+  }
+  .sec-shop .service-shop {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    grid-gap: 24px;
+    grid-template-rows: repeat(2, 1fr);
+  }
+  .sec-shop .service-shop .service-item {
+    height: 486px !important;
+  }
+  .sec-shop .service-shop .service-item:nth-child(n + 3) {
+    display: none !important;
+  }
+}
+
+/* Shop section CSS start */
 /* Skill section CSS start */
 .sec-skill {
   padding-bottom: 50px;
@@ -1252,6 +1571,19 @@ header .slider-bg .overlay .slider-content .text-content .center .scroll-action 
 }
 
 /* Skill section CSS end */
+/* Course section SCSS start*/
+.course-sec .course .course-title {
+  font-size: 18px;
+  padding: 10px 0px;
+  margin-bottom: 20px;
+  transition: all ease-in-out .3s;
+}
+
+.course-sec .course .course-title:hover {
+  color: #AF52DE;
+}
+
+/* Course section SCSS end*/
 /* Home page CSS end */
 /* Button CSS start */
 /* Button CSS end */
@@ -1340,4 +1672,9 @@ header .slider-bg .overlay .slider-content .text-content .center .scroll-action 
 
 /*Home Slider Responsive end*/
 /* --------------------------  */
+@media (max-width: 800px) {
+  footer.footer {
+    margin-bottom: 60px;
+  }
+}
 /*# sourceMappingURL=style.css.map */

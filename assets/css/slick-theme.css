@@ -21,34 +21,33 @@
 {
     font-size: 0;
     line-height: 0;
-
     position: absolute;
     top: 50%;
-
     display: block;
-
-    width: 20px;
-    height: 20px;
-    padding: 0;
+    width: 30px;
+    height: 30px;
+    padding: 5px;
     -webkit-transform: translate(0, -50%);
     -ms-transform: translate(0, -50%);
     transform: translate(0, -50%);
-
     cursor: pointer;
-
     color: transparent;
     border: none;
     outline: none;
-    background: transparent;
+    background: var(--primary-color);
+    transition: all ease-in-out .3s;
+    opacity: .5;
+    border-radius: 30px;
 }
 .slick-prev:hover,
 .slick-prev:focus,
 .slick-next:hover,
 .slick-next:focus
 {
-    color: transparent;
+    color: var(--white-color);
     outline: none;
-    background: transparent;
+    background: var(--secondary-color);
+    opacity: 1;
 }
 .slick-prev:hover:before,
 .slick-prev:focus:before,

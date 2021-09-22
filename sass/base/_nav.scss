@@ -128,7 +128,9 @@
                 flex-wrap: wrap;
                 justify-content: space-around;
                 align-items: center;
-                &__mbl-item{}
+                &__mbl-item{
+                    height: 60px;
+                }
                 &__mbl-link{
                     padding: 15px 41px;
                     display: block;

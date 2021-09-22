@@ -1,0 +1,17 @@
+/* Course section SCSS start*/
+.course-sec{
+    .course{
+        .course-title{
+            font-size: 18px;
+            padding: 10px 0px;
+            margin-bottom: 20px;
+            transition: all ease-in-out .3s;
+            &:hover{
+            color: $secondary-color;
+           
+        }
+        }
+        
+    }
+}
+/* Course section SCSS end*/
