@@ -1,0 +1,88 @@
+/* Tutorial section CSS start*/
+.tutorial-sec{
+    .tutorial-wrap{
+        width: calc(100% - 200px);
+        margin: 0 auto;
+        .tutorial{
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-gap: 24px;
+        .tut-item{
+            .tut-item-wrap{
+                background: linear-gradient(45deg, $secondary-color, $red-color);
+                padding: 5px;
+                border-radius: 10px;
+                .img-fluid{
+                    border-top-left-radius: 5px;
+                    border-top-right-radius: 5px;
+                }
+                .tut-body{
+                    padding: 12px;
+                    color: $white-color;
+                    .tut-link{
+                        color: $hover-color;
+                        &:hover{
+                            color: $white-color;
+                        }
+                    }
+                    .cat{
+                        margin-bottom: 0px !important;
+                        .cat-link{
+                            &:hover{
+                                color: $white-color;
+                            }
+                        }
+                    }
+
+                }
+            }
+            
+        }
+        }
+    }
+    
+}
+/* Tutorial responsive start */
+@media(max-width:1024px){
+    .tutorial-sec{
+         .tutorial-wrap{
+             width: calc(100% - 100px) !important;
+         }
+    }
+}
+@media(max-width:800px){
+    .tutorial-sec{
+         .tutorial-wrap{
+             width: calc(100% - 24px) !important;
+             .tutorial{
+                 grid-template-columns: repeat(2, 1fr);
+                 grid-template-rows: repeat(2, 1fr);
+                 .tut-item{
+                     &:nth-child(n + 5){
+                    border: none !important;
+                    display: none !important;
+                    }
+                 }
+             }
+         }
+    }
+}
+@media(max-width:540px){
+    .tutorial-sec{
+         .tutorial-wrap{
+             width: calc(100% - 24px) !important;
+             .tutorial{
+                 grid-template-columns: repeat(1, 1fr);
+                 grid-template-rows: repeat(2, 1fr);
+                 .tut-item{
+                     &:nth-child(n + 3){
+                    border: none !important;
+                    display: none !important;
+                    }
+                 }
+             }
+         }
+    }
+}
+/* Tutorial responsive end */
+/* Tutorial section CSS end */

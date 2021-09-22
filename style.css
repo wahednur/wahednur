@@ -1588,6 +1588,87 @@ header .slider-bg .overlay .slider-content .text-content .center .scroll-action 
 }
 
 /* Course section SCSS end*/
+/* Tutorial section CSS start*/
+.tutorial-sec .tutorial-wrap {
+  width: calc(100% - 200px);
+  margin: 0 auto;
+}
+
+.tutorial-sec .tutorial-wrap .tutorial {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 24px;
+}
+
+.tutorial-sec .tutorial-wrap .tutorial .tut-item .tut-item-wrap {
+  background: linear-gradient(45deg, #AF52DE, #FF2D55);
+  padding: 5px;
+  border-radius: 10px;
+}
+
+.tutorial-sec .tutorial-wrap .tutorial .tut-item .tut-item-wrap .img-fluid {
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.tutorial-sec .tutorial-wrap .tutorial .tut-item .tut-item-wrap .tut-body {
+  padding: 12px;
+  color: #fff;
+}
+
+.tutorial-sec .tutorial-wrap .tutorial .tut-item .tut-item-wrap .tut-body .tut-link {
+  color: #52E1DA;
+}
+
+.tutorial-sec .tutorial-wrap .tutorial .tut-item .tut-item-wrap .tut-body .tut-link:hover {
+  color: #fff;
+}
+
+.tutorial-sec .tutorial-wrap .tutorial .tut-item .tut-item-wrap .tut-body .cat {
+  margin-bottom: 0px !important;
+}
+
+.tutorial-sec .tutorial-wrap .tutorial .tut-item .tut-item-wrap .tut-body .cat .cat-link:hover {
+  color: #fff;
+}
+
+/* Tutorial responsive start */
+@media (max-width: 1024px) {
+  .tutorial-sec .tutorial-wrap {
+    width: calc(100% - 100px) !important;
+  }
+}
+
+@media (max-width: 800px) {
+  .tutorial-sec .tutorial-wrap {
+    width: calc(100% - 24px) !important;
+  }
+  .tutorial-sec .tutorial-wrap .tutorial {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+  }
+  .tutorial-sec .tutorial-wrap .tutorial .tut-item:nth-child(n + 5) {
+    border: none !important;
+    display: none !important;
+  }
+}
+
+@media (max-width: 540px) {
+  .tutorial-sec .tutorial-wrap {
+    width: calc(100% - 24px) !important;
+  }
+  .tutorial-sec .tutorial-wrap .tutorial {
+    grid-template-columns: repeat(1, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+  }
+  .tutorial-sec .tutorial-wrap .tutorial .tut-item:nth-child(n + 3) {
+    border: none !important;
+    display: none !important;
+  }
+}
+
+/* Tutorial responsive end */
+/* Tutorial section CSS end */
 /* Home page CSS end */
 /* Button CSS start */
 /* Button CSS end */
