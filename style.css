@@ -1572,6 +1572,10 @@ header .slider-bg .overlay .slider-content .text-content .center .scroll-action 
 
 /* Skill section CSS end */
 /* Course section SCSS start*/
+.course-sec {
+  background: linear-gradient(45deg, rgba(175, 82, 222, 0.6), rgba(255, 45, 85, 0.6));
+}
+
 .course-sec .course .course-title {
   font-size: 18px;
   padding: 10px 0px;

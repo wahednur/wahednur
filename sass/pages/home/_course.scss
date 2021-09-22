@@ -1,5 +1,6 @@
 /* Course section SCSS start*/
 .course-sec{
+    background: linear-gradient(45deg, rgba($color: $secondary-color, $alpha: 0.60), rgba($color: $red-color, $alpha: 0.60),);
     .course{
         .course-title{
             font-size: 18px;
