@@ -1589,6 +1589,10 @@ header .slider-bg .overlay .slider-content .text-content .center .scroll-action 
 
 /* Course section SCSS end*/
 /* Tutorial section CSS start*/
+.tutorial-sec {
+  margin-bottom: 80px;
+}
+
 .tutorial-sec .tutorial-wrap {
   width: calc(100% - 200px);
   margin: 0 auto;
@@ -1669,6 +1673,57 @@ header .slider-bg .overlay .slider-content .text-content .center .scroll-action 
 
 /* Tutorial responsive end */
 /* Tutorial section CSS end */
+/* Blog section CSS start */
+.blog-sec {
+  background: #fff;
+  padding-bottom: 50px;
+}
+
+.blog-sec .blog {
+  width: 100%;
+}
+
+.blog-sec .blog .blog-item {
+  width: 100%;
+  margin: 12px 12px;
+}
+
+.blog-sec .blog .blog-item .blog-wrap {
+  width: 100%;
+  background: #fff;
+  padding: 12px;
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.2);
+}
+
+.blog-sec .blog .blog-item .blog-wrap .blog-img .img-fluid {
+  width: 100%;
+}
+
+.blog-sec .blog .blog-item .blog-wrap .blog-body {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 12px;
+}
+
+.blog-sec .blog .blog-item .blog-wrap .blog-body .lef-sec p, .blog-sec .blog .blog-item .blog-wrap .blog-body .right-sec p {
+  padding-bottom: 0px;
+  margin-bottom: 5px;
+  color: #48484A;
+}
+
+.blog-sec .blog .blog-item .blog-wrap .blog-body .lef-sec p:last-child, .blog-sec .blog .blog-item .blog-wrap .blog-body .right-sec p:last-child {
+  margin-bottom: 0px;
+}
+
+.blog-sec .blog .blog-item .blog-wrap .blog-body .lef-sec p span, .blog-sec .blog .blog-item .blog-wrap .blog-body .right-sec p span {
+  margin-left: 10px;
+}
+
+.blog-sec .blog .blog-item .blog-wrap .blog-body .right-sec {
+  text-align: right;
+}
+
+/* Blog section CSS end */
 /* Home page CSS end */
 /* Button CSS start */
 /* Button CSS end */
