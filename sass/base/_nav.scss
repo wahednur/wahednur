@@ -198,7 +198,7 @@
                 width: 100%;
                 padding: 5px 20px;
                 text-transform: capitalize;
-                &:hover{
+                &:hover, &.active{
                     background-color: $secondary-color;
                 }
             }

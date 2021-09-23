@@ -284,7 +284,7 @@ ul {
     padding: 5px 20px;
     text-transform: capitalize;
   }
-  .mobile-nav .mbl-submenu__sub-link:hover {
+  .mobile-nav .mbl-submenu__sub-link:hover, .mobile-nav .mbl-submenu__sub-link.active {
     background-color: #AF52DE;
   }
   .mobile-nav .mbl-search {

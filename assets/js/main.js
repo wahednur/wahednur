@@ -54,9 +54,25 @@ mblSubBtn.addEventListener('click', () => {
     mblSubActive.classList.toggle('active');
     mblSearch.classList.remove('active');
     
-})
+});
 
 
+const mblSubNavBtn = document.querySelectorAll('.mobile-nav .mbl-submenu__sub-link');
+const mblSubNavItem = document.querySelectorAll('mbl-submenu__sub-link');
+mblSubNavBtn.forEach((item, indx) =>{
+    item.addEventListener('click', () => {
+        removeMblSubActive();
+        mblSubNavItem[indx].classList.add('active');
+       
+       
+        
+    });
+});
+
+function removeMblSubActive(){
+    mblSubNavItem.forEach(item => item.classList.remove('active'));
+    mblSubActive.classList.remove('active');
+}
 
 
 /** Mobile sub menu active javascript end */
