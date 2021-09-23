@@ -127,3 +127,7 @@ slPrevtBtn.addEventListener('click', () => {
 })
 
 
+window.addEventListener('scroll', () => {
+    const deskNav = document.querySelector('.desktop-nav');
+    deskNav.classList.toggle('sticky', window.scrollY > 500);
+})

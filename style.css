@@ -85,6 +85,7 @@ ul {
 /* Desktop Navigation and Search css start */
 .desktop-nav {
   background: rgba(82, 225, 218, 0.2);
+  transition: all ease-in-out .3s;
 }
 
 .desktop-nav .nav-search {
@@ -178,6 +179,16 @@ ul {
 .desktop-nav .nav-search .desk-search .search-group .search-btn:hover {
   background: #fff;
   color: #AF52DE;
+}
+
+.desktop-nav.sticky {
+  position: fixed;
+  background-color: #AF52DE;
+  transition: all ease-in-out .3s;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 999999;
 }
 
 /* Desktop Navigation and Search css end */

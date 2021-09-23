@@ -1,6 +1,7 @@
 /* Desktop Navigation and Search css start */
 .desktop-nav{
     background: rgba($color: $hover-color, $alpha: 0.20);
+    transition: all ease-in-out .3s;
     .nav-search{
     width: 100%;
     display: flex;
@@ -90,7 +91,15 @@
     /* --------------------- */
 }
 }
-
+.desktop-nav.sticky{
+    position: fixed;
+    background-color: $secondary-color;
+    transition: all ease-in-out .3s;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 999999;
+}
 /* Desktop Navigation and Search css end */
 /* ------------------------  */
 
