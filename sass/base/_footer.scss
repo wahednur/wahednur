@@ -5,7 +5,6 @@ footer.footer{
     background-size: cover;
     position: relative;
     z-index: -2;
-    padding-bottom: 50px;
     &::after{
         content: '';
         width: 100%;
@@ -50,13 +49,35 @@ footer.footer{
         .text-control{
             width: 100%;
             padding: 5px 10px;
+            margin-bottom: 24px;
             &:focus{
                 outline: none;
+            }
+        }
+        .send-btn{
+            background: linear-gradient(45deg, var(--c1, $primary-color), var(--c2, $secondary-color) 51%, var(--c1, $red-color)) var(--x, 0)/ 200%;
+            padding: 5px 20px;
+            border-radius: 3px;
+            transition: all ease-in-out .5s;
+            border: 1px solid $primary-color;
+            color: $white-color;
+            &:hover{
+                --x: 100%;
+                border: 1px solid $secondary-color;
             }
         }
     }
     .ml-10{
         margin-right: 10px !important;
+    }
+    .copywrite{
+        text-align: center;
+        background: $primary-color;
+        width: 100%;
+        p{
+            margin-top: 50px;
+            padding: 5px 10px;
+        }
     }
 }
 
@@ -65,5 +86,14 @@ footer.footer{
     margin-bottom: 60px;
     background: url('assets/images/footer_bg.jpg');
 }
-
+@media(max-width:540px){
+    .email-box{
+        margin-top: 24px;
+    }
+    .copywrite{
+        p{
+            font-size: 15px;
+        }
+    }
+}
 }

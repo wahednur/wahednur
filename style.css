@@ -1819,7 +1819,6 @@ footer.footer {
   background-size: cover;
   position: relative;
   z-index: -2;
-  padding-bottom: 50px;
 }
 
 footer.footer::after {
@@ -1870,20 +1869,55 @@ footer.footer .email-box .input-control:focus {
 footer.footer .email-box .text-control {
   width: 100%;
   padding: 5px 10px;
+  margin-bottom: 24px;
 }
 
 footer.footer .email-box .text-control:focus {
   outline: none;
 }
 
+footer.footer .email-box .send-btn {
+  background: linear-gradient(45deg, var(--c1, #00C7BE), var(--c2, #AF52DE) 51%, var(--c1, #FF2D55)) var(--x, 0)/200%;
+  padding: 5px 20px;
+  border-radius: 3px;
+  transition: all ease-in-out .5s;
+  border: 1px solid #00C7BE;
+  color: #fff;
+}
+
+footer.footer .email-box .send-btn:hover {
+  --x: 100%;
+  border: 1px solid #AF52DE;
+}
+
 footer.footer .ml-10 {
   margin-right: 10px !important;
+}
+
+footer.footer .copywrite {
+  text-align: center;
+  background: #00C7BE;
+  width: 100%;
+}
+
+footer.footer .copywrite p {
+  margin-top: 50px;
+  padding: 5px 10px;
 }
 
 @media (max-width: 800px) {
   footer.footer {
     margin-bottom: 60px;
     background: url("assets/images/footer_bg.jpg");
+  }
+}
+
+@media (max-width: 800px) and (max-width: 540px) {
+  .email-box {
+    margin-top: 24px;
+  }
+  .copywrite p {
+    font-size: 15px;
   }
 }
 /*# sourceMappingURL=style.css.map */
