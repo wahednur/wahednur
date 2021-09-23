@@ -380,6 +380,9 @@ ul {
   .desktop-nav {
     display: none;
   }
+  .mobile-nav nav .mbl-nav {
+    height: 50px;
+  }
   .mobile-nav nav .mbl-nav__mbl-link {
     padding: 8px 14px;
     font-size: 16px;
