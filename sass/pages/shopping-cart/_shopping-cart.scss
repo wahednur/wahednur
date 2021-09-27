@@ -1,0 +1,166 @@
+/*Shopping cart CSS start */
+.shopping-cart{
+    margin-top: 50px;
+    margin-bottom: 50px;
+    .table{
+        border-collapse: collapse;
+        border-radius: 5px 5px 5px 5px;
+        overflow: hidden;
+        position: relative;
+        &::before{
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            border: 1px solid $primary-color;
+            border-radius: 5px;
+            
+        }
+        thead{
+            background: $primary-color;
+            color: $white-color;
+            tr {
+               
+                th{
+                    border-bottom: 0px !important;
+                }
+                .head-img{
+                    width: 60px;
+                    text-align: center;
+                    border-right: 1px solid $hover-color;
+                   
+                }
+                .head-title{
+                    border-right: 1px solid $hover-color;
+                }
+                .head-price{
+                    text-align: center;
+                    width: 100px;
+                }
+            }
+        }
+        tbody{
+            color: $text-color;
+            tr{
+                overflow: hidden;
+                color: $text-color;
+                vertical-align: middle;
+                border-bottom: 1px solid rgba($color: $hover-color, $alpha: 0.40);
+                &:last-of-type{
+                    border: none;
+                }
+                .pro-img{
+                    width: 60px;
+                    a{
+                        width: 100%;
+                        display: block;
+                        img{
+                            width: 100%;
+                        }
+                    }
+                }
+                .pro-title{
+                   .product-title{
+                        color: $text-color;
+                   }
+                }
+                .pro-price{
+                    .amount-group{
+                        text-align: right;
+                        margin-bottom: 0px;
+                        color: $black-color;
+                        .dis-price{
+                            margin-bottom: 0px;
+                            font-size: small;
+                            s{
+                                text-decoration: line-through;
+                                color: $gray-color;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .cart-total-wrap{
+        border: 1px solid $primary-color;
+        border-radius: 5px;
+        margin-bottom: 24px;
+        .card-total-title{
+            background: $primary-color;
+            color: $white-color;
+            padding: 5px 12px;
+            margin-bottom: 0px;
+        }
+        .total-price-group{
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            .price-text{
+                font-size: 18px;
+                font-weight: 700;
+                color: $text-color;
+                line-height: 25px;
+            }
+            .price-ammount{
+                font-weight: 700;
+                font-size: 20px;
+                color: $primary-color;
+            }
+            
+        }
+        .cart-btn{
+            background: $primary-color;
+            padding: 10px 20px;
+            text-align: center;
+            color: $white-color;
+            width: calc(100% - 24px);
+            display: block;
+            margin: 12px auto;
+            font-weight: bold;
+            border-radius: 5px;
+            &:hover{
+                background: $secondary-color;
+            }
+            
+        }
+    }
+    .input-group{
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        .input-contro{
+            width: calc(100% - 100px);
+            border-radius: 5px !important;
+            border: 1px solid $primary-color;
+            padding: 5px 12px;
+            transition: all ease-in-out .3s;
+            &:focus{
+                outline: none;
+            }
+            &:hover{
+                border-color: $secondary-color;
+            }
+        }
+        .coupon-btn{
+            background: $primary-color;
+            padding: 5px 20px;
+            border: 1px solid $secondary-color;
+            border-radius: 5px !important;
+            transition: all ease-in-out .3s;
+            color: $white-color;
+            &:hover{
+                background: $secondary-color;
+               
+            }
+        }
+    }
+}
+.table > :not(caption) > * > *{
+    border: none;
+}
+/*Shopping cart CSS start */

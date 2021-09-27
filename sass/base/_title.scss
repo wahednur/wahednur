@@ -20,6 +20,26 @@
     }
 }
 
+/* Header title CSS Start */
+.header-title{
+    width: 100%;
+    text-align: center;
+    display: block;
+    height: 100%;
+    background: linear-gradient(90deg, $red-color, $secondary-color);
+    padding: 20px 20px;
+    .title{
+        display: inline-block;
+        padding: 10px 20px;
+        border: 1px solid $white-color;
+        margin-bottom: 0px;
+        border-radius: 5px;
+        color: $white-color;
+        font-weight: 700;
+    }
+}
+/* Header title CSS end */
+
 @media(max-width:768px){
     .title-section{
         .title{

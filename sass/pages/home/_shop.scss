@@ -6,17 +6,17 @@
         display: grid;
         grid-template-columns: repeat(4, 1fr);
         grid-gap: 24px;
-        grid-template-rows: 512px 512px;
+        grid-template-rows: 395px 395px;
         .service-item{
             border: 1px solid $primary-color;
             border-radius: 5px;
-            height: 512px;
+            height: 394px;
             overflow: hidden;
             transition: all ease-in-out .5s;
             position: relative;
             background: $white-color;
             &:hover, &.active{
-                height: 625px;
+                height: 507px;
                 z-index: 5;
                 box-shadow: 0px 0px 15px rgba($color: #000000, $alpha: 0.50);
                 border: 1px solid $secondary-color;
@@ -44,8 +44,6 @@
                             object-fit: cover;
                             object-position: center top;
                             border-radius: 3px;
-                            width: 430px !important;
-                            height: 286px !important;
                             overflow: hidden;
                             opacity: 1;
                         }
@@ -291,7 +289,27 @@
         grid-gap: 24px;
         grid-template-rows: repeat(2, 1fr);
         .service-item{
-            height: 486px !important;
+            height: 450px !important;
+            &:nth-child(n + 3){
+            display: none !important;
+        }
+        }
+        }
+        
+        
+    }
+}
+@media(max-width:375px){
+    .sec-shop{
+    padding-bottom: 50px;
+    background-color: $white-color;
+    .service-shop{
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        grid-gap: 24px;
+        grid-template-rows: repeat(2, 1fr);
+        .service-item{
+            height: 427px !important;
             &:nth-child(n + 3){
             display: none !important;
         }

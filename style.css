@@ -460,6 +460,27 @@ ul {
   bottom: -10px;
 }
 
+/* Header title CSS Start */
+.header-title {
+  width: 100%;
+  text-align: center;
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #FF2D55, #AF52DE);
+  padding: 20px 20px;
+}
+
+.header-title .title {
+  display: inline-block;
+  padding: 10px 20px;
+  border: 1px solid #fff;
+  margin-bottom: 0px;
+  border-radius: 5px;
+  color: #fff;
+  font-weight: 700;
+}
+
+/* Header title CSS end */
 @media (max-width: 768px) {
   .title-section .title {
     font-size: 80px;
@@ -1258,13 +1279,13 @@ header .slider-bg .overlay .slider-content .text-content .center .scroll-action 
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-gap: 24px;
-  grid-template-rows: 512px 512px;
+  grid-template-rows: 395px 395px;
 }
 
 .sec-shop .service-shop .service-item {
   border: 1px solid #00C7BE;
   border-radius: 5px;
-  height: 512px;
+  height: 394px;
   overflow: hidden;
   transition: all ease-in-out .5s;
   position: relative;
@@ -1272,7 +1293,7 @@ header .slider-bg .overlay .slider-content .text-content .center .scroll-action 
 }
 
 .sec-shop .service-shop .service-item:hover, .sec-shop .service-shop .service-item.active {
-  height: 625px;
+  height: 507px;
   z-index: 5;
   box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
   border: 1px solid #AF52DE;
@@ -1305,8 +1326,6 @@ header .slider-bg .overlay .slider-content .text-content .center .scroll-action 
   object-fit: cover;
   object-position: center top;
   border-radius: 3px;
-  width: 430px !important;
-  height: 286px !important;
   overflow: hidden;
   opacity: 1;
 }
@@ -1556,7 +1575,26 @@ header .slider-bg .overlay .slider-content .text-content .center .scroll-action 
     grid-template-rows: repeat(2, 1fr);
   }
   .sec-shop .service-shop .service-item {
-    height: 486px !important;
+    height: 450px !important;
+  }
+  .sec-shop .service-shop .service-item:nth-child(n + 3) {
+    display: none !important;
+  }
+}
+
+@media (max-width: 375px) {
+  .sec-shop {
+    padding-bottom: 50px;
+    background-color: #fff;
+  }
+  .sec-shop .service-shop {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    grid-gap: 24px;
+    grid-template-rows: repeat(2, 1fr);
+  }
+  .sec-shop .service-shop .service-item {
+    height: 427px !important;
   }
   .sec-shop .service-shop .service-item:nth-child(n + 3) {
     display: none !important;
@@ -1743,6 +1781,192 @@ header .slider-bg .overlay .slider-content .text-content .center .scroll-action 
 /* Button CSS end */
 /*Animation Transition CSS start*/
 /*Animation Transition CSS end*/
+/*Shopping cart CSS start */
+.shopping-cart {
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+.shopping-cart .table {
+  border-collapse: collapse;
+  border-radius: 5px 5px 5px 5px;
+  overflow: hidden;
+  position: relative;
+}
+
+.shopping-cart .table::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  border: 1px solid #00C7BE;
+  border-radius: 5px;
+}
+
+.shopping-cart .table thead {
+  background: #00C7BE;
+  color: #fff;
+}
+
+.shopping-cart .table thead tr th {
+  border-bottom: 0px !important;
+}
+
+.shopping-cart .table thead tr .head-img {
+  width: 60px;
+  text-align: center;
+  border-right: 1px solid #52E1DA;
+}
+
+.shopping-cart .table thead tr .head-title {
+  border-right: 1px solid #52E1DA;
+}
+
+.shopping-cart .table thead tr .head-price {
+  text-align: center;
+  width: 100px;
+}
+
+.shopping-cart .table tbody {
+  color: #48484A;
+}
+
+.shopping-cart .table tbody tr {
+  overflow: hidden;
+  color: #48484A;
+  vertical-align: middle;
+  border-bottom: 1px solid rgba(82, 225, 218, 0.4);
+}
+
+.shopping-cart .table tbody tr:last-of-type {
+  border: none;
+}
+
+.shopping-cart .table tbody tr .pro-img {
+  width: 60px;
+}
+
+.shopping-cart .table tbody tr .pro-img a {
+  width: 100%;
+  display: block;
+}
+
+.shopping-cart .table tbody tr .pro-img a img {
+  width: 100%;
+}
+
+.shopping-cart .table tbody tr .pro-title .product-title {
+  color: #48484A;
+}
+
+.shopping-cart .table tbody tr .pro-price .amount-group {
+  text-align: right;
+  margin-bottom: 0px;
+  color: #1C1C1E;
+}
+
+.shopping-cart .table tbody tr .pro-price .amount-group .dis-price {
+  margin-bottom: 0px;
+  font-size: small;
+}
+
+.shopping-cart .table tbody tr .pro-price .amount-group .dis-price s {
+  text-decoration: line-through;
+  color: #8E8E93;
+}
+
+.shopping-cart .cart-total-wrap {
+  border: 1px solid #00C7BE;
+  border-radius: 5px;
+  margin-bottom: 24px;
+}
+
+.shopping-cart .cart-total-wrap .card-total-title {
+  background: #00C7BE;
+  color: #fff;
+  padding: 5px 12px;
+  margin-bottom: 0px;
+}
+
+.shopping-cart .cart-total-wrap .total-price-group {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+}
+
+.shopping-cart .cart-total-wrap .total-price-group .price-text {
+  font-size: 18px;
+  font-weight: 700;
+  color: #48484A;
+  line-height: 25px;
+}
+
+.shopping-cart .cart-total-wrap .total-price-group .price-ammount {
+  font-weight: 700;
+  font-size: 20px;
+  color: #00C7BE;
+}
+
+.shopping-cart .cart-total-wrap .cart-btn {
+  background: #00C7BE;
+  padding: 10px 20px;
+  text-align: center;
+  color: #fff;
+  width: calc(100% - 24px);
+  display: block;
+  margin: 12px auto;
+  font-weight: bold;
+  border-radius: 5px;
+}
+
+.shopping-cart .cart-total-wrap .cart-btn:hover {
+  background: #AF52DE;
+}
+
+.shopping-cart .input-group {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.shopping-cart .input-group .input-contro {
+  width: calc(100% - 100px);
+  border-radius: 5px !important;
+  border: 1px solid #00C7BE;
+  padding: 5px 12px;
+  transition: all ease-in-out .3s;
+}
+
+.shopping-cart .input-group .input-contro:focus {
+  outline: none;
+}
+
+.shopping-cart .input-group .input-contro:hover {
+  border-color: #AF52DE;
+}
+
+.shopping-cart .input-group .coupon-btn {
+  background: #00C7BE;
+  padding: 5px 20px;
+  border: 1px solid #AF52DE;
+  border-radius: 5px !important;
+  transition: all ease-in-out .3s;
+  color: #fff;
+}
+
+.shopping-cart .input-group .coupon-btn:hover {
+  background: #AF52DE;
+}
+
+.table > :not(caption) > * > * {
+  border: none;
+}
+
+/*Shopping cart CSS start */
 /* --------------------------  */
 /*Home Slider Responsive start*/
 /* iPad 768p */
