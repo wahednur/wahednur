@@ -109,7 +109,12 @@ p {
 .desk-nav a.active {
   @apply text-wahednur border-b border-wahednur;
 }
-
+.profile-nav a {
+  @apply flex items-center gap-1 py-2 hover:text-wahednur duration-300 hover:border-l-2 hover:border-wahednur px-4;
+}
+.profile-nav a.active {
+  @apply text-wahednur border-l-2 border-wahednur;
+}
 /* Navbar css end  */
 
 /* Button css start */

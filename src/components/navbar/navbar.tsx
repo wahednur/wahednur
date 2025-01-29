@@ -2,7 +2,16 @@
 import Link from "next/link";
 import React from "react";
 import { usePathname } from "next/navigation";
-import { BsSearch } from "react-icons/bs";
+import {
+  BsBell,
+  BsBoxes,
+  BsCurrencyDollar,
+  BsEnvelope,
+  BsGear,
+  BsPersonCircle,
+  BsSearch,
+  BsSpeedometer,
+} from "react-icons/bs";
 import Image from "next/image";
 export default function Navbar() {
   const pathname = usePathname();
@@ -68,6 +77,20 @@ export default function Navbar() {
               <Link className="btn" href={"/login"}>
                 Login
               </Link>
+              <div className="flex items-center text-xl gap-2">
+                <Link className="relative" href="/notification">
+                  <BsBell className="inline-block" />
+                  <span className="absolute -top-2 -right-1.5 text-xs bg-red-500 text-white rounded-full py-0.5 px-1.5">
+                    2
+                  </span>
+                </Link>
+                <Link className="relative" href="/message">
+                  <BsEnvelope className="inline-block" />
+                  <span className="absolute -top-2 -right-2.5 text-xs bg-red-500 text-white rounded-full py-0.5 px-1.5">
+                    2
+                  </span>
+                </Link>
+              </div>
               <div className="relative">
                 <Image src={`/wsadika.png`} width={40} height={40} alt="user" />
                 <div className="absolute top-14 right-0 w-[300px] bg-white border-primary/10 border rounded-lg overflow-hidden pb-6">
@@ -83,8 +106,28 @@ export default function Navbar() {
                       <small>wahednur@gamail.com</small>
                     </div>
                   </div>
-                  <div className="px-4">
-                    <Link href={`/dashboard`}>Dashboard</Link>
+                  <div className="flex flex-col profile-nav">
+                    <Link href={`/dashboard`}>
+                      <BsSpeedometer />
+                      Dashboard
+                    </Link>
+                    <Link href={"/profile"}>
+                      <BsPersonCircle /> Profile
+                    </Link>
+                    <Link href={"/profile"}>
+                      <BsBoxes /> Orders
+                    </Link>
+                    <hr />
+                    <Link href={"/settings"}>
+                      <BsGear /> Setting
+                    </Link>
+                    <Link href={"/billing"}>
+                      <BsCurrencyDollar /> Billing
+                    </Link>
+                    <hr />
+                    <div className="mt-4 pl-4">
+                      <button className="btn inline-block">Logout</button>
+                    </div>
                   </div>
                 </div>
               </div>
