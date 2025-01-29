@@ -1,0 +1,120 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lora:ital,wght@0,400..700;1,400..700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+
+@import "tailwindcss";
+
+@theme {
+  /* Aspect Ration variables */
+  --aspect-banner: 16/9;
+  --aspect-mobile: 9/16;
+  /* Color variables */
+  --color-wahednur: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-lightbg: var(--lightbg);
+  --color-dark: var(--dark);
+  --color-dark-text: var(--dark-text);
+  --color-hover: var(--hover);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+  --color-info: var(--info);
+  --color-active: var(--active);
+  --color-rose: var(--rose);
+  --color-error: var(--error);
+  --color-accent: var(--accent);
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+
+  /* Font variables */
+  --font-title: "Poppins", serif;
+  --font-subtitle: "montserrat", serif;
+  --font-section: "Raleway", serif;
+  --font-btn: "Roboto", serif;
+  --font-body: "Inter", serif;
+  --font-testimonial: "Lora", serif;
+}
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
+:root {
+  --primary: #2563eb;
+  --secondary: #1e40af;
+  --lightbg: #f9fafb;
+  --dark: #0b0b0b;
+  --dark-text: #333;
+  --hover: #5fa9e9;
+  --warning: #f39c12;
+  --danger: #e74c3c;
+  --success: #10b981;
+  --info: #3b82f6;
+  --active: #4178c0;
+  --rose: #e91e63;
+  --error: #ef4444;
+  --accent: #f59e0b;
+  --text-primary: #2c3e50;
+  --text-secondary: #7f8c8d;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+  }
+}
+
+body {
+  @apply font-body text-dark-text bg-secondary/5;
+}
+
+.container {
+  @apply mx-auto md:px-3 xl:px-0 max-w-[1440px];
+}
+
+/* Title css start  */
+.sec-title {
+  @apply text-5xl md:text-6xl xl:text-[80px] xl:leading-tight  font-black font-section;
+}
+.sec-sub-title {
+  @apply text-3xl md:text-5xl xl:text-[56px] xl:leading-tight font-extrabold font-section;
+}
+.title {
+  @apply text-xl md:text-2xl font-bold font-title;
+}
+.heading {
+  @apply text-3xl md:text-5xl font-bold font-title;
+}
+.sub-title {
+  @apply text-lg md:text-xl font-bold font-subtitle;
+}
+p {
+  @apply text-sm md:text-base font-body;
+}
+/* Title css end  */
+/* Navbar css start  */
+.desk-nav a {
+  @apply py-3 px-5 duration-300 font-medium hover:text-wahednur hover:border-b hover:border-wahednur;
+}
+.desk-nav a.active {
+  @apply text-wahednur border-b border-wahednur;
+}
+
+/* Navbar css end  */
+
+/* Button css start */
+.btn,
+a.btn {
+  @apply px-5 py-3 rounded-lg duration-300 font-medium text-white hover:text-white hover:bg-secondary bg-wahednur;
+}
+/* Button css end */
