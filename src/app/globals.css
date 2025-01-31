@@ -112,8 +112,33 @@ p {
 .profile-nav a {
   @apply flex items-center gap-1 py-2 hover:text-wahednur duration-300 hover:border-l-2 hover:border-wahednur px-4;
 }
+.nav-profile {
+  @apply absolute top-14  w-[300px] bg-white border-primary/10 border rounded-lg overflow-hidden pb-6;
+}
 .profile-nav a.active {
   @apply text-wahednur border-l-2 border-wahednur;
+}
+.mbl-nav {
+  @apply bg-dark-text fixed left-0 bottom-0 right-0 z-50  w-full lg:hidden;
+}
+.mbl-nav a,
+.mbl-nav button {
+  @apply text-lg px-6 py-[18px] text-white hover:bg-primary;
+}
+.mbl-nav a.active {
+  @apply bg-primary;
+}
+.mobile-nav li {
+  @apply w-full float-left;
+}
+.mobile-nav li a {
+  @apply w-full block py-2 text-dark-text hover:bg-primary hover:text-white duration-300;
+}
+.mobile-nav {
+  @apply absolute left-1/2 -z-10 -translate-x-1/2 right-auto duration-500  w-[300px] flex flex-col bg-white border-primary/10 border rounded-lg overflow-hidden;
+}
+.mobile-nav li a.active {
+  @apply bg-primary text-white;
 }
 /* Navbar css end  */
 
@@ -123,3 +148,11 @@ a.btn {
   @apply px-5 py-3 rounded-lg duration-300 font-medium text-white hover:text-white hover:bg-secondary bg-wahednur;
 }
 /* Button css end */
+/* Form css start */
+.frm-grp {
+  @apply flex flex-col gap-2 w-full;
+}
+.frm-ctr {
+  @apply w-full px-5 py-2 rounded-lg border border-primary/10 bg-gray-50 text-dark-text outline-0;
+}
+/* Form css end */

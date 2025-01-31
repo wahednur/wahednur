@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import {
   BsBell,
@@ -8,12 +8,21 @@ import {
   BsCurrencyDollar,
   BsEnvelope,
   BsGear,
+  BsHouse,
+  BsList,
   BsPersonCircle,
   BsSearch,
   BsSpeedometer,
 } from "react-icons/bs";
 import Image from "next/image";
 export default function Navbar() {
+  const [open, setOpen] = useState(false);
+  const [openMbl, setOpenMbl] = useState(false);
+
+  const menuRef = useRef<null | HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const menuRefMbl = useRef<null | HTMLDivElement>(null);
+  const buttonRefMbl = useRef<HTMLButtonElement | null>(null);
   const pathname = usePathname();
   const navList = (
     <>
@@ -64,9 +73,35 @@ export default function Navbar() {
       </li>
     </>
   );
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(target) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(target)
+      ) {
+        setOpen(false);
+      }
+      if (
+        menuRefMbl.current &&
+        !menuRefMbl.current.contains(target) &&
+        buttonRefMbl.current &&
+        !buttonRefMbl.current.contains(target)
+      ) {
+        setOpenMbl(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
   return (
-    <div className="h-16 border-b shadow-md sticky top-0 left-0 right-0 z-50">
-      <div className=" hidden lg:block">
+    <div>
+      <div className=" hidden lg:block border-b shadow-md sticky top-0 left-0 right-0 z-50">
         <div className="container">
           <nav className="flex items-center justify-between h-full">
             <ul className="desk-nav flex items-center h-16">{navList}</ul>
@@ -77,23 +112,39 @@ export default function Navbar() {
               <Link className="btn" href={"/login"}>
                 Login
               </Link>
-              <div className="flex items-center text-xl gap-2">
+              <div className="flex items-center text-xl gap-3">
                 <Link className="relative" href="/notification">
-                  <BsBell className="inline-block" />
-                  <span className="absolute -top-2 -right-1.5 text-xs bg-red-500 text-white rounded-full py-0.5 px-1.5">
+                  <BsBell className="inline-block hover:text-primary duration-300" />
+                  <span className="absolute -top-1 -right-2 text-[8px] bg-red-500 text-white rounded-full w-4 h-4 flex justify-center items-center">
                     2
                   </span>
                 </Link>
                 <Link className="relative" href="/message">
-                  <BsEnvelope className="inline-block" />
-                  <span className="absolute -top-2 -right-2.5 text-xs bg-red-500 text-white rounded-full py-0.5 px-1.5">
+                  <BsEnvelope className="inline-block hover:text-primary duration-300" />
+                  <span className="absolute -top-1 -right-2 text-[8px] bg-red-500 text-white rounded-full w-4 h-4 flex justify-center items-center">
                     2
                   </span>
                 </Link>
               </div>
               <div className="relative">
-                <Image src={`/wsadika.png`} width={40} height={40} alt="user" />
-                <div className="absolute top-14 right-0 w-[300px] bg-white border-primary/10 border rounded-lg overflow-hidden pb-6">
+                <button
+                  className="cursor-pointer"
+                  ref={buttonRef}
+                  onClick={() => setOpen(!open)}
+                >
+                  <Image
+                    src={`/wsadika.png`}
+                    width={40}
+                    height={40}
+                    alt="user"
+                  />
+                </button>
+                <div
+                  ref={menuRef}
+                  className={`nav-profile duration-500 transition-all ${
+                    open ? "right-0 " : "right-[-800px] translate-x-[800px]"
+                  }`}
+                >
                   <div className="bg-primary flex items-center gap-2 text-white py-3 px-4 mb-4">
                     <Image
                       src={`/wsadika.png`}
@@ -134,6 +185,41 @@ export default function Navbar() {
             </div>
           </nav>
         </div>
+      </div>
+      <div className="mbl-nav h-14">
+        <nav className="flex items-center justify-between w-full h-full relative">
+          <Link href="/" className={`${pathname === "/" ? "active" : ""}`}>
+            <BsHouse />
+          </Link>
+          <button ref={buttonRefMbl} onClick={() => setOpen(!open)}>
+            <BsList />
+          </button>
+          <Link href="">
+            <BsSearch />
+          </Link>
+
+          <Link href="/notification" className="relative">
+            <BsBell />
+            <span className="absolute top-2 right-3 text-[8px] bg-red-500 text-white rounded-full w-4 h-4 flex justify-center items-center">
+              2
+            </span>
+          </Link>
+          <Link href="/message" className="relative">
+            <BsEnvelope />
+            <span className="absolute top-2 right-3 text-[8px] bg-red-500 text-white rounded-full w-4 h-4 flex justify-center items-center">
+              2
+            </span>
+          </Link>
+          <Link href="/">
+            <Image src={`/wsadika.png`} width={40} height={40} alt="user" />
+          </Link>
+          <div
+            ref={menuRefMbl}
+            className={`mobile-nav ${open ? "bottom-16" : "translate-y-full"}`}
+          >
+            <ul>{navList}</ul>
+          </div>
+        </nav>
       </div>
     </div>
   );

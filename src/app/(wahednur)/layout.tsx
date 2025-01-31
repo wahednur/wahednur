@@ -14,14 +14,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <>
+    <div className="overflow-hidden">
       <header className="sticky top-0 left-0 right-0 z-50">
         <Header />
       </header>
-      <main className="lg:mt-10">{children}</main>
+      <main className="lg:mt-10 min-h-[calc(100vh-300px)]">{children}</main>
       <footer>
         <Footer />
       </footer>
-    </>
+    </div>
   );
 }
