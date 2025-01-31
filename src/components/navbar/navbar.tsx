@@ -191,7 +191,7 @@ export default function Navbar() {
           <Link href="/" className={`${pathname === "/" ? "active" : ""}`}>
             <BsHouse />
           </Link>
-          <button ref={buttonRefMbl} onClick={() => setOpen(!open)}>
+          <button ref={buttonRefMbl} onClick={() => setOpenMbl(!openMbl)}>
             <BsList />
           </button>
           <Link href="">
@@ -215,7 +215,9 @@ export default function Navbar() {
           </Link>
           <div
             ref={menuRefMbl}
-            className={`mobile-nav ${open ? "bottom-16" : "translate-y-full"}`}
+            className={`mobile-nav ${
+              openMbl ? "bottom-16" : "translate-y-full"
+            }`}
           >
             <ul>{navList}</ul>
           </div>
