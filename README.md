@@ -1,3 +1,5 @@
+![Homepage Screenshot](./public/cover.jpg)
+
 # 👋 Hi there! I'm **Abdul Wahed Nur**
 
 🎯 _Innovative MERN Developer | SaaS Visionary | Feature-Driven Problem Solver_
