@@ -15,10 +15,10 @@ export default function RootLayout({
 }>) {
   return (
     <div className="overflow-hidden">
-      <header className="sticky top-0 left-0 right-0 z-50">
+      <header className="sticky top-0  bg-white z-50">
         <Header />
       </header>
-      <main className="lg:mt-10 min-h-[calc(100vh-300px)]">{children}</main>
+      <main className=" min-h-[calc(100vh-300px)]">{children}</main>
       <footer>
         <Footer />
       </footer>

@@ -1,3 +1,4 @@
+import HomeSlider from "@/components/home/slider/home-slider";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -6,5 +7,9 @@ export const metadata: Metadata = {
     "Innovative MERN Developer | SaaS Visionary | Feature-Driven Problem Solver",
 };
 export default function Home() {
-  return <div className="container sec-title">Abdul Wahed Nur</div>;
+  return (
+    <div>
+      <HomeSlider />
+    </div>
+  );
 }

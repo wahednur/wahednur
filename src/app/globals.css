@@ -156,3 +156,6 @@ a.btn {
   @apply w-full px-5 py-2 rounded-lg border border-primary/10 bg-gray-50 text-dark-text outline-0;
 }
 /* Form css end */
+.link {
+  @apply text-wahednur hover:text-secondary duration-300;
+}
