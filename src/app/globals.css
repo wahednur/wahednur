@@ -159,3 +159,81 @@ a.btn {
 .link {
   @apply text-wahednur hover:text-secondary duration-300;
 }
+.btn-err {
+  @apply px-5 py-3 text-white font-bold rounded-lg;
+  background: linear-gradient(
+      90deg,
+      var(--c1, #ff5722),
+      var(--c2, #00bcd4) 50%,
+      var(--c1, #ff5722)
+    )
+    var(--x, 0) / 200%;
+  transition: all ease-in-out 0.5s;
+}
+.btn-err:hover {
+  --x: 100%;
+}
+.btn-submit {
+  @apply px-5 py-3 text-white font-bold rounded-lg;
+  background: linear-gradient(
+      90deg,
+      var(--c1, #00bcd4),
+      var(--c2, #ff5722) 50%,
+      var(--c1, #a900ff)
+    )
+    var(--x, 0) / 200%;
+  transition: all ease-in-out 0.5s;
+}
+.btn-submit:hover {
+  --x: 100%;
+}
+
+.btn-gdn {
+  @apply px-5 py-3 rounded-lg text-white font-bold flex items-center justify-center;
+  background: linear-gradient(
+      90deg,
+      var(--c1, #ff5722),
+      var(--c2, #00bcd4) 50%,
+      var(--c1, #a900ff)
+    )
+    var(--x, 0) / 200%;
+  transition: all ease-in-out 0.5s;
+}
+
+.btn-gdn:hover {
+  --x: 100%;
+}
+.btn-outline {
+  @apply rounded-lg text-white font-bold duration-500 delay-150 flex items-center justify-center;
+  background: linear-gradient(
+      45deg,
+      var(--c1, #00bcd4),
+      var(--c2, #a900ff) 50%,
+      var(--c1, #ff5722)
+    )
+    var(--x, 0) / 200%;
+  transition: all ease-in-out 0.5s;
+}
+.btn-outline:hover {
+  --x: 100%;
+}
+.sec-title-gap {
+  @apply mt-10 md:mt-14 xl:mt-20 mb-10;
+}
+.home-about .icon {
+  @apply bg-success w-10 h-10 p-1 rounded-full text-white text-lg flex items-center justify-center;
+}
+
+.frm-ctr-clr {
+  @apply border border-wahednur px-5 py-2 w-full outline-0 rounded-r-full;
+}
+.frm-grp-row {
+  @apply flex items-center;
+}
+.frm-grp-row .icon {
+  @apply bg-wahednur w-[42px] h-[42px]  text-white text-xl flex items-center justify-center;
+}
+
+.bg-dgn {
+  @apply bg-gradient-to-tl from-purple-500 to-rose-500;
+}

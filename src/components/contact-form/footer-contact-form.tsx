@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function ContactForm() {
+export default function ContactFormFooter() {
   return (
     <div className="w-full">
       <form>
@@ -27,9 +27,11 @@ export default function ContactForm() {
             placeholder="Subject*"
           />
           <textarea className="frm-ctr" name="message"></textarea>
-          <button className="btn" type="submit">
-            Send Message
-          </button>
+          <div className="w-full text-center">
+            <button className="btn" type="submit">
+              Send Message
+            </button>
+          </div>
         </div>
       </form>
     </div>
