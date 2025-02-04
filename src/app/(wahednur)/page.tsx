@@ -91,7 +91,7 @@ export default function Home() {
               <div className="flex items-center gap-4 mt-8 relative border border-wahednur rounded-lg p-6 bg-wahednur text-white">
                 <button onClick={() => setOpen(!open)} className="btn-gdn">
                   Get in Touch
-                </button>{" "}
+                </button>
                 <h4 className="title"> I’d Love to Hear From You!</h4>
                 <div
                   className={`absolute duration-500 transition-all bottom-16 ${
@@ -101,7 +101,45 @@ export default function Home() {
                   <ContactForm setOpen={setOpen} />
                 </div>
               </div>
-              <div></div>
+              <div className="mt-8 bg-white p-6 rounded-lg border ">
+                <h4 className="sub-title mb-4">
+                  🚀 Using Modern Technology to Build Next-Gen Web Apps
+                </h4>
+                <table className="table-auto w-full ctbl rounded-2xl overflow-hidden">
+                  <thead className="bg-gray-300 w-full">
+                    <tr className=" w-full grid grid-cols-4">
+                      <th className="border-r border-r-white">Frontend</th>
+                      <th className="border-r border-r-white">Backend</th>
+                      <th className="border-r border-r-white">
+                        Authentication
+                      </th>
+                      <th>Deployment</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className=" grid grid-cols-4 w-full">
+                      <td>React</td>
+                      <td>Node.js</td>
+                      <td>JWT</td>
+                      <td className="border-r border-gray-300 ">Vercel</td>
+                    </tr>
+                    <tr className=" grid grid-cols-4 w-full">
+                      <td>Next.js</td>
+                      <td>Express.js</td>
+                      <td>Firebase Auth</td>
+                      <td className="border-r border-gray-300 ">Netlify</td>
+                    </tr>
+                    <tr className=" grid grid-cols-4 w-full">
+                      <td className="rounded-bl-2xl">Tailwind CSS</td>
+                      <td>MongoDB</td>
+                      <td>OAuth</td>
+                      <td className="border-r border-gray-300 rounded-br-2xl">
+                        Cloudinary
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>

@@ -54,13 +54,15 @@ export default function ContactForm({ setOpen }: ContactFormProps) {
             required
           />
         </div>
-        <div className="frm-grp-row mb-5">
-          <span className="icon min-h-full">
+        <div className="frm-grp-row mb-5 relative">
+          <span className="icon min-h-full absolute left-0 top-0">
             <BsChatRightText />
           </span>
           <textarea
-            className="w-full rounded-r-4xl border border-wahednur px-5 py-2 outline-0 "
+            className="w-full ml-10 rounded-r-4xl border border-wahednur text-secondary px-5 py-2 outline-0 "
             name="message"
+            rows={6}
+            placeholder="Your Message*"
           ></textarea>
         </div>
         <div className="text-center w-full flex justify-center items-center ">

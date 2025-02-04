@@ -225,7 +225,7 @@ a.btn {
 }
 
 .frm-ctr-clr {
-  @apply border border-wahednur px-5 py-2 w-full outline-0 rounded-r-full;
+  @apply border border-wahednur px-5 py-2 text-secondary w-full outline-0 rounded-r-full;
 }
 .frm-grp-row {
   @apply flex items-center;
@@ -236,4 +236,16 @@ a.btn {
 
 .bg-dgn {
   @apply bg-gradient-to-tl from-purple-500 to-rose-500;
+}
+.ctbl td {
+  @apply border border-l border-b border-r-0 border-t-0 border-gray-300  w-full px-3 py-3;
+}
+.ctbl th {
+  @apply px-3 py-3;
+}
+.ctbl tr {
+  @apply border-r border-gray-300;
+}
+.mt {
+  @apply mt-10 md:mt-14 xl:mt-24;
 }

@@ -5,7 +5,7 @@ import ContactForm from "../contact-form/footer-contact-form";
 
 export default function Footer() {
   return (
-    <div className="bg-[url('/footer.jpg')] bg-cover bg-center w-full">
+    <div className="bg-[url('/footer.jpg')] bg-cover bg-center w-full mt">
       <div className="container">
         <h1 className="sec-title text-center text-wahednur pt-10">
           Contact me

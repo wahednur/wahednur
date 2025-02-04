@@ -4,7 +4,10 @@ import { Metadata } from "next";
 import React from "react";
 
 export const metadata: Metadata = {
-  title: "Wahed Nur | Full stack developer",
+  title: {
+    template: "%s | Full stack developer",
+    default: "Full stack developer",
+  },
   description:
     "Innovative MERN Developer | SaaS Visionary | Feature-Driven Problem Solver",
 };
