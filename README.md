@@ -1,55 +1,95 @@
 ![Homepage Screenshot](./public/cover.jpg)
 
-# 👋 Hi there! I'm **Abdul Wahed Nur**
+# 👋 Hi there, I'm Abdul Wahed Nur (Wahed)
 
-🎯 _Innovative MERN Developer | SaaS Visionary | Feature-Driven Problem Solver_
-
----
-
-## 🌟 **About Me**
-
-I am a passionate developer dedicated to creating modern, user-centric, and scalable web applications. With expertise in the **MERN stack**, I focus on delivering high-quality solutions that drive business success.
-
-🔹 **Current Focus**: Developing SaaS platforms and exploring cutting-edge technologies.  
-🔹 **Interests**: Web Development, Cloud Solutions, and Entrepreneurship.  
-🔹 **Goal**: Helping businesses transform ideas into impactful digital solutions.
+🎯 Full Stack MERN Developer | SaaS & Web App Strategist | Former VFX Artist  
+💡 Bridging 10+ years of creative experience with modern software development.
 
 ---
 
-## 🛠️ **Skills & Technologies**
+## 🧠 About Me
 
-- **Frontend**: React.js, Tailwind CSS, HTML5, CSS3
-- **Backend**: Node.js, Express.js, MongoDB
-- **Authentication**: Firebase, JWT
-- **Version Control**: Git & GitHub
-- **Cloud & Hosting**: Firebase, Cloudinary
+With over a **decade of experience in animation, motion graphics, and VFX**, I bring a unique creative mindset into the world of **full-stack web development**.  
+Today, I focus on building robust **SaaS platforms**, **eCommerce solutions**, and **enterprise-level dashboards** that are not only technically sound but deeply aligned with real-world business needs.
 
----
+🔍 I specialize in identifying:
+- What features your business *actually* needs
+- How workflows can be optimized
+- Which hidden features increase **conversion, retention, and ROI**
 
-## 🚀 **Portfolio Highlights**
-
-- **[Car Doctor](https://github.com/wahednur/car-doctor)**: A full-stack automotive service platform.
-- **[Ekhaneikini](https://github.com/wahednur/ekhaneikini)**: A feature-rich e-commerce platform.
-- **[Wahed VFX Projects](https://github.com/wahednur/vfx-projects)**: Innovative visual effects showcase.
-
-Explore more projects in my **[GitHub Repositories](https://github.com/wahednur?tab=repositories)**.
+I don't just build apps — I help build **products that scale**.
 
 ---
 
-## 📊 **GitHub Stats**
+## 🚀 Tech Stack & Tools
 
-![Your GitHub stats](https://github-readme-stats.vercel.app/api?username=wahednur&show_icons=true&theme=radical)  
-![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=wahednur&layout=compact&theme=radical)
+**Frontend:**
+- React.js (React 19)
+- Next.js (learning)
+- Tailwind CSS
+- Axios, React Router DOM
+
+**Backend:**
+- Node.js
+- Express.js
+- MongoDB
+- Firebase Auth
+- JWT Auth
+
+**Integrations:**
+- Stripe Payments (One-time & Subscription)
+- Cloudinary (Free Tier)
+- Firebase (Hosting & Auth)
+
+**Other:**
+- Git & GitHub
+- Postman
+- Vercel / Netlify
+- VS Code
+- Animation Software (After Effects, Premiere Pro, etc.)
 
 ---
 
-## 🤝 **Connect with Me**
+## 📦 Projects & Interests
 
-🌐 **Website**: [wahednur.com](https://wahednur.com)  
-📧 **Email**: [wahednur@gmail.com](mailto:wahednur@gmail.com)
-📧 **Email**: [contact@wahednur.com](mailto:contact@wahednur.com)
-💼 **LinkedIn**: [linkedin.com/in/wahednur](https://linkedin.com/in/wahednur)
+### 🔧 Recent Projects:
+- `Car Doctor` – Auth-based car servicing app with admin dashboard
+- `Job Portal` – Role-based user system for job seekers & providers
+- `Apartment Manager` – Relational DB (MongoDB) with service & rent tracking
+- `Home Service Platform` – Similar to Sheba.xyz with vendor & service logic
+
+### 📌 Currently Working On:
+- Personal Portfolio Website with:
+  - Service Booking & Support System
+  - Stripe Payment Gateway
+  - Monthly Subscription Support
+- SaaS Dashboard Templates
+- Building E-commerce ERP modules (B2B, B2C, Inventory, HRM)
 
 ---
+
+## 🎨 My Background in Creative Industry
+
+Before diving into full-time development, I was a **professional VFX artist & commercial animator**. I’ve worked on:
+- Commercial Ads
+- Branding Videos
+- High-End Motion Graphics
+- 3D/2D Visual Effects
+
+This background gives me an edge in designing **visually impactful interfaces** and thinking **beyond code** to deliver smooth, immersive user experiences.
+
+---
+
+## 📫 Let's Connect
+
+- 💼 LinkedIn: [linkedin.com/in/wahednur](https://linkedin.com/in/wahednur)
+- 🖥️ Portfolio: Coming Soon...
+- 📧 Email: wahednur@gmail.com
+- 🌐 GitHub: [github.com/wahednur](https://github.com/wahednur)
+
+---
+
+> 🔄 “From visuals to logic — I turn creative ideas into working, scalable apps.”
+
 
 ### ✨ Let's Build Something Great Together!
