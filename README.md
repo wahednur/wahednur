@@ -26,10 +26,11 @@ I don't just build apps — I help build **products that scale**.
 
 **Frontend:**
 
+- Next.js
 - React.js (React 19)
-- Next.js (learning)
 - Tailwind CSS
 - Axios, React Router DOM
+- TypeScript
 
 **Backend:**
 
@@ -39,11 +40,18 @@ I don't just build apps — I help build **products that scale**.
 - Firebase Auth
 - JWT Auth
 
+**Databases:**
+
+- MongoDB
+- PostgreSQL
+- MySQL
+
 **Integrations:**
 
 - Stripe Payments (One-time & Subscription)
 - Cloudinary (Free Tier)
 - Firebase (Hosting & Auth)
+- SSLCommerz
 
 **Other:**
 
