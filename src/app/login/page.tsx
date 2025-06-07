@@ -1,12 +1,11 @@
-"use client";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-// app/login/page.tsx
-import type { Metadata } from "next";
+import { Metadata } from "next";
+
+import OAuthProviders from "@/components/auth/OAuthProviders";
+import Link from "next/link";
+import LoginForm from "./LoginForm";
 
 export const metadata: Metadata = {
-  title: "Login | User Authentication",
+  title: "Login | Login you account",
   description:
     "Login to your account to access services and products securely.",
   keywords: ["login", "authentication", "user login", "WS Auth"],
@@ -14,49 +13,44 @@ export const metadata: Metadata = {
 };
 
 export default function LoginPage() {
-  const [form, setForm] = useState({ email: "", password: "" });
-  const [error, setError] = useState("");
-  const router = useRouter();
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const res = await signIn("credentials", {
-      redirect: false,
-      email: form.email,
-      password: form.password,
-    });
-
-    if (res?.ok) {
-      router.push("/dashboard");
-    } else {
-      setError("Invalid credentials");
-    }
-  };
-
   return (
     <div className="vh-height flex justify-center items-center flex-col">
-      <div className="mb-10">
-        <h1 className="heading">User Login</h1>
+      <div className="w-full md:w-lg border border-ws-primary/30 shadow-xl bg-white/30 p-10 rounded-2xl backdrop-blur-sm">
+        <div className="mb-10">
+          <h2 className="text-2xl font-bold text-ws-heading">
+            Sign in to your account
+          </h2>
+          <p className="text-sm text-ws-text mt-2">
+            We’re glad to see you again — continue where you left off.
+          </p>
+        </div>
+        <LoginForm />
+        <div>
+          <div className="flex justify-center items-center my-5 text-gray-400">
+            <span className="flex-1">
+              <hr />
+            </span>
+            <span className="px-3 text-ws-text">or</span>
+            <span className="flex-1">
+              <hr />
+            </span>
+          </div>
+          <p className="text-sm -mt-5 text-center">Sign in with</p>
+        </div>
+        <div className="mt-5">
+          <OAuthProviders />
+        </div>
+
+        <p className="text-sm text-gray-600 mt-5">
+          Don’t have an account yet?{" "}
+          <Link
+            href="/register"
+            className="text-ws-primary hover:underline font-medium"
+          >
+            Create one now
+          </Link>
+        </p>
       </div>
-      <form onSubmit={handleSubmit} className="space-y-4 max-w-md mx-auto">
-        <input
-          name="email"
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
-          placeholder="Email"
-          className="w-full border p-2 rounded"
-        />
-        <input
-          name="password"
-          type="password"
-          onChange={(e) => setForm({ ...form, password: e.target.value })}
-          placeholder="Password"
-          className="w-full border p-2 rounded"
-        />
-        {error && <p className="text-red-500">{error}</p>}
-        <button type="submit" className="btn btn-filled">
-          Login
-        </button>
-      </form>
     </div>
   );
 }

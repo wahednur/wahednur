@@ -37,7 +37,7 @@
 /* Navbar css end  */
 
 body {
-  @apply font-inter;
+  @apply font-inter bg-gray-100;
 }
 
 /* Title and heading css start  */

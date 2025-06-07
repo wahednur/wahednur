@@ -1,3 +1,4 @@
+import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { HiOutlineShoppingBag } from "react-icons/hi2";
 export default function UserNav() {
@@ -9,6 +10,9 @@ export default function UserNav() {
       <Link href={"/login"} className="link">
         Login
       </Link>
+      <button className="btn btn-filled" onClick={() => signOut()}>
+        Sign Out
+      </button>
     </div>
   );
 }
