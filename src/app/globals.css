@@ -1,0 +1,93 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ws-primary: var(--color-ws-primary);
+  --color-ws-secondary: var(--color-ws-secondary);
+  --color-ws-heading: var(--color-ws-heading);
+  --color-ws-text: var(--color-ws-text);
+  --color-ws-success: var(--color-ws-success);
+  --color-ws-warning: var(--color-ws-warning);
+  --color-ws-error: var(--color-ws-error);
+
+  --font-inter: var(--font-inter);
+  --font-title: var(--font-title);
+  --font-quote: var(--font-quote);
+}
+
+:root {
+  --color-ws-primary: #0d9488;
+  --color-ws-secondary: #2dd4bf;
+  --color-ws-heading: #0f172a;
+  --color-ws-text: #334155;
+  --color-ws-success: #22c55e;
+  --color-ws-warning: #facc15;
+  --color-ws-error: #ef4444;
+  --font-inter: "Inter", sans-serif;
+  --font-title: "Poppins", sans-serif;
+  --font-quote: "Lora", serif;
+}
+
+/* Navbar css start  */
+.desk-nav {
+  @apply hidden lg:block;
+}
+.mbl-nav {
+  @apply lg:hidden;
+}
+/* Navbar css end  */
+
+body {
+  @apply font-inter;
+}
+
+/* Title and heading css start  */
+h1,
+h2,
+h3,
+h4,
+h5 {
+  @apply font-title;
+}
+.sec-heading {
+  @apply text-4xl lg:text-6xl xl:text-8xl;
+}
+.heading {
+  @apply text-3xl lg:text-4xl xl:text-5xl font-bold mb-4;
+}
+.title {
+  @apply text-xl lg:text-2xl font-bold mb-2;
+}
+.card-title {
+  @apply text-lg lg:text-xl;
+}
+/* Title and heading css end  */
+
+/* Navbar css start  */
+/* Desktop Nav */
+.desk-nav ul li a {
+  @apply px-3 py-4 hover:text-ws-primary duration-300  hover:border-b-2 hover:border-b-ws-primary;
+}
+.desk-nav ul li a.active {
+  @apply text-ws-primary border-b-2 border-b-ws-primary;
+}
+/* Navbar css end  */
+.vh-height {
+  @apply min-h-[calc(100vh-300px)];
+}
+
+/* Global CSS start  */
+.container {
+  @apply mx-auto;
+}
+.link {
+  @apply duration-300 hover:text-ws-primary;
+}
+
+/* Button  */
+.btn {
+  @apply px-4 py-2 rounded flex justify-center items-center;
+}
+.btn-filled {
+  @apply bg-ws-primary text-white hover:bg-ws-secondary duration-300 cursor-pointer;
+}
+/* Global CSS end  */
