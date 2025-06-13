@@ -1,0 +1,163 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ws-primary: var(--color-ws-primary);
+  --color-ws-secondary: var(--color-ws-secondary);
+  --color-ws-heading: var(--color-ws-heading);
+  --color-ws-text: var(--color-ws-text);
+  --color-ws-success: var(--color-ws-success);
+  --color-ws-warning: var(--color-ws-warning);
+  --color-ws-error: var(--color-ws-error);
+
+  --font-inter: var(--font-inter);
+  --font-title: var(--font-title);
+  --font-quote: var(--font-quote);
+
+  --aspect-slider: 1920/1032;
+  --aspect-mbl: 9/16;
+}
+
+:root {
+  --color-ws-primary: #0d9488;
+  --color-ws-secondary: #2dd4bf;
+  --color-ws-heading: #0f172a;
+  --color-ws-text: #334155;
+  --color-ws-success: #22c55e;
+  --color-ws-warning: #facc15;
+  --color-ws-error: #ef4444;
+  --font-inter: "Inter", sans-serif;
+  --font-title: "Poppins", sans-serif;
+  --font-quote: "Lora", serif;
+}
+
+/* Navbar css start  */
+.desk-nav {
+  @apply hidden lg:block border-b border-b-ws-primary/30 shadow-lg;
+}
+.mbl-nav {
+  @apply lg:hidden;
+}
+/* Navbar css end  */
+
+body {
+  @apply font-inter bg-gray-100;
+}
+
+/* Title and heading css start  */
+h1,
+h2,
+h3,
+h4,
+h5 {
+  @apply font-title;
+}
+.sec-heading {
+  @apply text-4xl lg:text-6xl xl:text-8xl;
+}
+.heading {
+  @apply text-3xl lg:text-4xl xl:text-5xl font-bold mb-4;
+}
+.title {
+  @apply text-xl lg:text-2xl font-bold mb-2;
+}
+.card-title {
+  @apply text-lg lg:text-xl;
+}
+/* Title and heading css end  */
+
+/* Navbar css start  */
+/* Desktop Nav */
+.desk-nav ul li a {
+  @apply px-3 py-3.5 hover:text-ws-primary duration-300  hover:border-b-2 hover:border-b-ws-primary;
+}
+.desk-nav ul li a.active {
+  @apply text-ws-primary border-b-2 border-b-ws-primary;
+}
+.user-btn {
+  @apply bg-ws-primary font-bold rounded-full cursor-pointer duration-300 hover:bg-gray-900 text-white w-10 h-10 flex justify-center items-center;
+}
+.dash-user-nav a,
+.mbl-nav a {
+  @apply duration-300 hover:text-ws-primary;
+}
+.dash-user-nav a.active,
+.mbl-nav a.active {
+  @apply text-ws-primary;
+}
+.mbl-nav a {
+  @apply py-2 w-full block;
+}
+
+.mbl-nav {
+}
+/* Navbar css end  */
+.vh-height {
+  @apply min-h-[calc(100vh-330px)];
+}
+.user-d-nav {
+  @apply w-[280px] absolute top-11 z-50 bg-white p-5 rounded-md;
+}
+/* Global CSS start  */
+.container {
+  @apply mx-auto;
+}
+.link {
+  @apply duration-300 hover:text-ws-primary;
+}
+.frm-ctr {
+  @apply px-3 py-2 rounded mb-5 bg-blue-100/50 outline-ws-secondary/30 w-full;
+}
+.slider-h {
+  @apply min-h-[calc(100vh-150px)];
+}
+
+/* Button  */
+.btn {
+  @apply px-4 py-2 rounded flex justify-center items-center font-bold;
+}
+.btn-filled {
+  @apply bg-ws-primary text-white hover:bg-ws-secondary duration-300 cursor-pointer;
+}
+.btn-outline {
+  @apply border border-ws-primary text-ws-primary hover:text-white hover:bg-ws-primary duration-300;
+}
+.btn-slider {
+  @apply border border-ws-primary hover:bg-ws-primary duration-300 text-white bg-black/20;
+}
+.btn-glass {
+  border-radius: 2322.585px;
+  border: 1px solid #f2f2f2;
+  background: rgba(214, 214, 214, 0.3);
+  box-shadow: 0px 1006.686px 281.314px 0px rgba(0, 0, 0, 0),
+    0px 644px 258.065px 0px rgba(0, 0, 0, 0.01),
+    0px 362.686px 218.542px 0px rgba(0, 0, 0, 0.05),
+    0px 160.419px 160.419px 0px rgba(0, 0, 0, 0.09),
+    0px 39.523px 88.347px 0px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(20.92418670654297px);
+  @apply px-8 hover:bg-gray-100/70 duration-300;
+}
+.column {
+  @apply flex flex-col gap-1;
+}
+/* Global CSS end  */
+
+/* Dashboard css start  */
+.sidebar-nav {
+  @apply text-white/70;
+}
+.menu-item-header {
+  @apply flex justify-between duration-300;
+}
+.submenu {
+  @apply bg-gray-700 duration-300;
+}
+span.menu-title {
+  @apply flex-1 text-left;
+}
+.menu-item {
+  @apply duration-300 cursor-pointer hover:bg-ws-primary/30 py-2;
+}
+.menu-item.active {
+  @apply bg-ws-secondary/30 text-white duration-500 transition-all;
+}
+/* Dashboard css end  */
