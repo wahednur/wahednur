@@ -8,26 +8,30 @@ import { HiOutlineShoppingBag } from "react-icons/hi2";
 export default function UserNav() {
   const { data: session } = useSession();
   const [open, setOpen] = useState(false);
-  const menuRef = useRef(null);
-  const buttonRef = useRef(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
   const p = usePathname();
 
   // setOpen(false) ousite click
   useEffect(() => {
-    const handleClickOutside = (event) => {
+    const handleClickOutside = (event: MouseEvent) => {
       if (
         menuRef.current &&
-        !menuRef.current.contains(event.target) &&
-        !buttonRef.current.contains(event.target)
+        !menuRef.current.contains(event.target as Node) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(event.target as Node)
       ) {
         setOpen(false);
       }
     };
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
   return (
     <div className="flex items-center gap-3 relative ">
       <button className="text-xl">
