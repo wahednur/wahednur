@@ -2,6 +2,7 @@ import Banner from "@/components/banners/banner";
 import HomeAbout from "@/components/home/HoemAbout";
 import defaultMetadata from "@/lib/seo";
 import { Metadata } from "next";
+import JobServicesSection from "../../components/services/JobServicesSection";
 import MySkills from "../../components/skills/MySkills";
 
 export function generateMetadata(): Metadata {
@@ -34,6 +35,11 @@ export default function Home() {
       </div>
       <div className="container py-10 lg:py-20">
         <MySkills />
+      </div>
+      <div className="bg-gray-200">
+        <div className="container py-10 lg:py-20">
+          <JobServicesSection />
+        </div>
       </div>
     </div>
   );
