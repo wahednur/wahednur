@@ -1,0 +1,35 @@
+[
+  {
+    "frontend": [
+      { "name": "React", "logo": "/tech-icon/react-icon.svg" },
+      { "name": "Next.js", "logo": "/tech-icon/nextjs-icon.svg" },
+      { "name": "TypeScript", "logo": "/tech-icon/typescript-icon.svg" },
+      { "name": "Tailwind CSS", "logo": "/tech-icon/tailwind-icon.svg" },
+      { "name": "Redux Toolkit", "logo": "/tech-icon/redux-icon.svg" },
+      { "name": "HTML5", "logo": "/tech-icon/html5-icon.svg" },
+      { "name": "CSS3", "logo": "/tech-icon/css3-icon.svg" },
+      { "name": "JavaScript (ES6+)", "logo": "/tech-icon/javascript-icon.svg" }
+    ]
+  },
+  {
+    "backend": [
+      { "name": "Node.js", "logo": "/tech-icon/nodejs-icon.svg" },
+      { "name": "Express.js", "logo": "/tech-icon/express-icon.svg" },
+      { "name": "MongoDB", "logo": "/tech-icon/mongodb-icon.svg" },
+      { "name": "Mongoose", "logo": "/tech-icon/mongoose-icon.svg" },
+      { "name": "NextAuth.js", "logo": "/tech-icon/nextauth-icon.png" },
+      { "name": "Zod Validation", "logo": "/tech-icon/zod-icon.svg" },
+      { "name": "JWT Auth", "logo": "/tech-icon/jwt-icon.svg" }
+    ]
+  },
+  {
+    "others": [
+      { "name": "Git", "logo": "/tech-icon/git-icon.svg" },
+      { "name": "GitHub", "logo": "/tech-icon/github-icon.svg" },
+      { "name": "Vercel", "logo": "/tech-icon/vercel-icon.svg" },
+      { "name": "Cloudinary", "logo": "/tech-icon/cloudinary-icon.svg" },
+      { "name": "Figma (UI Design)", "logo": "/tech-icon/figma-icon.svg" },
+      { "name": "Linux Basics", "logo": "/tech-icon/linux-icon.svg" }
+    ]
+  }
+]
