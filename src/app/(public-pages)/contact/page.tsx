@@ -19,7 +19,7 @@ export default function ContactPage() {
   return (
     <div className="vh-height bg-gray-50 py-20 px-4">
       <div className="container">
-        <div className="flex justify-between gap-10">
+        <div className="flex flex-col md:flex-row justify-between gap-10">
           <div className="w-full md:w-1/2">
             <div className="space-y-6">
               <h2 className="text-3xl font-bold text-gray-800">
