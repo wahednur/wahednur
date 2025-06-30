@@ -50,14 +50,14 @@ export default function MySkills() {
                 {items.map((item, i) => (
                   <div
                     key={i}
-                    className="flex items-center gap-2 rounded-md shadow-md bg-ws-primary hover:bg-gray-800 duration-300 text-white overflow-hidden hover:shadow-md"
+                    className="flex group items-center gap-2 rounded-md shadow-md bg-ws-primary hover:bg-gray-800 duration-300 text-white overflow-hidden hover:shadow-md"
                   >
                     <Image
                       src={item.logo}
                       alt={item.name}
                       width={24}
                       height={24}
-                      className="w-16 h-16 p-3 bg-white"
+                      className="w-16 h-16 p-3 duration-300 bg-white group-hover:bg-amber-300 "
                     />
                     <span>{item.name}</span>
                   </div>
