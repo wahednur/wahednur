@@ -12,7 +12,7 @@ export default function HomeAbout() {
       id="about"
       className="bg-white py-20 px-6 text-gray-800"
     >
-      <div className="max-w-4xl mx-auto text-center space-y-6">
+      <div className="max-w-4xl mx-auto space-y-6">
         <motion.h2
           initial={{ y: 60, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -25,24 +25,35 @@ export default function HomeAbout() {
           initial={{ y: 60, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-lg leading-relaxed text-gray-700"
+          className="text-lg leading-relaxed text-justify text-gray-700"
         >
-          I&apos;m{" "}
-          <span className="font-semibold text-gray-900">Abul Wahed Nur</span>, a
-          passionate{" "}
-          <span className="text-primary">Full Stack MERN Developer</span> and
-          <span className="text-primary"> Web App Consultant</span>. I help
-          startups, small businesses, and creators build scalable SaaS platforms
-          and modern web applications that solve real-world problems — from
-          secure authentication to sleek UI/UX.
+          I&apos;m a Full Stack JavaScript Developer with over 6 years of
+          real-world experience working across frontend, backend, and production
+          systems. My journey began back in 2008, building desktop and web-based
+          applications, and over time I&apos;ve delivered digital solutions for
+          organizations like{" "}
+          <span className="text-ws-primary font-bold">BRAC, UNDP, Oxfam</span>,
+          and several local businesses. From designing interactive dashboards
+          and role-based admin panels, to implementing secure authentication
+          flows, to integrating scalable backend APIs — I&apos;ve worn many hats
+          and solved real problems that impacted real users. While I&apos;ve
+          worked on multiple client projects and SaaS systems (including a
+          restaurant management platform and building management system),
+          I&apos;ve rarely had the luxury to pause and polish my personal
+          portfolio. My focus has always been on delivering value where
+          it&apos;s needed — in production, for clients, on deadlines. This
+          space is a work in progress, just like the best of us. I'm currently
+          organizing my past projects and code samples — so stay tuned or feel
+          free to reach out if you'd like to learn more about what I&apos;ve
+          built and delivered behind the scenes.
         </motion.p>
         <motion.p
           initial={{ y: 60, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="text-base text-gray-600"
+          className="font-semibold text-gray-600"
         >
-          Let’s build something smart, fast, and impactful — together.
+          Let&apos;s build something smart, fast, and impactful — together.
         </motion.p>
         <motion.div
           initial={{ y: 60, opacity: 0 }}
