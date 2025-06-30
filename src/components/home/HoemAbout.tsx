@@ -42,10 +42,10 @@ export default function HomeAbout() {
           I&apos;ve rarely had the luxury to pause and polish my personal
           portfolio. My focus has always been on delivering value where
           it&apos;s needed — in production, for clients, on deadlines. This
-          space is a work in progress, just like the best of us. I'm currently
-          organizing my past projects and code samples — so stay tuned or feel
-          free to reach out if you'd like to learn more about what I&apos;ve
-          built and delivered behind the scenes.
+          space is a work in progress, just like the best of us. I&apos;m
+          currently organizing my past projects and code samples — so stay tuned
+          or feel free to reach out if you&apos;d like to learn more about what
+          I&apos;ve built and delivered behind the scenes.
         </motion.p>
         <motion.p
           initial={{ y: 60, opacity: 0 }}
