@@ -1,7 +1,7 @@
 "use client";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function SignInPage() {
   const [email, setEmail] = useState("");
@@ -10,6 +10,12 @@ export default function SignInPage() {
   const router = useRouter();
 
   const { status } = useSession();
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      router.push("/");
+    }
+  }, [router, status]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,7 +33,7 @@ export default function SignInPage() {
       router.push("/");
     }
   };
-  if (status === "authenticated") return router.push("/");
+  if (status === "authenticated") return null;
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-lg shadow">
