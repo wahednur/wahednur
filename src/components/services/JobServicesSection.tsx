@@ -5,7 +5,7 @@ const services = [
   },
   {
     title: "Backend Development",
-    desc: "Node.js, Express.js, MongoDB, secure REST APIs, Mongoose models.",
+    desc: "Node.js, Express.js, MongoDB, secure REST APIs, Mongoose models. Django, MVT, MVC",
   },
   {
     title: "Full-Stack Apps",
