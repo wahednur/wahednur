@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 
 interface PortfolioItem {
   id: string;
@@ -19,7 +18,7 @@ const portfolios: PortfolioItem[] = [
     title: "E-commerce Eco System Development",
     slug: "ecommerce-web-app",
     description:
-      "A scalable e-commerce solution built with Python, Django DRF, Next.js, React, PostgreSQL, Redis,",
+      "A scalable e-commerce solution built with Python, Django DRF, Next.js, React, PostgreSQL, Redis, EKAI Assistant, AI.",
     image: "/ek.png",
     category: "E-Commerce",
     tags: ["Python","Django","Django DRF", "Next.js", "React", "PostgreSQL","Redis", "SSLCommerz", "Cloudflare", "Dokploy",],
@@ -90,14 +89,10 @@ export default function PortfolioPage() {
 
               <div className="flex justify-between">
                 {item.liveLink && (
-                  <Link href="#" className="text-blue-600 font-medium">
-                    Live
-                  </Link>
+                  <a href={`${item.liveLink}`}target="_blank" rel="noopener noreferrer"  className="text-blue-600 font-medium" >Live</a>
                 )}
                 {item.githubLink && (
-                  <Link href="#" className="text-gray-600 font-medium">
-                    GitHub
-                  </Link>
+                  <a href={`${item.githubLink}`} target="_blank" rel="noopener noreferrer"  className="text-blue-600 font-medium" >GitHub</a>
                 )}
               </div>
             </div>
