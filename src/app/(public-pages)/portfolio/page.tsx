@@ -16,6 +16,18 @@ interface PortfolioItem {
 const portfolios: PortfolioItem[] = [
   {
     id: "1",
+    title: "E-commerce Eco System Development",
+    slug: "ecommerce-web-app",
+    description:
+      "A scalable e-commerce solution built with Python, Django DRF, Next.js, React, PostgreSQL, Redis,",
+    image: "/ek.png",
+    category: "E-Commerce",
+    tags: ["Python","Django","Django DRF", "Next.js", "React", "PostgreSQL","Redis", "SSLCommerz", "Cloudflare", "Dokploy",],
+    liveLink: "https://ekhaneikini.com",
+    githubLink: "https://github.com/wahednur/ekhaneikini2026",
+  },
+  {
+    id: "2",
     title: "Full Stack SaaS Platform",
     slug: "full-stack-saas-platform",
     description:
@@ -25,18 +37,6 @@ const portfolios: PortfolioItem[] = [
     tags: ["Next.js", "MongoDB", "TailwindCSS", "Stripe", "NextAuth"],
     liveLink: "https://your-saas-app.vercel.app",
     githubLink: "https://github.com/username/saas-app",
-  },
-  {
-    id: "2",
-    title: "E-commerce Web Application",
-    slug: "ecommerce-web-app",
-    description:
-      "A scalable e-commerce solution built with Next.js, Stripe, and MongoDB.",
-    image: "/SebaHub.jpg",
-    category: "E-Commerce",
-    tags: ["Next.js", "Express", "MongoDB", "Stripe", "Cloudinary"],
-    liveLink: "https://your-ecommerce.vercel.app",
-    githubLink: "https://github.com/username/ecommerce-app",
   },
   {
     id: "3",
