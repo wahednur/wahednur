@@ -32,7 +32,7 @@ export default function HomeAbout() {
           systems. My journey began back in 2008, building desktop and web-based
           applications, and over time I&apos;ve delivered digital solutions for
           organizations like{" "}
-          <span className="text-ws-primary font-bold"> <a href="http://ekhaneikini.com" target="_blank" rel="noopener noreferrer">ekhaneikini.com</a> BRAC, UNDP, Oxfam</span>,
+          <span className="text-ws-primary font-bold"> <a href="http://ekhaneikini.com" target="_blank" rel="noopener noreferrer">ekhaneikini.com</a>, BRAC, UNDP, Oxfam</span>,
           and several local businesses. From designing interactive dashboards
           and role-based admin panels, to implementing secure authentication
           flows, to integrating scalable backend APIs — I&apos;ve worn many hats
