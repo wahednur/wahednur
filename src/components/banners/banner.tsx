@@ -22,7 +22,7 @@ export default function Banner() {
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.3 }}
           >
-            Full Stack MERN Developer | SaaS Architect & Consultant
+            Full Stack Python & MERN Developer | SaaS Architect & Consultant
           </motion.p>
           <motion.p
             initial={{ y: 20, opacity: 0 }}

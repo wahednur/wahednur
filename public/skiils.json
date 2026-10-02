@@ -13,16 +13,23 @@
   },
   {
     "backend": [
+      { "name": "Django", "logo": "/tech-icon/dj.svg" },
+      { "name": "Python", "logo": "/tech-icon/python.svg" },
       { "name": "Node.js", "logo": "/tech-icon/nodejs-icon.svg" },
       { "name": "Express.js", "logo": "/tech-icon/express-icon.svg" },
-      { "name": "MongoDB", "logo": "/tech-icon/mongodb-icon.svg" },
-      { "name": "Mongoose", "logo": "/tech-icon/mongoose-icon.svg" },
       { "name": "NextAuth.js", "logo": "/tech-icon/nextauth-icon.png" },
       { "name": "Zod Validation", "logo": "/tech-icon/zod-icon.svg" },
       { "name": "JWT Auth", "logo": "/tech-icon/jwt-icon.svg" },
-      { "name": "Python", "logo": "/tech-icon/python.svg" },
-      { "name": "Django", "logo": "/tech-icon/dj.svg" },
       { "name": "PostgreSQL", "logo": "/tech-icon/postgresql.svg" }
+    ]
+  },
+  {
+    "Database": [
+      { "name": "MongoDB", "logo": "/tech-icon/mongodb-icon.svg" },
+      { "name": "Mongoose", "logo": "/tech-icon/mongoose-icon.svg" },
+      { "name": "PostgreSQL", "logo": "/tech-icon/postgresql.svg" },
+      { "name": "Redis", "logo": "/tech-icon/redis.svg" },
+      { "name": "MySQL", "logo": "/tech-icon/sql.svg" }
     ]
   },
   {
@@ -32,7 +39,9 @@
       { "name": "Vercel", "logo": "/tech-icon/vercel-icon.svg" },
       { "name": "Cloudinary", "logo": "/tech-icon/cloudinary-icon.svg" },
       { "name": "Figma (UI Design)", "logo": "/tech-icon/figma-icon.svg" },
-      { "name": "Linux Basics", "logo": "/tech-icon/linux-icon.svg" }
+      { "name": "Linux Basics", "logo": "/tech-icon/linux-icon.svg" },
+      { "name": "Dokploy", "logo": "/tech-icon/dokploy.svg" },
+      { "name": "VPS", "logo": "/tech-icon/vps.png" }
     ]
   }
 ]
