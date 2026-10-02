@@ -19,8 +19,7 @@
       { "name": "Express.js", "logo": "/tech-icon/express-icon.svg" },
       { "name": "NextAuth.js", "logo": "/tech-icon/nextauth-icon.png" },
       { "name": "Zod Validation", "logo": "/tech-icon/zod-icon.svg" },
-      { "name": "JWT Auth", "logo": "/tech-icon/jwt-icon.svg" },
-      { "name": "PostgreSQL", "logo": "/tech-icon/postgresql.svg" }
+      { "name": "JWT Auth", "logo": "/tech-icon/jwt-icon.svg" }
     ]
   },
   {
