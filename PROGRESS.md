@@ -1,6 +1,6 @@
 # PROGRESS
 
-**Last updated:** 2026-10-06 (session 6)
+**Last updated:** 2026-10-06 (session 7)
 
 ## Done
 - Earlier test portfolio (`legacy/`) deleted at the owner's request; history keeps it. Only the ekhaneikini home screenshot was kept (now on its case study).
@@ -21,10 +21,14 @@
 - **Contact form wired to the Leads API** (`frontend/src/components/ContactForm.tsx`): posts to `${NEXT_PUBLIC_API_URL}/api/leads/`; sending/disabled state, success panel, per-field errors from 400, rate-limit (429), server (500) and network-failure messages (each with a direct-email fallback), invisible honeypot field, accessible (`aria-invalid`, live regions). Without `NEXT_PUBLIC_API_URL` it falls back to the old `mailto:` flow. Option values live in `src/lib/leadOptions.ts` and must match `backend/leads/models.py`.
 - Verified in a real browser against the real API, Celery worker, Redis and PostgreSQL: success, payload, form reset, 400/429/500/network-failure handling, honeypot invisible and unreachable by keyboard, a real 429 from the API shown in the UI, no horizontal scroll on mobile, and the `mailto:` fallback build.
 
+- **Deployment files** (Dokploy, Docker Compose): `docker-compose.yml` (frontend, api, worker, db=postgres:18, redis:8), `backend/Dockerfile` (multi-stage, non-root, gunicorn, collectstatic, health probe, migrations only on `api`), `frontend/Dockerfile` (Next.js standalone, Node 24, non-root), `.env.example`, `docs/DEPLOYMENT.md` (steps, backups, env reference, troubleshooting). WhiteNoise added for admin static files (prod only). Fonts now come from the `geist` package, not Google Fonts, so builds no longer need the internet.
+- Verified with real Docker (PostgreSQL 18.6, Redis 8.10, Node 24.21): see the list in `docs/DEPLOYMENT.md`. Backend tests also pass on PostgreSQL 18.6. Not verified: Dokploy UI, real TLS/Traefik, Cloudflare, real Resend delivery.
+
 ## In progress
 Nothing.
 
 ## Next
+0a. Owner: deploy using `docs/DEPLOYMENT.md` (VPS, DNS, Resend domain, secrets). Report anything that differs from the doc and it will be fixed.
 0. **Owner decision needed: the new services lineup (AI era).** Services page, Home, Fiverr/Upwork/LinkedIn/Guru texts must be rewritten together. Nothing about AI services is published until decided.
 1. Add real screenshots: put files in `frontend/public/work/<slug>/` and fill `screenshots` in `caseStudies.ts` (the gallery only renders when non-empty).
 2. OpenGraph image, favicon/brand mark, per-page social previews.
@@ -35,7 +39,6 @@ Nothing.
 ## Known issues
 - `NEXT_PUBLIC_API_URL` is baked in at build time. Set it in the host's build environment (Vercel/Dokploy), then rebuild; changing it at runtime has no effect. Add the site's real origin to the API's `CORS_ALLOWED_ORIGINS`.
 - The 5/hour limit counts per address. Several people behind one shared network (office, mobile carrier NAT) share it.
-- Backend tests were run on PostgreSQL 16 (sandbox). Run `pytest` on PostgreSQL 18.6 locally; any difference is a bug to fix.
 - The ekhaneikini screenshot (`frontend/public/work/ekhaneikini/home.png`, from the old test site) shows an "EKAI" promo banner while EKAI is only planned. Replace it with a fresh screenshot of the live store, or accept the banner.
 - `@types/node` is `^20`; align with the Node LTS you run locally.
 - Leads email has never been sent through the real Resend (blocked here). First real test after the key exists: submit the form once and confirm the email arrives and `notified_at` is set in Django admin.

@@ -16,6 +16,12 @@ Short record of what was chosen and why.
 12. **Resend over SMTP**: one HTTPS call, clear error codes, already used on the previous site. Called through a thin `emailer.py`, so swapping provider touches one file.
 13. **Public form protection in layers**: strict validation with fixed choice lists, honeypot, per-address rate limit, hashed IP, no auto-reply, escaped output.
 14. **No auto-reply emails**: sending mail to an address a stranger typed is an abuse vector.
+15. **One Compose stack including database and Redis**: simplest to deploy and restore on a single VPS. Trade-off: backups are the owner's job (see DEPLOYMENT.md); a managed database would remove that burden at extra cost.
+16. **Migrations run only in the `api` container** (`RUN_MIGRATIONS=1`), never in the worker, so two containers cannot race on the schema.
+17. **Containers run as non-root**, expose no host ports and carry a health check; the API probe sends proxy headers so it is not redirected or rejected.
+18. **Static files**: WhiteNoise (prod only) serves the Django admin assets, no separate web server needed.
+19. **Frontend as Next.js `standalone` output** in a Node 24 image; fonts come from the `geist` package so builds never depend on Google Fonts being reachable.
+20. **`NUM_PROXIES` is explicit**: the rate limiter trusts exactly that many proxy hops, so a wrong value either shares one limit across everyone (too low) or lets clients spoof their address (too high).
 
 ## Version policy
 - Use the newest **LTS** where one exists (Django, PostgreSQL major, Node), the newest stable where none does (React, Next.js).

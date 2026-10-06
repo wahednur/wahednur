@@ -26,7 +26,7 @@ See [`docs/PLAN.md`](docs/PLAN.md) for the roadmap and [`PROGRESS.md`](PROGRESS.
 | Redis | 8.x | |
 | Python | 3.14 locally (3.13 also works) | |
 
-See `docs/ARCHITECTURE.md` (version policy) for how upgrades are handled.
+See `docs/ARCHITECTURE.md` (version policy) for how upgrades are handled. Deployment: `docs/DEPLOYMENT.md`.
 
 ## Run the frontend
 

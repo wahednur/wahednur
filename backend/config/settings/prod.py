@@ -15,3 +15,17 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 
 # Without a key, leads would be saved but the owner would never be told.
 RESEND_API_KEY = env("RESEND_API_KEY")
+
+# WhiteNoise serves the Django admin's static files (right after SecurityMiddleware).
+# Added here, not in base, so dev and tests do not need a collected staticfiles dir.
+MIDDLEWARE = [
+    MIDDLEWARE[0],  # noqa: F405
+    "whitenoise.middleware.WhiteNoiseMiddleware",
+    *MIDDLEWARE[1:],  # noqa: F405
+]
+
+# Hashed, compressed static files (Django admin assets) served by WhiteNoise.
+STORAGES = {
+    "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+    "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},
+}

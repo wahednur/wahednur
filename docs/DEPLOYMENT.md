@@ -1,0 +1,98 @@
+# Deployment (Dokploy)
+
+One Docker Compose stack runs everything: `frontend` (Next.js), `api` (Django + gunicorn), `worker` (Celery), `db` (PostgreSQL 18), `redis` (Redis 8). The files: `docker-compose.yml` (repo root), `backend/Dockerfile`, `frontend/Dockerfile`, `.env.example`.
+
+## What is verified, and what is not
+
+Verified in a real Docker environment (images built from these Dockerfiles, full stack started, PostgreSQL 18.6, Redis 8.10, Node 24.21):
+- both images build; containers run as non-root; all five services become healthy
+- migrations run on `api` start; data survives `down`/`up`
+- `/api/health/` works behind proxy headers, plain HTTP is redirected to HTTPS, a wrong Host is rejected (400), the Django admin only answers at `ADMIN_URL`, admin CSS is served
+- CORS allows only the configured origin
+- a submitted lead is saved, the worker picks it up and retries with backoff when email fails, and the lead is kept
+- frontend serves pages, the image optimizer, the résumé PDF and the sitemap; the API URL is baked into the browser JavaScript
+- the 31 backend tests pass on PostgreSQL 18.6
+
+Not verified (cannot be done from the development sandbox): Dokploy itself (the UI steps below are written from how Dokploy works; confirm labels against its current screens), real TLS/Traefik, Cloudflare, and email delivery through the real Resend.
+
+## 1. Before you deploy
+
+- A VPS with Dokploy installed.
+- DNS: `A` records for `api.wahednur.tech`, `www.wahednur.tech` (and `wahednur.tech`) pointing at the VPS.
+- Resend: add and verify your domain, create an API key. Until the domain is verified, Resend only delivers to the account owner's own address.
+- Generate secrets (hex keeps database URLs safe):
+  ```bash
+  openssl rand -hex 32   # SECRET_KEY
+  openssl rand -hex 24   # POSTGRES_PASSWORD
+  openssl rand -hex 24   # REDIS_PASSWORD
+  ```
+
+## 2. Create the app in Dokploy
+
+1. **Create Project**, then **Create Service → Compose**.
+2. **Provider**: GitHub, repository `wahednur/wahednur`, the branch to deploy. **Compose Type**: Docker Compose. **Compose Path**: `./docker-compose.yml`.
+3. **Environment** tab: paste the contents of `.env.example` and fill in real values.
+4. **Domains** tab (HTTPS on, certificate Let's Encrypt):
+   - `api.wahednur.tech` → service `api`, port `8000`
+   - `www.wahednur.tech` → service `frontend`, port `3000`
+   - `wahednur.tech` → service `frontend`, port `3000` (or redirect the bare domain to `www` in Cloudflare)
+5. **Deploy**. The first build takes several minutes.
+
+`docker-compose.yml` publishes no host ports on purpose; Dokploy's Traefik reaches the services over the Docker network.
+
+## 3. After the first deploy
+
+1. Open `https://api.wahednur.tech/api/health/` → `{"status":"ok",...}`.
+2. Create the Django admin user (Dokploy: the `api` container's **Terminal**, or SSH):
+   ```bash
+   python manage.py createsuperuser
+   ```
+   Sign in at `https://api.wahednur.tech/<ADMIN_URL>` (default `/manage-site/`, not `/admin/`).
+3. Open the site, submit the contact form, and confirm: the email arrives, and the lead shows `notified_at` filled in the admin. If `notified_at` is empty, read the lead's `notify_error` and the `worker` logs.
+
+## 4. Updating
+
+Push to the deployed branch. With **Auto Deploy** on (webhook) Dokploy rebuilds and restarts. Migrations run automatically when `api` starts. To roll back code, redeploy an earlier deployment from the **Deployments** tab. Database migrations are not rolled back automatically.
+
+## 5. Backups (set this up before real leads arrive)
+
+Docker volumes are not backups. Run a nightly dump and copy it off the server (for example to Cloudflare R2):
+
+```bash
+# on the VPS, from cron
+docker exec "$(docker ps -qf name=db)" pg_dump -U wahednur wahednur | gzip > /backups/wahednur-$(date +%F).sql.gz
+```
+
+Check the container name filter matches (`docker ps`). Test a restore into a scratch database once; an untested backup is not a backup.
+
+## 6. Environment reference
+
+| Variable | Purpose |
+|---|---|
+| `SECRET_KEY`, `POSTGRES_PASSWORD`, `REDIS_PASSWORD` | secrets; the stack refuses to start without them |
+| `ALLOWED_HOSTS` | exact API hostname(s). The container health check uses the first one |
+| `CORS_ALLOWED_ORIGINS` | the site origins that may call the API (with `https://`) |
+| `CSRF_TRUSTED_ORIGINS` | the API origin, for the Django admin login |
+| `NEXT_PUBLIC_API_URL` | API base URL baked into the site **at build time** |
+| `RESEND_API_KEY`, `LEADS_FROM_EMAIL`, `LEADS_NOTIFY_TO` | contact-form email |
+| `NUM_PROXIES` | proxies in front of the API: `1` = Traefik only, `2` = Cloudflare orange cloud + Traefik |
+| `ADMIN_URL` | path of the Django admin (keep it non-default) |
+
+## 7. Troubleshooting
+
+| Symptom | Cause |
+|---|---|
+| API returns 400 for every request | `ALLOWED_HOSTS` does not contain the hostname |
+| Browser console shows a CORS error | site origin missing from `CORS_ALLOWED_ORIGINS` (check `https://` and `www`) |
+| Form opens the email app instead of sending | `NEXT_PUBLIC_API_URL` was empty at build time; set it and redeploy (rebuild) |
+| Everyone gets "too many messages" | `NUM_PROXIES` is too low behind Cloudflare, so all visitors share one address; set `2` |
+| Leads saved but no email | check `notify_error` in the admin, `RESEND_API_KEY`, and that the sending domain is verified |
+| `api` unhealthy | `docker logs` for the `api` container; usually a missing variable or the database not ready |
+| Redirect loop on the API | the proxy is not sending `X-Forwarded-Proto: https` (Traefik does by default) |
+
+## 8. Notes
+
+- Scale only `frontend` and `worker`. `api` runs migrations at start, so running several copies at once can race.
+- Pin `postgres:18` to an exact version (e.g. `postgres:18.6`) once you want upgrades to be deliberate. A major version change needs a dump and restore, not just a new image.
+- Images use `python:3.13-slim` (tested) and `node:24-slim` (Active LTS). Change them with the `PYTHON_IMAGE` / `NODE_IMAGE` build args.
+- HSTS preload is off; decide before launch.
