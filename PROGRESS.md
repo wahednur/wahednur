@@ -1,6 +1,6 @@
 # PROGRESS
 
-**Last updated:** 2026-10-06 (session 5)
+**Last updated:** 2026-10-06 (session 6)
 
 ## Done
 - Earlier test portfolio (`legacy/`) deleted at the owner's request; history keeps it. Only the ekhaneikini home screenshot was kept (now on its case study).
@@ -18,6 +18,9 @@
 
 - Version audit: Next 16.4.0, React 19.3.0, Django 5.2.18 (latest LTS), psycopg 3.3, Celery 5.6 confirmed installed; version table in README; version policy in ARCHITECTURE.
 
+- **Contact form wired to the Leads API** (`frontend/src/components/ContactForm.tsx`): posts to `${NEXT_PUBLIC_API_URL}/api/leads/`; sending/disabled state, success panel, per-field errors from 400, rate-limit (429), server (500) and network-failure messages (each with a direct-email fallback), invisible honeypot field, accessible (`aria-invalid`, live regions). Without `NEXT_PUBLIC_API_URL` it falls back to the old `mailto:` flow. Option values live in `src/lib/leadOptions.ts` and must match `backend/leads/models.py`.
+- Verified in a real browser against the real API, Celery worker, Redis and PostgreSQL: success, payload, form reset, 400/429/500/network-failure handling, honeypot invisible and unreachable by keyboard, a real 429 from the API shown in the UI, no horizontal scroll on mobile, and the `mailto:` fallback build.
+
 ## In progress
 Nothing.
 
@@ -26,11 +29,12 @@ Nothing.
 1. Add real screenshots: put files in `frontend/public/work/<slug>/` and fill `screenshots` in `caseStudies.ts` (the gallery only renders when non-empty).
 2. OpenGraph image, favicon/brand mark, per-page social previews.
 3. Owner to review all page copy (see Known issues).
-4. **Wire the contact form to `POST /api/leads/`** (frontend session): map the form's labels to the API codes (`ecommerce`, `business_app`, ...), add the hidden `website` honeypot field, show success/error and rate-limit (429) messages, keep `mailto:` only as a fallback. Needs `NEXT_PUBLIC_API_URL`.
-5. Owner: create a Resend account, verify the sending domain (until then `onboarding@resend.dev` can only send to the account owner's own address), set `RESEND_API_KEY`, `LEADS_FROM_EMAIL`, `LEADS_NOTIFY_TO` in the host env.
-6. Admin dashboard (`admin/`, React + Vite) and its authentication (SimpleJWT).
+4. Owner: create a Resend account, verify the sending domain (until then `onboarding@resend.dev` can only send to the account owner's own address), set `RESEND_API_KEY`, `LEADS_FROM_EMAIL`, `LEADS_NOTIFY_TO` in the host env.
+5. Admin dashboard (`admin/`, React + Vite) and its authentication (SimpleJWT).
 
 ## Known issues
+- `NEXT_PUBLIC_API_URL` is baked in at build time. Set it in the host's build environment (Vercel/Dokploy), then rebuild; changing it at runtime has no effect. Add the site's real origin to the API's `CORS_ALLOWED_ORIGINS`.
+- The 5/hour limit counts per address. Several people behind one shared network (office, mobile carrier NAT) share it.
 - Backend tests were run on PostgreSQL 16 (sandbox). Run `pytest` on PostgreSQL 18.6 locally; any difference is a bug to fix.
 - The ekhaneikini screenshot (`frontend/public/work/ekhaneikini/home.png`, from the old test site) shows an "EKAI" promo banner while EKAI is only planned. Replace it with a fresh screenshot of the live store, or accept the banner.
 - `@types/node` is `^20`; align with the Node LTS you run locally.
