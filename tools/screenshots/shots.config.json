@@ -1,0 +1,72 @@
+{
+  "settings": {
+    "outputDir": "output",
+    "navTimeoutMs": 45000,
+    "actionTimeoutMs": 15000,
+    "desktop": { "width": 1440, "height": 900, "deviceScaleFactor": 1 },
+    "mobile": { "width": 390, "height": 844, "deviceScaleFactor": 2 },
+    "allowText": [],
+    "blockHosts": [
+      "connect.facebook.net",
+      "www.facebook.com",
+      "www.googletagmanager.com",
+      "www.google-analytics.com",
+      "analytics.google.com"
+    ]
+  },
+  "sites": {
+    "store": { "baseUrl": "https://ekhaneikini.com", "auth": false },
+    "admin": { "baseUrl": "https://admin.ekhaneikini.com", "auth": true, "loginPath": "/login" },
+    "meter": { "baseUrl": "https://nurain.vercel.app", "auth": true, "loginPath": "/login" }
+  },
+  "shots": [
+    { "name": "store-home", "site": "store", "viewport": "desktop", "steps": [{ "goto": "/" }] },
+    {
+      "name": "store-product",
+      "site": "store",
+      "viewport": "desktop",
+      "steps": [{ "goto": "/" }, { "click": "a[href^=\"/product/\"]" }, { "waitFor": "h1" }]
+    },
+    {
+      "name": "store-checkout",
+      "site": "store",
+      "viewport": "desktop",
+      "steps": [
+        { "goto": "/" },
+        { "click": "a[href^=\"/product/\"]" },
+        { "waitFor": "button:has-text(\"Add to cart\")" },
+        { "click": "button:has-text(\"Add to cart\")" },
+        { "wait": 1200 },
+        { "goto": "/checkout" }
+      ]
+    },
+    { "name": "store-mobile-home", "site": "store", "viewport": "mobile", "steps": [{ "goto": "/" }] },
+    {
+      "name": "store-mobile-product",
+      "site": "store",
+      "viewport": "mobile",
+      "steps": [{ "goto": "/" }, { "click": "a[href^=\"/product/\"]" }, { "waitFor": "h1" }]
+    },
+    { "name": "admin-dashboard", "site": "admin", "viewport": "desktop", "steps": [{ "goto": "/" }] },
+    { "name": "admin-orders", "site": "admin", "viewport": "desktop", "steps": [{ "goto": "/orders" }] },
+    {
+      "name": "admin-order-detail",
+      "site": "admin",
+      "viewport": "desktop",
+      "steps": [
+        { "goto": "/orders" },
+        { "click": "a[href^=\"/orders/\"]:not([href=\"/orders/new\"])" },
+        { "wait": 1500 }
+      ]
+    },
+    { "name": "admin-products", "site": "admin", "viewport": "desktop", "steps": [{ "goto": "/catalog/products" }] },
+    { "name": "admin-analytics", "site": "admin", "viewport": "desktop", "steps": [{ "goto": "/analytics" }] },
+    {
+      "name": "meter-dashboard",
+      "site": "meter",
+      "viewport": "desktop",
+      "enabled": false,
+      "steps": [{ "goto": "/" }]
+    }
+  ]
+}

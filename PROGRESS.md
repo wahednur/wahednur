@@ -1,6 +1,6 @@
 # PROGRESS
 
-**Last updated:** 2026-10-06 (session 8)
+**Last updated:** 2026-10-06 (session 9)
 
 ## Done
 - Earlier test portfolio (`legacy/`) deleted at the owner's request; history keeps it. Only the ekhaneikini home screenshot was kept (now on its case study).
@@ -27,6 +27,8 @@
 - **Services rewritten for the AI era** (`frontend/src/lib/services.ts`, shown on Home and `/services`): seven services, a new "AI features for business software" service, a "How I use AI when I build" section, an updated "What I do not offer" list, and an AI question in the FAQ. Based on what the ekhaneikini repo actually contains (grounded product Q&A, AI-assisted search, draft descriptions and SEO text, comparison summaries, staff reply suggestions, provider fallback, cost tracking), not on plans. The ekhaneikini case study was corrected: it wrongly said AI was only planned.
 - Marketplace and LinkedIn texts were rewritten to match (`Profiles_v2`, delivered as a file in the session).
 
+- **Screenshot tool** (`tools/screenshots/`, Playwright + sharp): one command takes the portfolio screenshots of the live sites at fixed sizes (desktop 1440x900, mobile 390x844 @2x), full-page option, optional WebP, `manifest.json`. Admin pages use a saved login (`npm run login -- admin`). Privacy check stops a shot if a phone number or email that is not allow-listed is visible (blur/hide/allowText in the config). Refuses order-placing clicks, blocks analytics/ad pixels. Prefilled for ekhaneikini (storefront and admin routes taken from its repo). Tested here against the new site: sizes, mobile, full page, click flow, blur, privacy block (including text typed into a field), login-required skip, order-click guard, bad-selector error. Not run against the live ekhaneikini, Admin or meter sites (not reachable from this environment).
+
 ## In progress
 Nothing.
 
@@ -40,6 +42,7 @@ Nothing.
 5. Admin dashboard (`admin/`, React + Vite) and its authentication (SimpleJWT).
 
 ## Known issues
+- `tools/screenshots/shots.config.json` has guessed admin URL (`https://admin.ekhaneikini.com`), meter login path and the meter shot is off; selectors such as the product link and "Add to cart" come from the repo but must be confirmed on the live site (`--headed` to watch).
 - Confirm before launch: (1) whether the AI features are switched on in the live store (provider keys set in production); the site says they are *built into the platform*, not that they are live. (2) The "How I use AI when I build" section discloses AI-assisted development. It is true (the ekhaneikini repo is built that way) but it is the owner's choice to publish; delete `aiWorkflow` in `services.ts` to remove it. (3) "What I do not offer" says Messenger/WhatsApp bots and SaaS builds are not for sale yet; change it when that stops being true.
 - `NEXT_PUBLIC_API_URL` is baked in at build time. Set it in the host's build environment (Vercel/Dokploy), then rebuild; changing it at runtime has no effect. Add the site's real origin to the API's `CORS_ALLOWED_ORIGINS`.
 - The 5/hour limit counts per address. Several people behind one shared network (office, mobile carrier NAT) share it.
