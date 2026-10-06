@@ -14,6 +14,7 @@ export type Project = {
   status: string;
   summary: string;
   stack: string[];
+  slug: string;
   href?: string;
   linkLabel?: string;
 };
@@ -22,6 +23,7 @@ export type Project = {
 // live, or demo. Nothing here is a client claim.
 export const projects: Project[] = [
   {
+    slug: "ekhaneikini",
     title: "ekhaneikini.com",
     kind: "Own business · eCommerce platform",
     status: "Live",
@@ -32,6 +34,7 @@ export const projects: Project[] = [
     linkLabel: "Visit store",
   },
   {
+    slug: "service-parts-management",
     title: "Service & Parts Management System",
     kind: "Own project · business application",
     status: "Live",
@@ -42,12 +45,13 @@ export const projects: Project[] = [
     linkLabel: "View system",
   },
   {
+    slug: "education-management-demo",
     title: "Education Management System",
     kind: "Demo · prototype with sample data",
     status: "Demo",
     summary:
       "An interactive prototype that shows how an education management system would work, built so a school can evaluate it before deciding. Not a production system.",
-    stack: ["React", "Next.js", "TypeScript"],
+    stack: [],
     href: "https://lms.wahednur.tech",
     linkLabel: "Open demo",
   },

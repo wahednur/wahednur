@@ -22,7 +22,7 @@ Monorepo. Backend and frontends are separate apps and never share dependencies.
 - `admin/` React + Vite + TypeScript: owner dashboard (leads, projects, content).
 
 ## Phases (one module at a time)
-1. **Public site (frontend only)** - Home done. Next: `/work/[project]` case studies, Services, About, Contact, résumé page, SEO basics.
+1. **Public site (frontend only)** - Home, case studies, Services, About, Contact, sitemap/robots done. Next: real screenshots, OpenGraph image, copy review.
 2. **Backend foundation** - Django project, split settings, health endpoint, tests; leads/contact API (replaces `mailto`); project content API.
 3. **Contact form + lead capture** wired to the API, spam protection, email notification.
 4. **Admin dashboard** - leads inbox, project and content editing.

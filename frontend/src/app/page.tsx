@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Section from "@/components/Section";
 import { process, projects, roadmap, services, site } from "@/lib/site";
 
@@ -22,12 +23,12 @@ export default function Home() {
             live eCommerce platform, so I design from the owner&apos;s side.
           </p>
           <div className="mt-9 flex flex-wrap gap-3">
-            <a href="#work" className="rounded-md bg-brand px-5 py-3 text-sm font-semibold text-bg transition-opacity hover:opacity-90">
+            <Link href="/work" className="rounded-md bg-brand px-5 py-3 text-sm font-semibold text-bg transition-opacity hover:opacity-90">
               View my work
-            </a>
-            <a href="#contact" className="rounded-md border border-line px-5 py-3 text-sm font-semibold transition-colors hover:border-brand/60 hover:text-brand">
+            </Link>
+            <Link href="/contact" className="rounded-md border border-line px-5 py-3 text-sm font-semibold transition-colors hover:border-brand/60 hover:text-brand">
               Discuss your project
-            </a>
+            </Link>
           </div>
           <p className="mt-10 font-mono text-xs text-muted">
             Django · DRF · PostgreSQL · Redis · Celery · Next.js · React · TypeScript
@@ -55,11 +56,9 @@ export default function Home() {
                   </li>
                 ))}
               </ul>
-              {p.href && (
-                <a href={p.href} className="mt-6 text-sm font-medium text-brand hover:underline">
-                  {p.linkLabel} →
-                </a>
-              )}
+              <Link href={`/work/${p.slug}`} className="mt-6 text-sm font-medium text-brand hover:underline">
+                Read the case study →
+              </Link>
             </article>
           ))}
         </div>
