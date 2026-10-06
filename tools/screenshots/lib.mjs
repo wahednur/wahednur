@@ -85,6 +85,9 @@ export function assertSafeClick(selector, allowSubmit) {
 export async function runSteps(page, site, steps, { timeout, actionTimeout = 15000, allowSubmit }) {
   for (const [i, s] of steps.entries()) {
     const label = `step ${i + 1} (${JSON.stringify(s)})`;
+    if (JSON.stringify(s).includes("PASTE_"))
+      throw new Error(`${label}: replace the PASTE_... placeholder in shots.config.json first`);
+    const t = s.timeout ?? actionTimeout; // per-step override, e.g. slow free-tier servers
     try {
       if (s.goto !== undefined) {
         await page.goto(new URL(s.goto, site.baseUrl).toString(), {
@@ -93,19 +96,19 @@ export async function runSteps(page, site, steps, { timeout, actionTimeout = 150
         });
       } else if (s.click !== undefined) {
         assertSafeClick(s.click, allowSubmit);
-        await page.locator(s.click).first().click({ timeout: actionTimeout });
+        await page.locator(s.click).first().click({ timeout: t });
       } else if (s.fill !== undefined) {
-        await page.locator(s.fill).first().fill(String(s.value ?? ""), { timeout: actionTimeout });
+        await page.locator(s.fill).first().fill(String(s.value ?? ""), { timeout: t });
       } else if (s.press !== undefined) {
         await page.keyboard.press(s.press);
       } else if (s.waitFor !== undefined) {
-        await page.locator(s.waitFor).first().waitFor({ timeout: actionTimeout });
+        await page.locator(s.waitFor).first().waitFor({ timeout: t });
       } else if (s.wait !== undefined) {
         await page.waitForTimeout(Number(s.wait));
       } else if (s.scroll !== undefined) {
         if (typeof s.scroll === "number")
           await page.evaluate((y) => window.scrollTo(0, y), s.scroll);
-        else await page.locator(s.scroll).first().scrollIntoViewIfNeeded({ timeout: actionTimeout });
+        else await page.locator(s.scroll).first().scrollIntoViewIfNeeded({ timeout: t });
       } else {
         throw new Error("unknown step type");
       }

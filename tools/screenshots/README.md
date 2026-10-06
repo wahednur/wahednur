@@ -64,3 +64,13 @@ Each shot has a `name` (becomes the file name), a `site`, a `viewport` (`desktop
 | key | `{ "press": "Escape" }` |
 
 If a selector does not match your site, run with `--headed` to watch the browser, and adjust.
+
+## Meter system (`meter-*` shots)
+
+Steps were written from the app's source code (routes, table columns, page titles), not run against the live site. If a shot fails, run it with `--headed` and fix the selector.
+
+- Before the first run, create a **test customer named exactly `Demo Customer`** with the fake phone `01700000000` and a test invoice. The ledger shot searches for that name.
+- The app shows the **shop name** in the sidebar, on the login page and on the public invoice page. The shots blur the sidebar; check the others yourself.
+- The products shot blurs **Supplier** and **Buy Price**.
+- `meter-report-profit-loss` and `meter-public-invoice` are **off** on purpose (real income figures; needs an invoice token). Read the `_note` on each before turning them on.
+- The free-tier server can take a minute to wake up, so the first waits are long (90 s).
