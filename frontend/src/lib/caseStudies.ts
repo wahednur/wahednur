@@ -44,6 +44,7 @@ export const caseStudies: CaseStudy[] = [
       "Admin dashboard for products, stock, orders, customers and reports, with permission-based access.",
       "Customer CRM, notifications and marketing source tracking (website, Facebook, WhatsApp).",
       "Offline-first mobile order app built with Flutter.",
+      "AI features that work only from the store's own data: product questions, AI-assisted search, draft descriptions and SEO text, comparison summaries and suggested replies for staff.",
     ],
     workflow: [
       {
@@ -87,6 +88,10 @@ export const caseStudies: CaseStudy[] = [
         text: "The mobile app can create orders offline. Each order carries a client reference so a retried sync does not create the same order twice.",
       },
       {
+        title: "AI that cannot invent facts",
+        text: "Every AI answer is built from database rows. Price, stock and warranty are shown by the system, not written by the model. Draft content is saved as a draft for a person to approve, staff replies are suggested but sent by a person, and a template fallback runs if the AI provider is unavailable.",
+      },
+      {
         title: "Guest customers keep their history",
         text: "Guest orders are linked to a customer's phone number, so past orders appear when that customer later signs in.",
       },
@@ -96,7 +101,7 @@ export const caseStudies: CaseStudy[] = [
     limits: [
       "No sales or traffic figures are published here.",
       "I am the only developer, so the roadmap moves at the pace of one person.",
-      "AI features (an assistant for product questions and order help) are planned. They are not part of the current system.",
+      "The AI features are built and tested in the platform. A shopping assistant on Messenger and WhatsApp is still a plan.",
     ],
     screenshots: [
       {

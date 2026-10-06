@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Section from "@/components/Section";
-import { process, projects, roadmap, services, site } from "@/lib/site";
+import { serviceList } from "@/lib/services";
+import { process, projects, roadmap, site } from "@/lib/site";
 
 export default function Home() {
   return (
@@ -67,10 +68,10 @@ export default function Home() {
       {/* Services */}
       <Section id="services" label="Services" title="What I can build for you">
         <div className="grid gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-3">
-          {services.map((s) => (
+          {serviceList.map((s) => (
             <div key={s.title} className="bg-surface p-6">
               <h3 className="font-semibold">{s.title}</h3>
-              <p className="mt-2 text-sm leading-6 text-muted">{s.text}</p>
+              <p className="mt-2 text-sm leading-6 text-muted">{s.short}</p>
             </div>
           ))}
         </div>

@@ -1,6 +1,6 @@
 # PROGRESS
 
-**Last updated:** 2026-10-06 (session 7)
+**Last updated:** 2026-10-06 (session 8)
 
 ## Done
 - Earlier test portfolio (`legacy/`) deleted at the owner's request; history keeps it. Only the ekhaneikini home screenshot was kept (now on its case study).
@@ -24,12 +24,15 @@
 - **Deployment files** (Dokploy, Docker Compose): `docker-compose.yml` (frontend, api, worker, db=postgres:18, redis:8), `backend/Dockerfile` (multi-stage, non-root, gunicorn, collectstatic, health probe, migrations only on `api`), `frontend/Dockerfile` (Next.js standalone, Node 24, non-root), `.env.example`, `docs/DEPLOYMENT.md` (steps, backups, env reference, troubleshooting). WhiteNoise added for admin static files (prod only). Fonts now come from the `geist` package, not Google Fonts, so builds no longer need the internet.
 - Verified with real Docker (PostgreSQL 18.6, Redis 8.10, Node 24.21): see the list in `docs/DEPLOYMENT.md`. Backend tests also pass on PostgreSQL 18.6. Not verified: Dokploy UI, real TLS/Traefik, Cloudflare, real Resend delivery.
 
+- **Services rewritten for the AI era** (`frontend/src/lib/services.ts`, shown on Home and `/services`): seven services, a new "AI features for business software" service, a "How I use AI when I build" section, an updated "What I do not offer" list, and an AI question in the FAQ. Based on what the ekhaneikini repo actually contains (grounded product Q&A, AI-assisted search, draft descriptions and SEO text, comparison summaries, staff reply suggestions, provider fallback, cost tracking), not on plans. The ekhaneikini case study was corrected: it wrongly said AI was only planned.
+- Marketplace and LinkedIn texts were rewritten to match (`Profiles_v2`, delivered as a file in the session).
+
 ## In progress
 Nothing.
 
 ## Next
 0a. Owner: deploy using `docs/DEPLOYMENT.md` (VPS, DNS, Resend domain, secrets). Report anything that differs from the doc and it will be fixed.
-0. **Owner decision needed: the new services lineup (AI era).** Services page, Home, Fiverr/Upwork/LinkedIn/Guru texts must be rewritten together. Nothing about AI services is published until decided.
+0. **Owner to confirm the services lineup** (draft is in the code; see Known issues for what to check) before the site goes live.
 1. Add real screenshots: put files in `frontend/public/work/<slug>/` and fill `screenshots` in `caseStudies.ts` (the gallery only renders when non-empty).
 2. OpenGraph image, favicon/brand mark, per-page social previews.
 3. Owner to review all page copy (see Known issues).
@@ -37,6 +40,7 @@ Nothing.
 5. Admin dashboard (`admin/`, React + Vite) and its authentication (SimpleJWT).
 
 ## Known issues
+- Confirm before launch: (1) whether the AI features are switched on in the live store (provider keys set in production); the site says they are *built into the platform*, not that they are live. (2) The "How I use AI when I build" section discloses AI-assisted development. It is true (the ekhaneikini repo is built that way) but it is the owner's choice to publish; delete `aiWorkflow` in `services.ts` to remove it. (3) "What I do not offer" says Messenger/WhatsApp bots and SaaS builds are not for sale yet; change it when that stops being true.
 - `NEXT_PUBLIC_API_URL` is baked in at build time. Set it in the host's build environment (Vercel/Dokploy), then rebuild; changing it at runtime has no effect. Add the site's real origin to the API's `CORS_ALLOWED_ORIGINS`.
 - The 5/hour limit counts per address. Several people behind one shared network (office, mobile carrier NAT) share it.
 - The ekhaneikini screenshot (`frontend/public/work/ekhaneikini/home.png`, from the old test site) shows an "EKAI" promo banner while EKAI is only planned. Replace it with a fresh screenshot of the live store, or accept the banner.

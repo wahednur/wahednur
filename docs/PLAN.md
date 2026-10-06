@@ -21,8 +21,8 @@ Monorepo. Backend and frontends are separate apps and never share dependencies.
 - `frontend/` Next.js: public site now, client panel later.
 - `admin/` React + Vite + TypeScript: owner dashboard (leads, projects, content).
 
-## Services need a rewrite (open)
-AI changes how software is built and what clients ask for, so the services list on the site and the marketplace profiles must be rewritten. Nothing is published until the owner decides the new lineup and what is already proven. Rule: a service is listed only if it has been built or is how the work is actually done; planned things stay under the roadmap label.
+## Services (rewritten for the AI era)
+Seven services; the AI service is limited to what exists in the owner's own platform (grounded Q&A, AI-assisted search, reviewed content drafts, staff reply suggestions). Rule: a service is listed only if it has been built or is how the work is actually done; planned things (Messenger/WhatsApp assistant, SaaS products, autonomous agents) stay under the roadmap label or in "What I do not offer".
 
 ## Phases (one module at a time)
 1. **Public site (frontend only)** - Home, case studies, Services, About, Contact, sitemap/robots done. Next: real screenshots, OpenGraph image, copy review.

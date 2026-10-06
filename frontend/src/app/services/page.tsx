@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import PageHero from "@/components/PageHero";
 import CtaBand from "@/components/CtaBand";
-import { faq, notOffered, serviceList } from "@/lib/services";
+import { aiWorkflow, faq, notOffered, serviceList } from "@/lib/services";
 import { process } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -16,7 +16,7 @@ export default function ServicesPage() {
       <PageHero
         label="Services"
         title="What I can build for you"
-        intro="Web applications for real business workflows. Each service below is something I have built myself."
+        intro="Web applications for real business workflows. These services come from systems I have built and run myself."
       />
       <div className="mx-auto max-w-6xl space-y-5 px-4 py-14 sm:px-6">
         {serviceList.map((s) => (
@@ -27,6 +27,7 @@ export default function ServicesPage() {
               <span className="font-semibold text-ink">Good for: </span>
               {s.goodFor}
             </p>
+            {s.note && <p className="mt-3 text-sm italic text-brand">{s.note}</p>}
             <ul className="mt-4 grid gap-2 text-sm text-muted sm:grid-cols-2">
               {s.includes.map((i) => (
                 <li key={i} className="flex gap-2">
@@ -38,6 +39,17 @@ export default function ServicesPage() {
           </section>
         ))}
       </div>
+
+      <section className="border-t border-line py-16">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <p className="font-mono text-xs uppercase tracking-[0.2em] text-brand">{aiWorkflow.title}</p>
+          <div className="mt-4 max-w-2xl space-y-3 leading-7 text-muted">
+            {aiWorkflow.text.map((t) => (
+              <p key={t}>{t}</p>
+            ))}
+          </div>
+        </div>
+      </section>
 
       <section className="border-t border-line py-16">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">

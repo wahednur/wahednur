@@ -57,33 +57,6 @@ export const projects: Project[] = [
   },
 ];
 
-export const services = [
-  {
-    title: "Custom eCommerce",
-    text: "Storefront, admin panel and backend built around how you sell: variations, checkout, payments, delivery and reports.",
-  },
-  {
-    title: "Business management apps",
-    text: "Inventory, invoicing, partial payments, due tracking and ledgers for businesses that outgrew spreadsheets.",
-  },
-  {
-    title: "Admin dashboards",
-    text: "Clear internal tools for orders, stock, customers and reporting, with permission-based access.",
-  },
-  {
-    title: "Backend APIs & integrations",
-    text: "Django REST APIs with authentication, background jobs, and payment-gateway or courier integration.",
-  },
-  {
-    title: "Improve an existing app",
-    text: "Review, fix and extend a web application you already have, without a rewrite when one isn't needed.",
-  },
-  {
-    title: "Deployment setup",
-    text: "Docker-based setup on your own VPS, agreed per project.",
-  },
-];
-
 export const process = [
   { n: "01", title: "Understand", text: "I start with your business and the problem, not the technology." },
   { n: "02", title: "Agree the scope", text: "A written scope, milestones and delivery time before any code." },
@@ -92,6 +65,7 @@ export const process = [
 ];
 
 export const roadmap = [
+  "AI shopping assistant on Messenger and the storefront",
   "Multi-store dropshipping platform",
   "Shop management system",
   "Restaurant management system",
