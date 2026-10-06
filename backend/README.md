@@ -37,3 +37,9 @@ ruff check . && ruff format --check .
 - Business logic lives in `services.py`, not in views or serializers.
 - The API is secure by default: `IsAuthenticated` unless a view opts out with `AllowAny`.
 - The Django admin sits at `ADMIN_URL` (not `/admin/`); the owner dashboard is the separate React app.
+
+## Leads API
+
+`POST /api/leads/` (public). Body: `name`, `email`, `need` (`ecommerce`, `business_app`, `admin_dashboard`, `backend_api`, `improve_existing`, `other`), `details` (10-5000 chars), optional `budget` and `timeline`, and a hidden honeypot `website` that must stay empty. Returns `201 {"detail": "received"}`, `400` with field errors, or `429` when rate limited (5 per hour per address).
+
+Email goes through Resend. Set `RESEND_API_KEY`, `LEADS_FROM_EMAIL` (a verified domain address) and `LEADS_NOTIFY_TO`. With no key (local dev) the message is logged by the worker instead of sent. Production refuses to start without a key.

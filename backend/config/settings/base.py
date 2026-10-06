@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "corsheaders",
     "core",
+    "leads",
 ]
 
 MIDDLEWARE = [
@@ -82,7 +83,9 @@ REST_FRAMEWORK = {
     "DEFAULT_RENDERER_CLASSES": ["rest_framework.renderers.JSONRenderer"],
     "DEFAULT_PARSER_CLASSES": ["rest_framework.parsers.JSONParser"],
     "DEFAULT_THROTTLE_CLASSES": ["rest_framework.throttling.AnonRateThrottle"],
-    "DEFAULT_THROTTLE_RATES": {"anon": "60/min"},
+    "DEFAULT_THROTTLE_RATES": {"anon": "60/min", "leads": "5/hour"},
+    # Number of reverse proxies in front of the app (Dokploy/Traefik = 1 in prod).
+    "NUM_PROXIES": env.int("NUM_PROXIES", default=0),
 }
 
 # --- CORS: only the site and the admin dashboard may call the API ----------
@@ -114,3 +117,8 @@ LOGGING = {
     "handlers": {"console": {"class": "logging.StreamHandler"}},
     "root": {"handlers": ["console"], "level": "INFO"},
 }
+
+# --- Leads: email notification through Resend ------------------------------
+RESEND_API_KEY = env("RESEND_API_KEY", default="")
+LEADS_NOTIFY_TO = env("LEADS_NOTIFY_TO", default="wahednur@gmail.com")
+LEADS_FROM_EMAIL = env("LEADS_FROM_EMAIL", default="onboarding@resend.dev")
