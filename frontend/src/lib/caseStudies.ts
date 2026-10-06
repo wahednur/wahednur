@@ -98,7 +98,12 @@ export const caseStudies: CaseStudy[] = [
       "I am the only developer, so the roadmap moves at the pace of one person.",
       "AI features (an assistant for product questions and order help) are planned. They are not part of the current system.",
     ],
-    screenshots: [],
+    screenshots: [
+      {
+        src: "/work/ekhaneikini/home.png",
+        alt: "ekhaneikini.com home page with search, category banners and a shop-by-category section",
+      },
+    ],
     href: "https://ekhaneikini.com",
     linkLabel: "Visit the store",
   },

@@ -17,6 +17,13 @@ Short record of what was chosen and why.
 13. **Public form protection in layers**: strict validation with fixed choice lists, honeypot, per-address rate limit, hashed IP, no auto-reply, escaped output.
 14. **No auto-reply emails**: sending mail to an address a stranger typed is an abuse vector.
 
+## Version policy
+- Use the newest **LTS** where one exists (Django, PostgreSQL major, Node), the newest stable where none does (React, Next.js).
+- Django: 5.2 LTS now. Django 6.0 is not LTS, so it is skipped. Move to the next LTS (6.2, expected April 2027) when it ships and the deprecation warnings are clean.
+- Next.js is pinned exactly (16.4.0) because minor releases changed APIs (Cache Components); upgrade deliberately, read `node_modules/next/dist/docs` first.
+- Python packages use compatible ranges in `requirements/`; a lock file is added before the first deploy.
+- PostgreSQL 18.6 is the target. The sandbox used for development sessions only has PostgreSQL 16, so run `pytest` on your own PostgreSQL 18 machine before each merge.
+
 ## Not decided yet
 - Authentication for the admin dashboard (likely SimpleJWT).
 - File storage for uploads (case-study images), if the backend ever serves them.

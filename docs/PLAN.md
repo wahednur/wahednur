@@ -21,16 +21,20 @@ Monorepo. Backend and frontends are separate apps and never share dependencies.
 - `frontend/` Next.js: public site now, client panel later.
 - `admin/` React + Vite + TypeScript: owner dashboard (leads, projects, content).
 
+## Services need a rewrite (open)
+AI changes how software is built and what clients ask for, so the services list on the site and the marketplace profiles must be rewritten. Nothing is published until the owner decides the new lineup and what is already proven. Rule: a service is listed only if it has been built or is how the work is actually done; planned things stay under the roadmap label.
+
 ## Phases (one module at a time)
 1. **Public site (frontend only)** - Home, case studies, Services, About, Contact, sitemap/robots done. Next: real screenshots, OpenGraph image, copy review.
 2. **Backend foundation** - done: Django project, split settings, health endpoint, tests, Celery/Redis. Next: leads/contact API (replaces `mailto`); project content API.
 3. **Contact form + lead capture** wired to the API, spam protection, email notification.
 4. **Admin dashboard** - leads inbox, project and content editing.
 5. **Client panel** - only if there is a real need (project status and files for active clients).
-6. **Deploy** - Docker on VPS (Dokploy), domain switch from `legacy/` to the new site.
+6. **Deploy** - Docker on VPS (Dokploy), point the domain at the new site (the old test site is gone).
 
 ## Decisions
-- Old app moved to `legacy/` (history kept with `git mv`) so the new apps can use the repo root layout. Deployment must be re-pointed to `frontend/` only when the new site is ready to replace the old one.
+- The earlier test portfolio (Next.js + MongoDB) was deleted. It was an experiment, mixed template images with real work and its contents were no longer known. It remains in git history. Only one real asset was kept: the ekhaneikini home-page screenshot. Deployment must be pointed at `frontend/` when the new site goes live.
+- Versions: current stable/LTS only (see README and ARCHITECTURE version policy).
 - Phase 1 ships without a backend so the site can be live early; the contact link is `mailto:` until Phase 3.
 
 ## Open questions for the owner

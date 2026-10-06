@@ -1,9 +1,9 @@
 # PROGRESS
 
-**Last updated:** 2026-10-06 (session 4)
+**Last updated:** 2026-10-06 (session 5)
 
 ## Done
-- Previous site moved to `legacy/` (history preserved).
+- Earlier test portfolio (`legacy/`) deleted at the owner's request; history keeps it. Only the ekhaneikini home screenshot was kept (now on its case study).
 - `frontend/` Next.js scaffold (Next 16, Tailwind 4), design tokens, header, footer.
 - Home page: hero, selected work (3 labelled projects), services, process, about, roadmap (planned), contact. Résumé PDF at `/Abdul_Wahed_Nur_Resume.pdf`.
 - Pages: `/work` (index), `/work/[slug]` (3 case studies: ekhaneikini, service-parts-management, education-management-demo), `/services`, `/about`, `/contact`, `sitemap.xml`, `robots.txt`. Content lives in `frontend/src/lib/` (`caseStudies.ts`, `services.ts`, `site.ts`).
@@ -16,10 +16,13 @@
 - **Leads API** (`backend/leads/`): `POST /api/leads/` (public, write-only). Validated fields (name, email, need, details, optional budget/timeline), honeypot field `website`, rate limit 5/hour per client address, IP stored only as a keyed hash. Saved first, then a Celery task emails the owner through Resend after the DB commit (retry with backoff, idempotency key so a retry never double-sends, enquiry is kept even if email fails). All user text is escaped in the HTML email; subject uses only fixed labels. Django admin lists leads read-only. 25 new tests (31 total).
 - Verified end to end: real server + real Celery/Redis worker + real PostgreSQL; the worker's actual HTTP request to a local stand-in for Resend had the right URL, bearer header, idempotency key, `reply_to` and escaped HTML. Real Resend was not reachable from this environment.
 
+- Version audit: Next 16.4.0, React 19.3.0, Django 5.2.18 (latest LTS), psycopg 3.3, Celery 5.6 confirmed installed; version table in README; version policy in ARCHITECTURE.
+
 ## In progress
 Nothing.
 
 ## Next
+0. **Owner decision needed: the new services lineup (AI era).** Services page, Home, Fiverr/Upwork/LinkedIn/Guru texts must be rewritten together. Nothing about AI services is published until decided.
 1. Add real screenshots: put files in `frontend/public/work/<slug>/` and fill `screenshots` in `caseStudies.ts` (the gallery only renders when non-empty).
 2. OpenGraph image, favicon/brand mark, per-page social previews.
 3. Owner to review all page copy (see Known issues).
@@ -28,6 +31,9 @@ Nothing.
 6. Admin dashboard (`admin/`, React + Vite) and its authentication (SimpleJWT).
 
 ## Known issues
+- Backend tests were run on PostgreSQL 16 (sandbox). Run `pytest` on PostgreSQL 18.6 locally; any difference is a bug to fix.
+- The ekhaneikini screenshot (`frontend/public/work/ekhaneikini/home.png`, from the old test site) shows an "EKAI" promo banner while EKAI is only planned. Replace it with a fresh screenshot of the live store, or accept the banner.
+- `@types/node` is `^20`; align with the Node LTS you run locally.
 - Leads email has never been sent through the real Resend (blocked here). First real test after the key exists: submit the form once and confirm the email arrives and `notified_at` is set in Django admin.
 - `NUM_PROXIES` must match the proxies in front of the API (Dokploy/Traefik is usually 1). Wrong value = rate limit keys on the wrong address.
 - Lead text is stored as typed (not HTML-escaped); it is escaped on output (email, Django admin). Any future dashboard must escape it too (React does by default).
