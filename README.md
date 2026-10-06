@@ -9,7 +9,7 @@ Personal portfolio and services platform of **Abdul Wahed Nur**, Full-Stack Deve
 | Folder | What | Stack | State |
 |---|---|---|---|
 | `frontend/` | Public site (later: client panel) | Next.js, Tailwind CSS | Home page done |
-| `backend/` | API (contact/leads, content, client panel) | Django, DRF, PostgreSQL, Redis, Celery | Not started |
+| `backend/` | API (contact/leads, content, client panel) | Django, DRF, PostgreSQL, Redis, Celery | Foundation done (see `backend/README.md`) |
 | `admin/` | Owner dashboard | React + Vite + TypeScript | Not started |
 | `legacy/` | Previous Next.js + MongoDB site | | Frozen, not deployed from here |
 | `docs/` | Plan and decisions | | |

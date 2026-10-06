@@ -23,7 +23,7 @@ Monorepo. Backend and frontends are separate apps and never share dependencies.
 
 ## Phases (one module at a time)
 1. **Public site (frontend only)** - Home, case studies, Services, About, Contact, sitemap/robots done. Next: real screenshots, OpenGraph image, copy review.
-2. **Backend foundation** - Django project, split settings, health endpoint, tests; leads/contact API (replaces `mailto`); project content API.
+2. **Backend foundation** - done: Django project, split settings, health endpoint, tests, Celery/Redis. Next: leads/contact API (replaces `mailto`); project content API.
 3. **Contact form + lead capture** wired to the API, spam protection, email notification.
 4. **Admin dashboard** - leads inbox, project and content editing.
 5. **Client panel** - only if there is a real need (project status and files for active clients).
