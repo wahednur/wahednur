@@ -1,6 +1,8 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
+from projects.models import Project
+
 from .models import Document
 
 
@@ -14,6 +16,7 @@ class DocumentSerializer(serializers.ModelSerializer):
             "title",
             "category",
             "client",
+            "project",
             "client_email",
             "shared_with_client",
             "original_name",
@@ -34,6 +37,9 @@ class UploadSerializer(serializers.Serializer):
         queryset=get_user_model().objects.filter(is_active=True), required=False, allow_null=True
     )
     shared_with_client = serializers.BooleanField(default=False)
+    project = serializers.PrimaryKeyRelatedField(
+        queryset=Project.objects.filter(deleted_at__isnull=True), required=False, allow_null=True
+    )
 
 
 class SharingSerializer(serializers.Serializer):

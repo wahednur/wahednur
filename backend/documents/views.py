@@ -28,6 +28,9 @@ class DocumentListView(APIView):
 
     def get(self, request):
         qs = services.visible_to(request.user).select_related("client")
+        project = request.query_params.get("project")
+        if project:
+            qs = qs.filter(project_id=project) if services.is_uuid(project) else qs.none()
         return _no_store(Response(DocumentSerializer(qs, many=True).data))
 
     def post(self, request):

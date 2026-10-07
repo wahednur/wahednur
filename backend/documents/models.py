@@ -27,6 +27,13 @@ class Document(models.Model):
         on_delete=models.PROTECT,
         related_name="documents",
     )
+    project = models.ForeignKey(
+        "projects.Project",
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        related_name="documents",
+    )
     shared_with_client = models.BooleanField(default=False)
     uploaded_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL, related_name="+"

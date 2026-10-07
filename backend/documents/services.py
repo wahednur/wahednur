@@ -53,7 +53,15 @@ def _clean_name(name: str) -> str:
 
 
 def upload_document(
-    *, user, file, title, category, client=None, shared_with_client=False, request=None
+    *,
+    user,
+    file,
+    title,
+    category,
+    client=None,
+    project=None,
+    shared_with_client=False,
+    request=None,
 ):
     name = _clean_name(file.name)
     ext = PurePath(name).suffix.lower()
@@ -70,6 +78,8 @@ def upload_document(
     content_type, looks_right = ALLOWED[ext]
     if not looks_right(data[:16]):
         raise ValidationError({"file": "The file content does not match its extension."})
+    if project is not None:
+        client = project.client  # a project's documents always belong to its client
     if shared_with_client and client is None:
         raise ValidationError({"shared_with_client": "Choose a client before sharing."})
 
@@ -79,6 +89,7 @@ def upload_document(
         title=title.strip(),
         category=category,
         client=client,
+        project=project,
         shared_with_client=shared_with_client,
         uploaded_by=user,
         file_key=key,
@@ -118,3 +129,11 @@ def delete_document(*, user, doc: Document, request=None):
     doc.deleted_at = timezone.now()
     doc.save(update_fields=["deleted_at"])
     record("document_deleted", request=request, user=user)
+
+
+def is_uuid(value: str) -> bool:
+    try:
+        uuid.UUID(value)
+    except ValueError:
+        return False
+    return True

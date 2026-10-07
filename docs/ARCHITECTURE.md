@@ -48,3 +48,10 @@ Short record of what was chosen and why.
 - Staff see all documents; a client sees only documents of theirs that were explicitly shared. "Not yours" and "does not exist" both answer 404.
 - Delete is soft (file kept). Every upload, download and delete is written to the audit trail.
 - R2 setup: create a private bucket; create an API token with Object Read & Write for that bucket only; set the four `R2_PRIVATE_*` variables (the `R2_*` set is the separate public bucket for site assets). No CORS needed because the browser never uploads to R2 directly.
+
+## Clients and projects (phase 4)
+- A client is a normal account; `ClientProfile` holds business details and private notes. Staff pick a client by email.
+- Progress is never stored: it is the share of milestones marked done, so it cannot disagree with the work list.
+- Status moves only along allowed paths (a proposal cannot jump to completed; cancelled is final; completed can be reopened).
+- Clients read their own projects and public notes. Internal notes are filtered on the server. Only staff with 2FA can write.
+- A document uploaded to a project is assigned to that project's client automatically.
