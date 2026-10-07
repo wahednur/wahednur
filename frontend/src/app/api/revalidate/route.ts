@@ -25,7 +25,7 @@ export async function POST(request: Request) {
   if (!Array.isArray(paths) || paths.length > 20 || !paths.every((p) => typeof p === "string" && ALLOWED.test(p))) {
     return new Response("Bad request", { status: 400 });
   }
-  revalidateTag("cms", "max"); // the cached API responses
+  revalidateTag("cms", { expire: 0 }); // the cached API responses: the next visitor gets fresh content
   for (const p of paths as string[]) revalidatePath(p); // the rendered pages
   return Response.json({ revalidated: paths });
 }
