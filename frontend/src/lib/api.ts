@@ -221,3 +221,41 @@ export const EXPENSE_CATEGORIES: [string, string][] = [
   ["tax", "Tax and licences"],
   ["other", "Other"],
 ];
+
+export type PackageInfo = {
+  id: number;
+  name: string;
+  tagline: string;
+  features: string[];
+  price: string;
+  currency: "BDT" | "USD";
+  cycle: "one_time" | "monthly" | "yearly";
+  delivery_days: number | null;
+  revisions: number | null;
+};
+export type ServiceInfo = { slug: string; title: string; summary: string; description: string; packages: PackageInfo[] };
+export type OrderRow = {
+  id: string;
+  title: string;
+  unit_price: string;
+  currency: "BDT" | "USD";
+  cycle: string;
+  note: string;
+  status: "requested" | "accepted" | "declined" | "cancelled";
+  client_email: string;
+  project: string | null;
+};
+export type SubscriptionRow = {
+  id: number;
+  title: string;
+  client_email: string;
+  project: string;
+  unit_price: string;
+  currency: "BDT" | "USD";
+  cycle: "monthly" | "yearly";
+  status: "active" | "paused" | "cancelled";
+  start_date: string;
+  next_billing_date: string | null;
+  invoices: string[];
+};
+export const CYCLE_LABEL: Record<string, string> = { one_time: "one time", monthly: "per month", yearly: "per year" };
