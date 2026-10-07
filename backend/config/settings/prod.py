@@ -5,6 +5,9 @@ from .base import env
 # startup fails loudly if they are missing.
 DEBUG = False
 
+# The container's own health check calls the app as `localhost`.
+ALLOWED_HOSTS = [*ALLOWED_HOSTS, *(h for h in ("localhost", "127.0.0.1") if h not in ALLOWED_HOSTS)]  # noqa: F405
+
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True

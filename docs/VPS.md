@@ -100,7 +100,7 @@ curl -s -H "Host: api.wahednur.tech" -H "X-Forwarded-Proto: https" http://127.0.
 | 502 with a Cloudflare-branded page | Cloudflare cannot reach the server: SSL mode must be Full (strict), ports 80/443 open, and the Caddy certificate issued |
 | No HTTPS certificate | `docker compose logs caddy`: DNS not pointing here yet, or port 80/443 blocked |
 | 502, `api` exited or restarting | `docker compose logs api`: usually a missing `.env` value |
-| 400 from the API | `ALLOWED_HOSTS` does not match the hostname |
+| 400 "Host" error from the API | `ALLOWED_HOSTS` must hold bare host names (`api.wahednur.tech`), never `https://...`, and must include the API hostname |
 | CORS error in the browser | the site origin is missing from `CORS_ALLOWED_ORIGINS` (exact, with `https://`) |
 | Form falls back to the email app | `NEXT_PUBLIC_API_URL` was empty at Vercel build time |
 | Leads saved but no email | the lead's `notify_error` in the Django admin, then `docker compose logs worker`; verify the Resend domain |

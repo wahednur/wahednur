@@ -5,6 +5,8 @@ from pathlib import Path
 
 import environ
 
+from .utils import clean_hosts, clean_origins
+
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 env = environ.Env()
@@ -12,7 +14,7 @@ environ.Env.read_env(BASE_DIR / ".env")  # no-op when the file does not exist
 
 SECRET_KEY = env("SECRET_KEY")
 DEBUG = False
-ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=[])
+ALLOWED_HOSTS = clean_hosts(env.list("ALLOWED_HOSTS", default=[]))
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -89,8 +91,8 @@ REST_FRAMEWORK = {
 }
 
 # --- CORS: only the site and the admin dashboard may call the API ----------
-CORS_ALLOWED_ORIGINS = env.list("CORS_ALLOWED_ORIGINS", default=[])
-CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=[])
+CORS_ALLOWED_ORIGINS = clean_origins(env.list("CORS_ALLOWED_ORIGINS", default=[]))
+CSRF_TRUSTED_ORIGINS = clean_origins(env.list("CSRF_TRUSTED_ORIGINS", default=[]))
 
 # --- Auth ------------------------------------------------------------------
 AUTH_PASSWORD_VALIDATORS = [
