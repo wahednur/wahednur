@@ -18,6 +18,9 @@ export default async function AuthGate({ children }: { children: React.ReactNode
           <Link href="/app/projects" className="text-muted hover:text-ink">
             Projects
           </Link>
+          <Link href="/app/billing" className="text-muted hover:text-ink">
+            Billing
+          </Link>
           <Link href="/app/documents" className="text-muted hover:text-ink">
             Documents
           </Link>

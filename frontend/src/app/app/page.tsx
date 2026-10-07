@@ -36,7 +36,7 @@ export default async function Dashboard() {
         {[
           ["Projects", "Your projects, milestones and progress.", "/app/projects"],
           ["Documents", "Agreements and other project files.", "/app/documents"],
-          ["Invoices", "Invoices and payments will appear here.", ""],
+          ["Billing", "Quotations, invoices and payments.", "/app/billing"],
         ].map(([title, text, href]) => {
           const card = (
             <>

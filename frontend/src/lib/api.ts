@@ -104,3 +104,80 @@ export const CATEGORIES: [string, string][] = [
   ["receipt", "Receipt"],
   ["other", "Other"],
 ];
+
+/** Downloads a protected file (PDF) through the session cookie and hands it to the browser. */
+export async function downloadFile(path: string, fallbackName: string): Promise<string> {
+  try {
+    const res = await fetch(`${API_URL}/api${path}`, { credentials: "include" });
+    if (!res.ok) return "Could not download the file.";
+    const blob = await res.blob();
+    const name = /filename="([^"]+)"/.exec(res.headers.get("Content-Disposition") ?? "")?.[1] ?? fallbackName;
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = name;
+    a.click();
+    URL.revokeObjectURL(url);
+    return "";
+  } catch {
+    return "Could not reach the server. Try again.";
+  }
+}
+
+export type BillItem = { id?: number; description: string; quantity: string; unit_price: string; cycle: string; amount?: string };
+export type BillBase = {
+  id: string;
+  number: string;
+  title: string;
+  project: string;
+  project_title: string;
+  client_email: string;
+  currency: "BDT" | "USD";
+  discount: string;
+  notes: string;
+  status: string;
+  subtotal: string;
+  total: string;
+  items: BillItem[];
+  created_at: string;
+};
+export type Quotation = BillBase & {
+  valid_until: string | null;
+  invoice_id: string | null;
+};
+export type InstallmentRow = { id: number; label: string; amount: string; due_date: string | null; paid: string; state: string };
+export type PaymentRow = { id: number; amount: string; method: string; reference: string; paid_on: string; note: string };
+export type Invoice = BillBase & {
+  state: string;
+  due_date: string | null;
+  quotation_id: string | null;
+  paid_total: string;
+  outstanding: string;
+  installments: InstallmentRow[];
+  payments: PaymentRow[];
+};
+
+/** Display only: the server calculated the number, this just formats it. */
+export const fmt = (currency: string, value: string) =>
+  `${currency === "USD" ? "$" : "৳"}${Number(value).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+export const PLANS: Record<string, { label: string; steps: { label: string; percent: string }[] }> = {
+  full: { label: "Full payment", steps: [{ label: "Full payment", percent: "100" }] },
+  half: { label: "50% start, 50% final", steps: [{ label: "Start", percent: "50" }, { label: "Final", percent: "50" }] },
+  three: {
+    label: "40% start, 30% middle, 30% final",
+    steps: [
+      { label: "Start", percent: "40" },
+      { label: "Middle", percent: "30" },
+      { label: "Final", percent: "30" },
+    ],
+  },
+};
+export const METHODS: [string, string][] = [
+  ["bank", "Bank transfer"],
+  ["bkash", "bKash"],
+  ["nagad", "Nagad"],
+  ["cash", "Cash"],
+  ["card", "Card or gateway"],
+  ["other", "Other"],
+];
