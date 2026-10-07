@@ -222,12 +222,19 @@ EMAIL_BACKEND = (
     else "django.core.mail.backends.console.EmailBackend"
 )
 
-# --- Document vault (Cloudflare R2, private bucket) ---------------------------
-# Without R2 keys the vault falls back to a local private folder (dev and tests only).
+# --- Cloudflare R2 -----------------------------------------------------------
+# Two separate buckets and two separate tokens:
+#   R2_*          public bucket (website images and assets, used from phase 8)
+#   R2_PRIVATE_*  private vault (contracts, invoices). Documents use ONLY this one.
 R2_ACCOUNT_ID = env("R2_ACCOUNT_ID", default="")
 R2_ACCESS_KEY_ID = env("R2_ACCESS_KEY_ID", default="")
 R2_SECRET_ACCESS_KEY = env("R2_SECRET_ACCESS_KEY", default="")
 R2_BUCKET = env("R2_BUCKET", default="")
+# Without the private keys the vault falls back to a local private folder (dev and tests only).
+R2_PRIVATE_ACCOUNT_ID = env("R2_PRIVATE_ACCOUNT_ID", default="")
+R2_PRIVATE_ACCESS_KEY_ID = env("R2_PRIVATE_ACCESS_KEY_ID", default="")
+R2_PRIVATE_SECRET_ACCESS_KEY = env("R2_PRIVATE_SECRET_ACCESS_KEY", default="")
+R2_PRIVATE_BUCKET = env("R2_PRIVATE_BUCKET", default="")
 DOCUMENTS_MAX_MB = env.int("DOCUMENTS_MAX_MB", default=20)
 DOCUMENTS_URL_TTL = env.int("DOCUMENTS_URL_TTL", default=300)  # seconds a download link lives
 DOCUMENTS_LOCAL_ROOT = BASE_DIR / "private_media"

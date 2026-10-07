@@ -1,6 +1,6 @@
 """Where document bytes live. Private always: nothing is ever served from a public URL.
 
-R2 (S3 API) when keys are set; a local private folder otherwise (dev and tests only).
+R2 (S3 API) when the R2_PRIVATE_* keys are set; otherwise a local private folder (dev, tests).
 Callers use `get_storage()` and never import boto3 themselves.
 """
 
@@ -23,12 +23,12 @@ class R2Storage:
         import boto3
         from botocore.config import Config
 
-        self.bucket = settings.R2_BUCKET
+        self.bucket = settings.R2_PRIVATE_BUCKET
         self.client = boto3.client(
             "s3",
-            endpoint_url=f"https://{settings.R2_ACCOUNT_ID}.r2.cloudflarestorage.com",
-            aws_access_key_id=settings.R2_ACCESS_KEY_ID,
-            aws_secret_access_key=settings.R2_SECRET_ACCESS_KEY,
+            endpoint_url=f"https://{settings.R2_PRIVATE_ACCOUNT_ID}.r2.cloudflarestorage.com",
+            aws_access_key_id=settings.R2_PRIVATE_ACCESS_KEY_ID,
+            aws_secret_access_key=settings.R2_PRIVATE_SECRET_ACCESS_KEY,
             region_name="auto",
             config=Config(signature_version="s3v4", retries={"max_attempts": 3}),
         )
@@ -87,10 +87,10 @@ class LocalStorage:
 @lru_cache(maxsize=1)
 def get_storage():
     if (
-        settings.R2_ACCOUNT_ID
-        and settings.R2_ACCESS_KEY_ID
-        and settings.R2_SECRET_ACCESS_KEY
-        and settings.R2_BUCKET
+        settings.R2_PRIVATE_ACCOUNT_ID
+        and settings.R2_PRIVATE_ACCESS_KEY_ID
+        and settings.R2_PRIVATE_SECRET_ACCESS_KEY
+        and settings.R2_PRIVATE_BUCKET
     ):
         return R2Storage()
     return LocalStorage()

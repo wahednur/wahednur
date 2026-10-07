@@ -187,8 +187,8 @@ def test_staff_needs_two_factor_when_required(staff, settings):
 
 
 def test_r2_storage_signs_private_links_and_uploads(settings):
-    settings.R2_ACCOUNT_ID, settings.R2_BUCKET = "acct", "vault"
-    settings.R2_ACCESS_KEY_ID, settings.R2_SECRET_ACCESS_KEY = "AK", "SK"
+    settings.R2_PRIVATE_ACCOUNT_ID, settings.R2_PRIVATE_BUCKET = "acct", "vault"
+    settings.R2_PRIVATE_ACCESS_KEY_ID, settings.R2_PRIVATE_SECRET_ACCESS_KEY = "AK", "SK"
     storage.get_storage.cache_clear()
     r2 = storage.get_storage()
     assert isinstance(r2, storage.R2Storage)
