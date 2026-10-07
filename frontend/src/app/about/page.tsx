@@ -83,7 +83,7 @@ export default function AboutPage() {
               href={site.resume}
               className="rounded-md bg-brand px-4 py-2.5 text-sm font-semibold text-bg hover:opacity-90"
             >
-              Download résumé
+              Download resume
             </a>
             <a
               href={site.github}

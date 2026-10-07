@@ -145,7 +145,7 @@ export default function Home() {
             GitHub
           </a>
           <a href={site.resume} className="rounded-md border border-line px-5 py-3 text-sm font-semibold hover:border-brand/60 hover:text-brand">
-            Download résumé
+            Download resume
           </a>
         </div>
       </Section>

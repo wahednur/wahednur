@@ -34,7 +34,7 @@ export default function ContactPage() {
                 <a href={site.github} className="hover:text-ink">GitHub</a>
               </li>
               <li>
-                <a href={site.resume} className="hover:text-ink">Résumé (PDF)</a>
+                <a href={site.resume} className="hover:text-ink">Resume (PDF)</a>
               </li>
             </ul>
           </div>
