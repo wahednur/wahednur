@@ -27,7 +27,7 @@ Ours: `GET /api/auth/me/` returns `{id, email, full_name, roles, email_verified,
 
 ## Production checklist
 - `COOKIE_DOMAIN=.wahednur.tech`, `FRONTEND_URL=https://www.wahednur.tech`, `CORS_ALLOWED_ORIGINS` with the site origins, `RESEND_API_KEY` (codes are emailed through it).
-- Create the owner with `createsuperuser`, sign in, **set up two-factor immediately** (the API refuses owner actions until you do).
+- Create the owner with `python manage.py bootstrap_owner --email you@example.com` (superuser with a **verified** email, safe to run again if you are ever locked out), sign in, **set up two-factor immediately** (the API refuses owner actions until you do).
 - Keep `REQUIRE_STAFF_MFA=true`.
 
 ## Known limits

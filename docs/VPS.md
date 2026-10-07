@@ -45,7 +45,7 @@ Fill in `.env` (generate secrets with `openssl rand -hex 32`):
 ```bash
 docker compose up -d --build
 docker compose ps                        # all healthy
-docker compose exec api python manage.py createsuperuser   # asks for an email address and a password
+docker compose exec api python manage.py bootstrap_owner --email you@example.com   # asks for a password; email is marked verified
 curl https://api.wahednur.tech/api/health/    # {"status":"ok",...}
 ```
 Caddy gets the HTTPS certificate on first request (DNS must already point here and ports 80/443 must be reachable).
