@@ -1,6 +1,9 @@
-# Production stack for Dokploy (type: Compose). No host ports are published:
-# Dokploy's Traefik reaches `api` (8000) and `frontend` (3000) over the
-# network, and you attach domains to them in the Dokploy "Domains" tab.
+# Production stack. Always on: db, redis, api, worker.
+# Optional, switched on with COMPOSE_PROFILES in .env:
+#   proxy     Caddy in front of the API with automatic HTTPS (plain VPS, see docs/VPS.md)
+#   frontend  the Next.js site, if you host it here instead of on Vercel
+# Only Caddy publishes host ports (80/443). Behind Dokploy, leave `proxy` off and
+# attach domains to `api` (8000) and `frontend` (3000) in Dokploy.
 name: wahednur
 
 x-backend: &backend
@@ -72,15 +75,36 @@ services:
       disable: true
 
   frontend:
+    profiles: ["frontend"]
     build:
       context: ./frontend
       args:
-        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:?set NEXT_PUBLIC_API_URL}
+        # Baked into the site at build time. Required when this profile is used.
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-}
     image: wahednur-frontend:latest
     restart: unless-stopped
     expose:
       - "3000"
 
+  caddy:
+    profiles: ["proxy"]
+    image: caddy:2-alpine
+    restart: unless-stopped
+    environment:
+      API_DOMAIN: ${API_DOMAIN:-localhost}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - api
+
 volumes:
   pgdata:
   redisdata:
+  caddy_data:
+  caddy_config:

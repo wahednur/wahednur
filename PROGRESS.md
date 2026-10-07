@@ -1,6 +1,6 @@
 # PROGRESS
 
-**Last updated:** 2026-10-06 (session 12)
+**Last updated:** 2026-10-06 (session 13)
 
 ## Done
 - Earlier test portfolio (`legacy/`) deleted at the owner's request; history keeps it. Only the ekhaneikini home screenshot was kept (now on its case study).
@@ -37,10 +37,13 @@
 - **Package manager is bun** (owner's choice): `frontend/bun.lock` is the lockfile, `package-lock.json` removed, `frontend/Dockerfile` installs with `oven/bun` and builds/runs on Node 24 (verified with a real Docker build and run).
 - Fixed a build break from the footer's `new Date()` (Cache Components forbids it while prerendering) with `components/Year.tsx`; header image alt text fixed; duplicate `src/app/wahednur.jpg` and the generated `icon.png` removed (owner's favicon is used).
 
+- **Plain-VPS deployment path** (owner's choice; Dokploy and Vercel gave trouble): compose profiles (`proxy` = Caddy with automatic HTTPS, `frontend` = optional site), `deploy/Caddyfile`, `deploy/backup.sh`, `docs/VPS.md` (server setup, firewall, DNS, `.env`, Vercel hookup, backups, updates, troubleshooting). Verified in real Docker: profile selection, Caddy config validity, and backup, restore (250/250 rows on PostgreSQL 18.6), pruning, and failure handling. Not verified: real certificates, DNS, Resend.
+
 ## In progress
 Nothing.
 
 ## Next
+- **Owner, in order:** (1) make `bike-meter-service-erp` private and rotate its secrets, remove the DB dump from its history; (2) buy/prepare VPS, DNS `api.wahednur.tech`, Resend domain + key; (3) follow `docs/VPS.md`; (4) set `NEXT_PUBLIC_API_URL` and Root Directory `frontend` in Vercel; (5) run the screenshot tool and send images; (6) merge `portfolio` into `main` (tag `old-site` first); (7) update LinkedIn/Upwork/Fiverr/Guru with `Profiles_v2`; (8) confirm the AI claims and the EMIS naming.
 - Add real screenshots (owner runs `tools/screenshots`; send the files).
 - Deploy per `docs/DEPLOYMENT.md`, merge `portfolio` into `main` and point the host at `frontend/`.
 0a. Owner: deploy using `docs/DEPLOYMENT.md` (VPS, DNS, Resend domain, secrets). Report anything that differs from the doc and it will be fixed.

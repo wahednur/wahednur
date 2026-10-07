@@ -1,4 +1,6 @@
-# Deployment (Dokploy)
+# Deployment (Dokploy, optional)
+
+> **Primary path is now a plain VPS with Docker and Caddy: see `VPS.md`.** This page covers Dokploy only. With Dokploy, leave `COMPOSE_PROFILES` empty (no Caddy) and add `frontend` to it only if you host the site there too.
 
 One Docker Compose stack runs everything: `frontend` (Next.js), `api` (Django + gunicorn), `worker` (Celery), `db` (PostgreSQL 18), `redis` (Redis 8). The files: `docker-compose.yml` (repo root), `backend/Dockerfile`, `frontend/Dockerfile`, `.env.example`.
 
