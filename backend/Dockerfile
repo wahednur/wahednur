@@ -11,7 +11,8 @@ FROM ${PYTHON_IMAGE} AS runtime
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PATH="/opt/venv/bin:$PATH" \
-    DJANGO_SETTINGS_MODULE=config.settings.prod
+    DJANGO_SETTINGS_MODULE=config.settings.prod \
+    HOME=/tmp
 WORKDIR /app
 RUN useradd --system --uid 10001 --no-create-home app
 COPY --from=builder /opt/venv /opt/venv
