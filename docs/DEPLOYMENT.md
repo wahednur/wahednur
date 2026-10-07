@@ -105,3 +105,9 @@ Set these in Vercel (Environment Variables), then redeploy:
 - `NEXT_PUBLIC_SHOW_BLOG=true` and `NEXT_PUBLIC_SHOW_PACKAGES=true`: show the Blog and Packages links in the header once there is real content.
 
 API (VPS `.env`): `REVALIDATE_SECRET` (same value), optionally `AI_PROVIDERS=anthropic` with `ANTHROPIC_API_KEY` (or gemini / groq). Leave `AI_PROVIDERS` empty to use the free rule-based SEO text. The worker container must run (it also bills subscriptions and writes SEO text).
+
+## Shop setup (after deploy)
+1. Vault: upload each downloadable file (staff, `/app/documents`). Do not tick "share with client".
+2. Django admin (`/manage-site/`): add Shipping zones (name and fee), Products (set Published last), attach the vault file under "Product files" for digital products, then add stock with *Stock movements* (reason Restock). Stock is never typed into a product: it is the sum of movements.
+3. Set `INVOICE_PAYMENT_NOTE` on the API (your bKash/Nagad/bank details, shown to buyers and printed on invoices) and, on Vercel, `NEXT_PUBLIC_SHOW_SHOP=true`.
+4. Unpaid orders return their stock after `SHOP_PAYMENT_HOURS` (default 48). Orders where the customer reported a payment wait for you.
