@@ -122,3 +122,10 @@ Run these on the VPS, in this order:
 2. `docker compose logs --tail=50 worker`: the worker sends sign-in emails in the background. If it is not running, or cannot reach Redis, nothing leaves the server.
 3. Resend dashboard, Emails: shows delivered, bounced or blocked.
 Common causes: the domain in `LEADS_FROM_EMAIL` is not verified in Resend (Resend then only delivers to your own account address), a wrong or revoked `RESEND_API_KEY`, or the worker container is stopped.
+
+
+## Commands on Dokploy (there is no `git pull` and no `.env` file on the server)
+- **Code**: Dokploy pulls from GitHub itself. In the service's **General → Provider**, the branch must be **`main`** (an old branch such as `portfolio` deploys old code). Then press **Deploy** (or turn on Auto Deploy).
+- **Settings**: only the service's **Environment** tab counts. Paste `KEY=value` lines, one per line, no quotes, no `<placeholders>`; leave `COMPOSE_PROFILES` empty. Press **Save**, then **Deploy** (a changed value needs a redeploy).
+- **Run a command** (for example `python manage.py send_test_email you@example.com` or `python manage.py bootstrap_owner you@example.com`): service → **Advanced → Terminal**, choose the container `api`, run the command without `docker compose exec`. Over SSH instead: `docker ps` to find the name, then `docker exec -it <api-container-name> python manage.py ...`.
+- **Logs**: service → **Logs**, choose `api` or `worker`.
