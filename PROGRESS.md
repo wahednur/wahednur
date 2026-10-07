@@ -1,6 +1,6 @@
 # PROGRESS
 
-**Last updated:** 2026-10-06 (session 17)
+**Last updated:** 2026-10-06 (session 18)
 
 ## Done
 - Earlier test portfolio (`legacy/`) deleted at the owner's request; history keeps it. Only the ekhaneikini home screenshot was kept (now on its case study).
@@ -47,6 +47,8 @@
 
 - **Email login**: custom `accounts.User` (email is the login, lowercase, unique ignoring case), admin registration, 11 new tests (45 total) including admin login by email and `createsuperuser`; verified `migrate` + `createsuperuser` on an empty PostgreSQL database. **An existing database must be reset once** (steps in `docs/VPS.md` §4) before this version is deployed.
 - `Download resume` spelling done; `NEXT_PUBLIC_API_URL` set on Vercel by the owner.
+
+- **Sign-in backend (phase 1)**: django-allauth headless, email code verification, password reset by code, Google (when keys are set), set-password after Google, TOTP two-factor required for staff and owner (API and Django admin), roles (owner/staff/client), DRF permission classes, `/api/auth/me/`, audit trail, Resend email backend (Celery), CSRF/CORS/cookie settings for the www/api split, branded emails. 83 tests pass; verified end to end over real HTTP (CSRF cookie, signup, code, HttpOnly session cookie, `/api/auth/me/`, missing CSRF 403, evil origin 403, logout). See `docs/AUTH.md`.
 
 ## In progress
 Nothing.

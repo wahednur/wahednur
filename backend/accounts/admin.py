@@ -1,3 +1,4 @@
+from allauth.account.decorators import secure_admin_login
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 
@@ -19,3 +20,7 @@ class UserAdmin(DjangoUserAdmin):
         ("Important dates", {"fields": ("last_login", "date_joined")}),
     )
     add_fieldsets = ((None, {"classes": ("wide",), "fields": ("email", "password1", "password2")}),)
+
+
+# The Django admin signs in through allauth, so it gets the same rate limits and two-factor step.
+admin.site.login = secure_admin_login(admin.site.login)

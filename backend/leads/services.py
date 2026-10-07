@@ -1,20 +1,11 @@
 """Business logic for leads. Views call these; they do not touch the model."""
 
-import hashlib
-import hmac
-
-from django.conf import settings
 from django.db import transaction
+
+from core.utils import hash_ip
 
 from .models import Lead
 from .tasks import send_lead_notification
-
-
-def hash_ip(ip: str) -> str:
-    if not ip:
-        return ""
-    key = settings.SECRET_KEY.encode()
-    return hmac.new(key, ip.encode(), hashlib.sha256).hexdigest()
 
 
 def create_lead(*, ip: str = "", **data) -> Lead:

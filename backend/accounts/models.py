@@ -1,8 +1,12 @@
+from django.conf import settings
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
 from django.db import models
 from django.db.models.functions import Lower
 from django.utils import timezone
+
+from .roles import ALL as ROLE_NAMES
+from .roles import OWNER, STAFF
 
 
 class UserManager(BaseUserManager):
@@ -51,3 +55,32 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self) -> str:
         return self.email
+
+    @property
+    def roles(self) -> list[str]:
+        """Role names for the UI. Authorization is always decided on the server."""
+        roles = [r for r in self.groups.values_list("name", flat=True) if r in ROLE_NAMES]
+        if self.is_superuser and OWNER not in roles:
+            roles.append(OWNER)
+        if self.is_staff and STAFF not in roles and OWNER not in roles:
+            roles.append(STAFF)
+        return sorted(set(roles))
+
+
+class AuditEvent(models.Model):
+    """Security-relevant events: sign-ins, failures, password and 2FA changes."""
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL, related_name="+"
+    )
+    action = models.CharField(max_length=40, db_index=True)
+    email = models.CharField(max_length=254, blank=True)  # attempted address for failed logins
+    ip_hash = models.CharField(max_length=64, blank=True)
+    user_agent = models.CharField(max_length=200, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self) -> str:
+        return f"{self.created_at:%Y-%m-%d %H:%M} {self.action} {self.email or self.user_id}"

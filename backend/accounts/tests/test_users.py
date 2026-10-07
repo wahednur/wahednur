@@ -54,29 +54,14 @@ def test_createsuperuser_command_works_with_an_email():
     assert User.objects.get(email="boss@example.com").is_superuser
 
 
-def test_admin_login_with_email(settings):
-    User.objects.create_superuser("root@example.com", "s3cret-pass-123")
-    client = Client()
-    login_url = f"/{settings.ADMIN_URL}login/"
-    # The real login form also sends a hidden `next` field pointing at the admin index.
-    response = client.post(
-        login_url,
-        {
-            "username": "root@example.com",
-            "password": "s3cret-pass-123",
-            "next": f"/{settings.ADMIN_URL}",
-        },
-        follow=True,
-    )
-    assert response.status_code == 200
-    assert response.context["user"].is_authenticated
-    assert client.get(f"/{settings.ADMIN_URL}").status_code == 200
+def test_django_admin_login_goes_through_allauth(settings):
+    """The admin shares allauth's rate limits and two-factor step instead of its own form."""
+    response = Client().get(f"/{settings.ADMIN_URL}login/")
+    assert response.status_code == 302
+    assert response.url.startswith("/accounts/login/")
 
 
-def test_admin_login_rejects_a_wrong_password(settings):
-    User.objects.create_superuser("root@example.com", "s3cret-pass-123")
-    response = Client().post(
-        f"/{settings.ADMIN_URL}login/", {"username": "root@example.com", "password": "nope"}
-    )
-    assert response.status_code == 200  # form shown again, not logged in
-    assert not response.context["user"].is_authenticated
+def test_admin_is_closed_to_anonymous_visitors(settings):
+    response = Client().get(f"/{settings.ADMIN_URL}")
+    assert response.status_code == 302
+    assert "login" in response.url

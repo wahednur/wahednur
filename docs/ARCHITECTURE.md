@@ -23,6 +23,12 @@ Short record of what was chosen and why.
 19. **Frontend as Next.js `standalone` output** in a Node 24 image; fonts come from the `geist` package so builds never depend on Google Fonts being reachable.
 20. **`NUM_PROXIES` is explicit**: the rate limiter trusts exactly that many proxy hops, so a wrong value either shares one limit across everyone (too low) or lets clients spoof their address (too high).
 21. **Custom user model with email login** (`accounts.User`, `AUTH_USER_MODEL`), chosen at the very start because swapping later means rebuilding the database. Email is the only identifier (no username), stored lowercase and unique ignoring case. The future owner dashboard will authenticate the same users.
+22. **Sign-in is django-allauth (headless) with HttpOnly session cookies**, not hand-written and not JWT in the browser. Session cookie `wn_sid` is HttpOnly, SameSite=Lax, shared by `www` and `api` through `COOKIE_DOMAIN`; the CSRF cookie is readable so the site can echo it in `X-CSRFToken`. Email codes (not links) for verification and password reset; Google by redirect flow; TOTP for two-factor.
+23. **Authorization is decided by the API on every request** (DRF permission classes: verified user, staff + 2FA, owner + 2FA). The Next.js proxy and pages only mirror it for a good experience.
+24. **Staff and owner need two-factor authentication** (`REQUIRE_STAFF_MFA`), including for the Django admin, whose login is routed through allauth.
+25. **Google and password both work for one account**: a Google sign-in joins an existing account only when the email is verified; someone who started with Google can set a password later and use either.
+26. **Audit trail** of sign-ins, failures, password and 2FA changes (no secrets stored, IP kept only as a keyed hash).
+27. **Frontend origins are trusted automatically** for CORS, CSRF and the post-Google redirect, from one list, so a forgotten setting cannot silently break sign-in.
 
 ## Version policy
 - Use the newest **LTS** where one exists (Django, PostgreSQL major, Node), the newest stable where none does (React, Next.js).

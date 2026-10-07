@@ -14,3 +14,8 @@ REST_FRAMEWORK = {
     **REST_FRAMEWORK,  # noqa: F405
     "DEFAULT_THROTTLE_CLASSES": [],
 }
+
+EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
+FRONTEND_URL = "https://www.wahednur.tech"
+TRUSTED_FRONTEND_ORIGINS = {FRONTEND_URL}
+CSRF_TRUSTED_ORIGINS = [FRONTEND_URL]

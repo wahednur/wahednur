@@ -23,6 +23,11 @@ x-backend: &backend
     LEADS_NOTIFY_TO: ${LEADS_NOTIFY_TO:?set LEADS_NOTIFY_TO}
     NUM_PROXIES: ${NUM_PROXIES:-1}
     ADMIN_URL: ${ADMIN_URL:-manage-site/}
+    FRONTEND_URL: ${FRONTEND_URL:?set FRONTEND_URL}
+    COOKIE_DOMAIN: ${COOKIE_DOMAIN:-}
+    GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+    GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+    REQUIRE_STAFF_MFA: ${REQUIRE_STAFF_MFA:-true}
   depends_on:
     db:
       condition: service_healthy

@@ -23,6 +23,12 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
+    "allauth.mfa",
+    "allauth.headless",
     "rest_framework",
     "corsheaders",
     "core",
@@ -38,6 +44,7 @@ MIDDLEWARE = [
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
@@ -48,7 +55,7 @@ ASGI_APPLICATION = "config.asgi.application"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -82,6 +89,7 @@ CELERY_TIMEZONE = "Asia/Dhaka"
 # Secure by default: every endpoint needs authentication unless it opts out
 # with AllowAny. JSON only, and anonymous callers are rate limited.
 REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": ["rest_framework.authentication.SessionAuthentication"],
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
     "DEFAULT_RENDERER_CLASSES": ["rest_framework.renderers.JSONRenderer"],
     "DEFAULT_PARSER_CLASSES": ["rest_framework.parsers.JSONParser"],
@@ -93,14 +101,90 @@ REST_FRAMEWORK = {
 
 # --- CORS: only the site and the admin dashboard may call the API ----------
 CORS_ALLOWED_ORIGINS = clean_origins(env.list("CORS_ALLOWED_ORIGINS", default=[]))
-CSRF_TRUSTED_ORIGINS = clean_origins(env.list("CSRF_TRUSTED_ORIGINS", default=[]))
+# The site sends the session cookie to the API (same site, different subdomain).
+CORS_ALLOW_CREDENTIALS = True
 
 # --- Auth ------------------------------------------------------------------
 # Staff sign in with their email address. Must be set before the first migration.
 AUTH_USER_MODEL = "accounts.User"
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+]
+
+# The Next.js site (another host than the API). allauth sends people back to it.
+FRONTEND_URL = env("FRONTEND_URL", default="http://localhost:3000").rstrip("/")
+TRUSTED_FRONTEND_ORIGINS = {FRONTEND_URL, *CORS_ALLOWED_ORIGINS}
+# Any origin allowed to call the API with cookies must also pass Django's CSRF origin check,
+# so it is derived from the same list (plus anything listed explicitly).
+CSRF_TRUSTED_ORIGINS = clean_origins(
+    [*env.list("CSRF_TRUSTED_ORIGINS", default=[]), FRONTEND_URL, *CORS_ALLOWED_ORIGINS]
+)
+
+# Cookies: HttpOnly session cookie shared by www and api (set COOKIE_DOMAIN=.wahednur.tech
+# in production). The CSRF cookie must be readable by the site so it can echo it in a header.
+COOKIE_DOMAIN = env("COOKIE_DOMAIN", default=None)
+SESSION_COOKIE_NAME = "wn_sid"
+SESSION_COOKIE_DOMAIN = COOKIE_DOMAIN
+SESSION_COOKIE_SAMESITE = "Lax"
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 14
+CSRF_COOKIE_DOMAIN = COOKIE_DOMAIN
+CSRF_COOKIE_SAMESITE = "Lax"
+CSRF_COOKIE_HTTPONLY = False
+
+# Two-factor authentication is required for staff and owner API access.
+REQUIRE_STAFF_MFA = env.bool("REQUIRE_STAFF_MFA", default=True)
+
+ACCOUNT_ADAPTER = "accounts.adapters.AccountAdapter"
+ACCOUNT_EMAIL_SUBJECT_PREFIX = "wahednur.tech: "
+ACCOUNT_LOGIN_METHODS = {"email"}
+ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*"]
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+ACCOUNT_EMAIL_VERIFICATION_BY_CODE_ENABLED = True
+ACCOUNT_PASSWORD_RESET_BY_CODE_ENABLED = True
+ACCOUNT_PREVENT_ENUMERATION = True
+ACCOUNT_RATE_LIMITS = {
+    "login_failed": "5/5m/ip,5/5m/key",
+    "signup": "10/h/ip",
+    "reset_password": "5/h/ip,3/h/key",
+}
+SOCIALACCOUNT_AUTO_SIGNUP = True
+SOCIALACCOUNT_LOGIN_ON_GET = False
+SOCIALACCOUNT_STORE_TOKENS = False
+# A Google sign-in joins an existing account with the same email only when Google has verified it.
+SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
+SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
+GOOGLE_CLIENT_ID = env("GOOGLE_CLIENT_ID", default="")
+GOOGLE_CLIENT_SECRET = env("GOOGLE_CLIENT_SECRET", default="")
+SOCIALACCOUNT_PROVIDERS = (
+    {
+        "google": {
+            "APP": {"client_id": GOOGLE_CLIENT_ID, "secret": GOOGLE_CLIENT_SECRET, "key": ""},
+            "SCOPE": ["profile", "email"],
+            "AUTH_PARAMS": {"access_type": "online", "prompt": "select_account"},
+        }
+    }
+    if GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET
+    else {}
+)
+MFA_SUPPORTED_TYPES = ["totp", "recovery_codes"]
+MFA_TOTP_ISSUER = "wahednur.tech"
+HEADLESS_CLIENTS = ("browser",)
+HEADLESS_SERVE_SPECIFICATION = env.bool("SERVE_API_SPEC", default=False)
+HEADLESS_FRONTEND_URLS = {
+    "account_signup": f"{FRONTEND_URL}/register",
+    "account_confirm_email": f"{FRONTEND_URL}/verify-email/{{key}}",
+    "account_reset_password": f"{FRONTEND_URL}/forgot-password",
+    "account_reset_password_from_key": f"{FRONTEND_URL}/reset-password/{{key}}",
+    "socialaccount_login_error": f"{FRONTEND_URL}/login?error=social",
+}
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
-    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
+    {
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+        "OPTIONS": {"min_length": 12},
+    },
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
@@ -128,3 +212,11 @@ LOGGING = {
 RESEND_API_KEY = env("RESEND_API_KEY", default="")
 LEADS_NOTIFY_TO = env("LEADS_NOTIFY_TO", default="wahednur@gmail.com")
 LEADS_FROM_EMAIL = env("LEADS_FROM_EMAIL", default="onboarding@resend.dev")
+
+# --- Email: Resend through Celery; printed to the console when no key is set --
+DEFAULT_FROM_EMAIL = LEADS_FROM_EMAIL
+EMAIL_BACKEND = (
+    "core.mail.ResendEmailBackend"
+    if RESEND_API_KEY
+    else "django.core.mail.backends.console.EmailBackend"
+)
