@@ -98,3 +98,10 @@ Check the container name filter matches (`docker ps`). Test a restore into a scr
 - Pin `postgres:18` to an exact version (e.g. `postgres:18.6`) once you want upgrades to be deliberate. A major version change needs a dump and restore, not just a new image.
 - Images use `python:3.13-slim` (tested) and `node:24-slim` (Active LTS). Change them with the `PYTHON_IMAGE` / `NODE_IMAGE` build args.
 - HSTS preload is off; decide before launch.
+
+## Website settings for content and packages
+Set these in Vercel (Environment Variables), then redeploy:
+- `REVALIDATE_SECRET`: the same long random value as on the API. Without it the instant page refresh is switched off (pages still refresh within an hour).
+- `NEXT_PUBLIC_SHOW_BLOG=true` and `NEXT_PUBLIC_SHOW_PACKAGES=true`: show the Blog and Packages links in the header once there is real content.
+
+API (VPS `.env`): `REVALIDATE_SECRET` (same value), optionally `AI_PROVIDERS=anthropic` with `ANTHROPIC_API_KEY` (or gemini / groq). Leave `AI_PROVIDERS` empty to use the free rule-based SEO text. The worker container must run (it also bills subscriptions and writes SEO text).
