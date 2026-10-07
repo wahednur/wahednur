@@ -8,6 +8,7 @@ const nav = [
   { href: "/services", label: "Services" },
   // Shown once there is content to read (set these in the website's environment).
   ...(process.env.NEXT_PUBLIC_SHOW_PACKAGES === "true" ? [{ href: "/packages", label: "Packages" }] : []),
+  ...(process.env.NEXT_PUBLIC_SHOW_SHOP === "true" ? [{ href: "/shop", label: "Shop" }] : []),
   ...(process.env.NEXT_PUBLIC_SHOW_BLOG === "true" ? [{ href: "/blog", label: "Blog" }] : []),
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },

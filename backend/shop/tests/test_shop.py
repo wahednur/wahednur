@@ -373,3 +373,19 @@ def test_stock_is_only_ever_the_sum_of_movements(alice, mug, zone):
     order(alice, [("mug", 2)], zone, SHIP)
     assert [m.delta for m in mug.movements.order_by("id")] == [5, -2]
     assert mug.stock == 3
+
+
+def test_product_and_stock_changes_refresh_the_public_pages(
+    mug, staff, monkeypatch, django_capture_on_commit_callbacks
+):
+    from cms import tasks as cms_tasks
+
+    sent = []
+    monkeypatch.setattr(cms_tasks.revalidate_frontend, "delay", lambda paths: sent.append(paths))
+    with django_capture_on_commit_callbacks(execute=True):
+        StockMovement.objects.create(product=mug, delta=-5, reason="adjustment", created_by=staff)
+    assert sent and "/shop/mug" in sent[-1]
+    sent.clear()
+    with django_capture_on_commit_callbacks(execute=True):
+        Product.objects.filter(pk=mug.pk).first().save()
+    assert sent and "/shop" in sent[-1]

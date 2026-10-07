@@ -281,3 +281,49 @@ export const SEO_SOURCE_LABEL: Record<ManagedPage["seo_source"], string> = {
   ai: "Written by AI from your text",
   manual: "Written by hand",
 };
+
+export type ShopProduct = {
+  slug: string;
+  title: string;
+  summary: string;
+  description: string;
+  kind: "digital" | "physical";
+  price: string;
+  currency: "BDT" | "USD";
+  image_url: string;
+  in_stock: boolean;
+};
+export type Zone = { id: number; name: string; fee: string; currency: "BDT" | "USD" };
+export type ShopOrderOut = {
+  id: string;
+  number: string;
+  status: "awaiting_payment" | "payment_review" | "processing" | "shipped" | "delivered" | "completed" | "cancelled";
+  customer_email: string;
+  currency: "BDT" | "USD";
+  items: { title: string; kind: "digital" | "physical"; unit_price: string; quantity: number; amount: string }[];
+  shipping_fee: string;
+  shipping_zone: string | null;
+  ship_to: { name: string; phone: string; address: string } | null;
+  note: string;
+  total: string;
+  outstanding: string;
+  paid: boolean;
+  invoice: string;
+  payment_note: string;
+  claimed: { method: string; reference: string; at: string } | null;
+  expires_at: string | null;
+  tracking: string;
+  shipped_at: string | null;
+  delivered_at: string | null;
+  has_downloads: boolean;
+  created_at: string;
+};
+export const ORDER_STATUS_LABEL: Record<ShopOrderOut["status"], string> = {
+  awaiting_payment: "Waiting for payment",
+  payment_review: "Checking your payment",
+  processing: "Being prepared",
+  shipped: "On the way",
+  delivered: "Delivered",
+  completed: "Complete",
+  cancelled: "Cancelled",
+};
