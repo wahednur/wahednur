@@ -12,3 +12,6 @@ node_modules/
 # Deploy secrets (never commit)
 /.env
 backend/private_media/
+
+# Redis dumps
+dump.rdb
