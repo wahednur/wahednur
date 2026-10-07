@@ -22,6 +22,7 @@ Short record of what was chosen and why.
 18. **Static files**: WhiteNoise (prod only) serves the Django admin assets, no separate web server needed.
 19. **Frontend as Next.js `standalone` output** in a Node 24 image; fonts come from the `geist` package so builds never depend on Google Fonts being reachable.
 20. **`NUM_PROXIES` is explicit**: the rate limiter trusts exactly that many proxy hops, so a wrong value either shares one limit across everyone (too low) or lets clients spoof their address (too high).
+21. **Custom user model with email login** (`accounts.User`, `AUTH_USER_MODEL`), chosen at the very start because swapping later means rebuilding the database. Email is the only identifier (no username), stored lowercase and unique ignoring case. The future owner dashboard will authenticate the same users.
 
 ## Version policy
 - Use the newest **LTS** where one exists (Django, PostgreSQL major, Node), the newest stable where none does (React, Next.js).

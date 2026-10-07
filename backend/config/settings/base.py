@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "corsheaders",
     "core",
+    "accounts",
     "leads",
 ]
 
@@ -95,6 +96,8 @@ CORS_ALLOWED_ORIGINS = clean_origins(env.list("CORS_ALLOWED_ORIGINS", default=[]
 CSRF_TRUSTED_ORIGINS = clean_origins(env.list("CSRF_TRUSTED_ORIGINS", default=[]))
 
 # --- Auth ------------------------------------------------------------------
+# Staff sign in with their email address. Must be set before the first migration.
+AUTH_USER_MODEL = "accounts.User"
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},

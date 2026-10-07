@@ -45,10 +45,29 @@ Fill in `.env` (generate secrets with `openssl rand -hex 32`):
 ```bash
 docker compose up -d --build
 docker compose ps                        # all healthy
-docker compose exec api python manage.py createsuperuser
+docker compose exec api python manage.py createsuperuser   # asks for an email address and a password
 curl https://api.wahednur.tech/api/health/    # {"status":"ok",...}
 ```
 Caddy gets the HTTPS certificate on first request (DNS must already point here and ports 80/443 must be reachable).
+
+### One-time: moving an existing database to the email login model
+
+Staff now sign in with their **email address** (custom user model `accounts.User`). A database that already ran the old migrations cannot switch models in place: the next deploy would crash with `InconsistentMigrationHistory`, which looks like a 502. Do this once, before deploying the version that has `accounts`. Nothing is lost except staff users (create them again).
+
+1. Optional, only if the database holds real leads you want to keep (the file contains personal data, delete it afterwards):
+   ```bash
+   docker compose exec -T api python manage.py dumpdata leads --indent 2 > leads.json
+   ```
+   (On Dokploy: run the same command in the `api` container's terminal and copy the output out.)
+2. Empty the database (psql in the db container or Dokploy's database terminal):
+   ```sql
+   DROP SCHEMA public CASCADE; CREATE SCHEMA public;
+   ```
+3. Deploy the new version. With `RUN_MIGRATIONS=1` the tables are created.
+4. If you kept leads: `docker compose exec -T api python manage.py loaddata /dev/stdin < leads.json`, then delete `leads.json`.
+5. `python manage.py createsuperuser` and sign in at `/manage-site/` with the email.
+
+A brand-new database needs none of this.
 
 ## 5. Connect Vercel
 

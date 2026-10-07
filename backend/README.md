@@ -10,6 +10,7 @@ python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements/dev.txt
 cp .env.example .env        # then edit SECRET_KEY and DATABASE_URL
 python manage.py migrate
+python manage.py createsuperuser   # staff sign in with an email address
 python manage.py runserver  # http://localhost:8000/api/health/
 ```
 
@@ -36,6 +37,7 @@ ruff check . && ruff format --check .
 
 - Business logic lives in `services.py`, not in views or serializers.
 - The API is secure by default: `IsAuthenticated` unless a view opts out with `AllowAny`.
+- Login is by **email** (`accounts.User`, no username). Emails are stored lowercase and are unique ignoring case.
 - The Django admin sits at `ADMIN_URL` (not `/admin/`); the owner dashboard is the separate React app.
 
 ## Leads API

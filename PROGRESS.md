@@ -1,6 +1,6 @@
 # PROGRESS
 
-**Last updated:** 2026-10-06 (session 16)
+**Last updated:** 2026-10-06 (session 17)
 
 ## Done
 - Earlier test portfolio (`legacy/`) deleted at the owner's request; history keeps it. Only the ekhaneikini home screenshot was kept (now on its case study).
@@ -44,6 +44,9 @@
 - Vercel fix: `output: "standalone"` is now only enabled for the Docker build (`NEXT_OUTPUT=standalone` in the Dockerfile), so Vercel uses the default Next.js build; added `frontend/vercel.json`. 502 diagnosis steps added to `docs/VPS.md` §8.
 
 - Deploy hardening after the owner's 502: container health check now uses `/api/health/live/` (no dependency checks), entrypoint run via `sh`, `.gitattributes` forces LF line endings, and the failure modes (missing env, unreachable DB with migrations on, bad Redis URL, wrong ALLOWED_HOSTS) were reproduced with the real image and written into `docs/VPS.md`.
+
+- **Email login**: custom `accounts.User` (email is the login, lowercase, unique ignoring case), admin registration, 11 new tests (45 total) including admin login by email and `createsuperuser`; verified `migrate` + `createsuperuser` on an empty PostgreSQL database. **An existing database must be reset once** (steps in `docs/VPS.md` §4) before this version is deployed.
+- `Download resume` spelling done; `NEXT_PUBLIC_API_URL` set on Vercel by the owner.
 
 ## In progress
 Nothing.
