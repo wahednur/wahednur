@@ -8,7 +8,7 @@ const BASE = `${API_URL}/_allauth/browser/v1`;
 
 export const isConfigured = () => API_URL !== "";
 
-function csrfToken(): string {
+export function csrfToken(): string {
   const match = document.cookie.match(/(?:^|;\s*)csrftoken=([^;]+)/);
   return match ? decodeURIComponent(match[1]) : "";
 }
