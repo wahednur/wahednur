@@ -77,3 +77,10 @@ Short record of what was chosen and why.
 - Subscriptions bill by issuing one invoice per period. `Charge(subscription, period_start)` is unique, so a retried or double-run job cannot bill a period twice. The billing day is kept from the start date and clamped in short months. Pausing and resuming never back-bills the paused months.
 - Scheduled work runs in the worker container (`celery ... worker -B`), one process on a single VPS. If the worker is down, the next run catches up (at most 12 periods per subscription per run).
 - Packages and services are edited in the Django admin (2FA protected) for now; the public price list is a read-only cached API.
+
+## CMS and automatic SEO (phase 8)
+- Content is Markdown in the database. SEO text is derived data: a hash of title, excerpt and body is stored with it, and when the hash differs the text is regenerated in the background.
+- The AI may only rephrase the page's own text. The prompt forbids new facts, and the answer is rejected if it contains a number that is not in the page. Any provider error, bad JSON or odd length falls through to the next provider and finally to a rule-based generator. SEO therefore never depends on a paid service being up.
+- Hand-written SEO sets a lock; the generator will not touch it until the lock is removed.
+- A generation result is saved only if the content is still the same as when the job started (compared under a row lock), so a slow job cannot overwrite a newer edit.
+- After a change the API calls the website's `/api/revalidate` (shared secret) so the pages refresh immediately; Celery retries on failure. Pages still expire on their own timer, so a missed call only delays the update.

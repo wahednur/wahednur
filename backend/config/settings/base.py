@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "accounting",
     "catalog",
     "subscriptions",
+    "cms",
 ]
 
 MIDDLEWARE = [
@@ -257,3 +258,18 @@ CELERY_BEAT_SCHEDULE = {
         "schedule": 24 * 60 * 60,
     },
 }
+
+# --- AI-assisted SEO and frontend refresh -------------------------------------
+# Providers are tried in this order; with none configured (or all failing) a rule-based
+# generator writes the SEO text, so SEO never depends on a paid service.
+AI_PROVIDERS = env.list("AI_PROVIDERS", default=[])  # any of: anthropic, gemini, groq
+ANTHROPIC_API_KEY = env("ANTHROPIC_API_KEY", default="")
+GEMINI_API_KEY = env("GEMINI_API_KEY", default="")
+GROQ_API_KEY = env("GROQ_API_KEY", default="")
+AI_MODELS = {
+    "anthropic": env("AI_MODEL_ANTHROPIC", default="claude-haiku-4-5-20251001"),
+    "gemini": env("AI_MODEL_GEMINI", default="gemini-2.5-flash"),
+    "groq": env("AI_MODEL_GROQ", default="llama-3.3-70b-versatile"),
+}
+# Shared secret the API sends to the website so it refreshes pages right after a change.
+REVALIDATE_SECRET = env("REVALIDATE_SECRET", default="")
