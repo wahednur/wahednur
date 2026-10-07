@@ -186,9 +186,20 @@ EMAIL_PORT=465
 EMAIL_HOST_USER=wahednur@gmail.com
 EMAIL_HOST_PASSWORD=<gmail app password>
 EMAIL_FROM=wahednur@gmail.com
-R2_PRIVATE_ACCOUNT_ID=...  R2_PRIVATE_ACCESS_KEY_ID=...  R2_PRIVATE_SECRET_ACCESS_KEY=...  R2_PRIVATE_BUCKET=wahednur-private
+R2_PRIVATE_ACCOUNT_ID=<from Cloudflare>
+R2_PRIVATE_ACCESS_KEY_ID=<from Cloudflare>
+R2_PRIVATE_SECRET_ACCESS_KEY=<from Cloudflare>
+R2_PRIVATE_BUCKET=wahednur-private
 ```
 Check it before starting: `docker compose config > /dev/null && echo OK` prints nothing but OK when every required value is present.
 
 ### Dokploy instead of a plain VPS
 If the API runs on Dokploy, there is no `.env` file: paste the same variables into the service's **Environment** tab, leave `COMPOSE_PROFILES` empty, and use Dokploy's own domain/HTTPS. Database and Redis then come from this same compose file unless you remove them and give `DATABASE_URL`, `REDIS_CACHE_URL`, `CELERY_BROKER_URL` yourself.
+
+### If compose says a variable is missing although it is in `.env`
+Work through these in order (the first one that fails is the cause):
+1. **Right folder, right name.** `.env` must sit next to `docker-compose.yml`. On Windows, Notepad often saves it as `.env.txt` (hidden extension): list it with `dir /a .env*` or PowerShell `Get-ChildItem -Force .env*`.
+2. **One variable per line**, `NAME=value`, no spaces around `=`, no angle brackets, no quotes needed. Two variables on one line become one broken value.
+3. **Encoding.** The file must be UTF-8. PowerShell's `>` and `Out-File` write UTF-16, which compose cannot read (it then sees nothing). Re-save as UTF-8 (`Set-Content -Encoding utf8 .env (Get-Content .env)`), or create the file with `nano` on the VPS.
+4. **Latest compose file.** `grep RESEND docker-compose.yml` must show `${RESEND_API_KEY:-}`. If it shows `:?set RESEND_API_KEY`, the folder has an old copy: `git status`, `git diff docker-compose.yml`, then `git pull`.
+5. `docker compose config > /dev/null && echo OK` prints OK only when everything required is present.
