@@ -70,6 +70,12 @@ def test_plain_text_and_cutting():
     assert len(seo._cut("word " * 100, 155)) <= 155
 
 
+def test_script_and_style_text_never_reaches_the_snippet():
+    md = "Hello <script>window.x=1</script> world <style>p{color:red}</style> end"
+    assert seo.plain_text(md) == "Hello world end"
+    assert "alert" not in seo.rule_based("T", "", "Text<SCRIPT>alert(1)</SCRIPT>")["description"]
+
+
 def test_rule_based_never_exceeds_limits():
     r = seo.rule_based("T" * 200, "", "word " * 500)
     assert len(r["title"]) <= seo.TITLE_MAX and len(r["description"]) <= seo.DESC_MAX

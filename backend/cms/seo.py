@@ -25,7 +25,9 @@ PROMPT = (
 
 def plain_text(markdown: str) -> str:
     """Markdown -> readable plain text (enough for summaries; not a full parser)."""
-    text = re.sub(r"```.*?```", " ", markdown, flags=re.S)
+    # Raw HTML is never shown on the site, so its text must not reach the search snippet either.
+    text = re.sub(r"<(script|style)\b.*?</\1\s*>", " ", markdown, flags=re.S | re.I)
+    text = re.sub(r"```.*?```", " ", text, flags=re.S)
     text = re.sub(r"!\[[^\]]*\]\([^)]*\)", " ", text)
     text = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", text)
     text = re.sub(r"^[#>\-*+\d.\s]+", "", text, flags=re.M)

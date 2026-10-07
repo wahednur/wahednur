@@ -63,6 +63,7 @@ export default function ContentManager() {
     setBusy(false);
     if (!r.ok || !r.data) return setError(r.error);
     setCurrent(r.data);
+    setSlugTouched(true); // once saved, the address stays put: changing the title must not break links
     setTick((t) => t + 1);
     if (r.data.status === "published") {
       setNote("Saved. Writing the SEO text…");
