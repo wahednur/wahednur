@@ -87,7 +87,7 @@ services:
 
   worker:
     <<: *backend
-    command: ["celery", "-A", "config", "worker", "-l", "info", "--concurrency", "2"]
+    command: ["celery", "-A", "config", "worker", "-B", "-l", "info", "--concurrency", "2"]
     healthcheck:
       disable: true
 

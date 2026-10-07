@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     "projects",
     "billing",
     "accounting",
+    "catalog",
+    "subscriptions",
 ]
 
 MIDDLEWARE = [
@@ -247,3 +249,11 @@ BUSINESS_NAME = env("BUSINESS_NAME", default="Abdul Wahed Nur")
 BUSINESS_EMAIL = env("BUSINESS_EMAIL", default="wahednur@gmail.com")
 BUSINESS_ADDRESS = env("BUSINESS_ADDRESS", default="Sherpur, Bangladesh")
 INVOICE_PAYMENT_NOTE = env("INVOICE_PAYMENT_NOTE", default="")  # bank / bKash / Nagad details
+
+# --- Scheduled jobs (run by the worker with -B) --------------------------------
+CELERY_BEAT_SCHEDULE = {
+    "bill-subscriptions-daily": {
+        "task": "subscriptions.tasks.bill_due_subscriptions",
+        "schedule": 24 * 60 * 60,
+    },
+}

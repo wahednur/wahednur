@@ -70,3 +70,10 @@ Short record of what was chosen and why.
 - Everything is per currency; BDT and USD are never added together (no exchange rate is invented).
 - Cancelled invoices are excluded from income; drafts never count. "Still owed" is the outstanding balance of issued invoices; "overdue" is the unpaid part of installments past their due date.
 - CSV export prefixes cells that start with `= + - @` so a spreadsheet cannot run them as formulas.
+
+## Services, packages and subscriptions (phase 7)
+- A package is a fixed-price offer (like a Fiverr tier). Orders copy the price, so editing a package never changes an existing order.
+- An order is only a request. Accepting a one-time package continues through the normal quotation, invoice and installments path (nothing is billed behind the client's back). Accepting a recurring package starts a subscription at the listed price.
+- Subscriptions bill by issuing one invoice per period. `Charge(subscription, period_start)` is unique, so a retried or double-run job cannot bill a period twice. The billing day is kept from the start date and clamped in short months. Pausing and resuming never back-bills the paused months.
+- Scheduled work runs in the worker container (`celery ... worker -B`), one process on a single VPS. If the worker is down, the next run catches up (at most 12 periods per subscription per run).
+- Packages and services are edited in the Django admin (2FA protected) for now; the public price list is a read-only cached API.
