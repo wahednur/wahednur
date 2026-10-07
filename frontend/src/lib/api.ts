@@ -259,3 +259,25 @@ export type SubscriptionRow = {
   invoices: string[];
 };
 export const CYCLE_LABEL: Record<string, string> = { one_time: "one time", monthly: "per month", yearly: "per year" };
+
+export type ManagedPage = {
+  id: number;
+  kind: "post" | "page";
+  slug: string;
+  title: string;
+  excerpt: string;
+  body: string;
+  status: "draft" | "published";
+  published_at: string | null;
+  seo_title: string;
+  seo_description: string;
+  seo_source: "none" | "rule" | "ai" | "manual";
+  seo_locked: boolean;
+  seo_stale: boolean;
+};
+export const SEO_SOURCE_LABEL: Record<ManagedPage["seo_source"], string> = {
+  none: "Not written yet",
+  rule: "Written by rules",
+  ai: "Written by AI from your text",
+  manual: "Written by hand",
+};
