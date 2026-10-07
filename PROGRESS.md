@@ -1,6 +1,6 @@
 # PROGRESS
 
-**Last updated:** 2026-10-06 (session 10)
+**Last updated:** 2026-10-06 (session 11)
 
 ## Done
 - Earlier test portfolio (`legacy/`) deleted at the owner's request; history keeps it. Only the ekhaneikini home screenshot was kept (now on its case study).
@@ -29,10 +29,16 @@
 
 - **Screenshot tool** (`tools/screenshots/`, Playwright + sharp): one command takes the portfolio screenshots of the live sites at fixed sizes (desktop 1440x900, mobile 390x844 @2x), full-page option, optional WebP, `manifest.json`. Admin pages use a saved login (`npm run login -- admin`). Privacy check stops a shot if a phone number or email that is not allow-listed is visible (blur/hide/allowText in the config). Refuses order-placing clicks, blocks analytics/ad pixels. Prefilled for ekhaneikini (storefront and admin routes taken from its repo). Tested here against the new site: sizes, mobile, full page, click flow, blur, privacy block (including text typed into a field), login-required skip, order-click guard, bad-selector error. Not run against the live ekhaneikini, Admin or meter sites (not reachable from this environment). Meter steps (`meter-*`) were added from that app's source; see the README section.
 
+- Branch renamed to **`portfolio`** (old long name still exists on GitHub; delete it in Settings > Branches or with `git push origin --delete claude/portfolio-resume-restructure-s0u5qz`).
+- EMIS case study completed from the `lms-demo` repo (stack, screens, five simulated roles, no backend, browser storage); home card stack filled in. No sensitive files found in that repo.
+- OpenGraph/Twitter share image and a site icon added (replaces the default Next.js favicon); `@types/node` set to ^24 (Node LTS).
+
 ## In progress
 Nothing.
 
 ## Next
+- Add real screenshots (owner runs `tools/screenshots`; send the files).
+- Deploy per `docs/DEPLOYMENT.md`, merge `portfolio` into `main` and point the host at `frontend/`.
 0a. Owner: deploy using `docs/DEPLOYMENT.md` (VPS, DNS, Resend domain, secrets). Report anything that differs from the doc and it will be fixed.
 0. **Owner to confirm the services lineup** (draft is in the code; see Known issues for what to check) before the site goes live.
 1. Add real screenshots: put files in `frontend/public/work/<slug>/` and fill `screenshots` in `caseStudies.ts` (the gallery only renders when non-empty).
@@ -56,7 +62,7 @@ Nothing.
 - `backend/.env` is local only and ignored by git; recreate it from `.env.example` on each machine.
 - HSTS preload is intentionally not enabled (hard to undo); decide before launch.
 - No Dockerfile or deploy config yet (Phase 6).
-- Copy to confirm with the owner: "source code and handover" (process step), "Deployment setup" as a service, the About line that the 2020-21 eCommerce system code was written by others, the EMIS case study (no stack listed because it is unconfirmed), and the "Budget" ranges on the contact form (suggestions, not prices).
+- Copy to confirm with the owner: "source code and handover" (process step), "Deployment setup" as a service, the About line that the 2020-21 eCommerce system code was written by others, and the "Budget" ranges on the contact form (suggestions, not prices).
 - An unknown `/work/<slug>` returns 200 with `noindex` on the first request (documented Next.js behavior with Cache Components); `dynamicParams` is not allowed with `cacheComponents`.
 - Footer year is hardcoded (cache-components blocks `new Date()`); update yearly or move to a client component.
 - Contact is a `mailto:` link until the backend exists.

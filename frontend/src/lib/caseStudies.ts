@@ -190,16 +190,39 @@ export const caseStudies: CaseStudy[] = [
       "Decision-makers at a school find it hard to judge software from a description. A working prototype lets them see the screens and the flow and give feedback before any real build.",
     role: "Sole developer of the prototype.",
     solution: [
-      "An interactive front-end and admin presentation with sample data.",
+      "Admin screens for students, staff, academics, class routine, attendance, examinations and results, plus reports, roles and an audit log.",
+      "Five simulated roles (principal, academic in-charge, head of department, teacher, student) so each person sees only their own part.",
+      "A public site with departments and contact pages, a light and dark theme, and charts for the reports.",
       "Built to show the intended screens and flow, not to run a real institution.",
     ],
-    workflow: [],
-    stack: [],
-    challenges: [],
+    workflow: [
+      {
+        actor: "A walkthrough in the demo",
+        steps: [
+          "Pick a role on the login page (no password; demo only)",
+          "See the screens and numbers that role would use",
+          "Record attendance or results and watch the reports change",
+          "Reset the demo data at any time from the settings page",
+        ],
+      },
+    ],
+    stack: [
+      { name: "Next.js and React", why: "One app for the public site and the role-based admin screens." },
+      { name: "TypeScript, Tailwind CSS and shadcn/ui", why: "A consistent, accessible interface that is quick to adjust after feedback." },
+      { name: "TanStack Table and Recharts", why: "Searchable tables and charts for the lists and reports." },
+      { name: "Browser storage with a checked seed dataset", why: "No server is needed to show it, and the sample data is validated for duplicates and broken references." },
+    ],
+    challenges: [
+      {
+        title: "Believable without being real",
+        text: "The sample data is generated deterministically and checked by scripts for duplicate roll numbers, broken references and routine clashes, so the demo behaves like a real system without holding real people's data.",
+      },
+    ],
     statusText:
       "Demo only. A production system has not been built or contracted.",
     limits: [
       "It is a prototype with sample data. It is not a production system.",
+      "There is no server: data lives in the browser. A real system would need a backend, real login and secure storage.",
       "No real student or staff data is used.",
     ],
     screenshots: [],

@@ -51,7 +51,7 @@ export const projects: Project[] = [
     status: "Demo",
     summary:
       "An interactive prototype that shows how an education management system would work, built so a school can evaluate it before deciding. Not a production system.",
-    stack: [],
+    stack: ["Next.js", "React", "TypeScript", "shadcn/ui", "Recharts"],
     href: "https://lms.wahednur.tech",
     linkLabel: "Open demo",
   },
