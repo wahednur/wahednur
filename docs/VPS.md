@@ -41,6 +41,14 @@ Fill in `.env` (generate secrets with `openssl rand -hex 32`):
 | `SECRET_KEY`, `POSTGRES_PASSWORD`, `REDIS_PASSWORD` | random, hex |
 | `RESEND_API_KEY`, `LEADS_FROM_EMAIL`, `LEADS_NOTIFY_TO` | from Resend / your address |
 | `NUM_PROXIES` | `1` (or `2` behind Cloudflare) |
+| `FRONTEND_URL` | `https://www.wahednur.tech` (the address people sign in on) |
+| `COOKIE_DOMAIN` | `.wahednur.tech` (leading dot, so www and api share the sign-in cookie) |
+| `REQUIRE_STAFF_MFA` | `true` |
+| `R2_PRIVATE_ACCOUNT_ID`, `R2_PRIVATE_ACCESS_KEY_ID`, `R2_PRIVATE_SECRET_ACCESS_KEY`, `R2_PRIVATE_BUCKET` | **required in production**: without them uploaded documents go to the container's disk and are lost on the next deploy |
+| `REVALIDATE_SECRET` | random hex, the same value as on Vercel |
+| `INVOICE_PAYMENT_NOTE`, `BUSINESS_NAME`, `BUSINESS_ADDRESS` | printed on invoices and shown to shop buyers |
+| `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` | optional; redirect URI `https://api.wahednur.tech/accounts/google/login/callback/` |
+| `AI_PROVIDERS` and its key | optional; empty = free rule-based SEO text |
 
 ```bash
 docker compose up -d --build
@@ -137,3 +145,13 @@ curl -s -H "Host: api.wahednur.tech" -H "X-Forwarded-Proto: https" http://127.0.
 | Everyone is "rate limited" | `NUM_PROXIES` too low behind Cloudflare |
 
 Routine care: `docker system prune -f` now and then, `apt upgrade` monthly, watch disk space (`df -h`).
+
+## 9. After the first deploy (checklist)
+
+1. `docker compose ps`: db, redis, api, worker, caddy all up; `curl https://api.wahednur.tech/api/health/` says ok.
+2. `docker compose exec api python manage.py bootstrap_owner --email you@example.com`, then sign in at `https://www.wahednur.tech/login`, open `/app/security` and turn on two-factor authentication. Until you do, owner features (accounting, staff writes) answer 403 on purpose.
+3. Vercel: `NEXT_PUBLIC_API_URL`, `REVALIDATE_SECRET` (same as the VPS), and later `NEXT_PUBLIC_SHOW_BLOG`, `NEXT_PUBLIC_SHOW_PACKAGES`, `NEXT_PUBLIC_SHOW_SHOP`. Redeploy.
+4. Upload a test PDF in `/app/documents`, then check the object appears in the private R2 bucket (and that the bucket has no public access).
+5. Django admin (`/manage-site/`): add your services, packages, products, delivery zones and stock.
+6. Place one small test shop order and one test invoice payment end to end, then cancel or refund them.
+7. Set up the nightly backup (section 6) and test a restore once.
