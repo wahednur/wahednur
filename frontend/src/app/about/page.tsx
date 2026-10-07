@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import PageHero from "@/components/PageHero";
 import CtaBand from "@/components/CtaBand";
 import { site } from "@/lib/site";
@@ -47,6 +48,13 @@ export default function AboutPage() {
       />
       <div className="mx-auto grid max-w-6xl gap-12 px-4 py-14 sm:px-6 lg:grid-cols-[1fr_380px]">
         <div className="max-w-2xl space-y-5 leading-8 text-muted">
+          <Image
+            src="/wahednur.jpg"
+            alt="Abdul Wahed Nur"
+            width={160}
+            height={160}
+            className="h-40 w-40 rounded-2xl border border-line object-cover"
+          />
           <p>
             I am Abdul Wahed Nur, a full-stack developer based in Sherpur, Bangladesh.
             Before software I worked in VFX, animation and graphics. That time taught

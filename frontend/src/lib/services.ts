@@ -4,12 +4,14 @@ export type Service = {
   summary: string;
   goodFor: string;
   includes: string[];
+  icon: "store" | "boxes" | "layout" | "server" | "sparkles" | "wrench" | "rocket";
   note?: string; // where I have built this myself
 };
 
 export const serviceList: Service[] = [
   {
     title: "Custom eCommerce development",
+    icon: "store",
     short: "Storefront, admin panel and backend built around how you sell: variations, checkout, payments, delivery and reports.",
     summary:
       "An online store built around how you sell, from the storefront to the admin panel and the backend.",
@@ -24,6 +26,7 @@ export const serviceList: Service[] = [
   },
   {
     title: "Business management applications",
+    icon: "boxes",
     short: "Inventory, invoicing, partial payments, due tracking and ledgers for businesses that outgrew spreadsheets.",
     summary:
       "Inventory, invoicing, payments and reports in one system, shaped to your records.",
@@ -38,6 +41,7 @@ export const serviceList: Service[] = [
   },
   {
     title: "Admin dashboards",
+    icon: "layout",
     short: "Clear internal tools for orders, stock, customers and reporting, with permission-based access.",
     summary: "Clear internal tools for the people who run the business daily.",
     goodFor: "Teams that already have a backend or data and need a usable interface.",
@@ -50,6 +54,7 @@ export const serviceList: Service[] = [
   },
   {
     title: "Backend API development and integration",
+    icon: "server",
     short: "Django REST APIs with authentication, background jobs, and payment-gateway or courier integration.",
     summary: "Django REST APIs that other apps can rely on.",
     goodFor: "New products that need a backend, or apps that must talk to payment and delivery services.",
@@ -62,6 +67,7 @@ export const serviceList: Service[] = [
   },
   {
     title: "AI features for business software",
+    icon: "sparkles",
     short: "Product Q&A, smarter search and content drafts that work only from your own data, with a person approving what goes out.",
     summary:
       "AI that works from your own data and does not invent facts. Customers get answers taken from your catalog, shoppers find products by what they mean, and you get drafts of descriptions and SEO text that you approve before anything is published.",
@@ -78,6 +84,7 @@ export const serviceList: Service[] = [
   },
   {
     title: "Improve an existing application",
+    icon: "wrench",
     short: "Review, fix and extend a web application you already have, without a rewrite when one isn't needed.",
     summary: "Review, fix and extend a web application you already run.",
     goodFor: "Apps that work but are slow to change, buggy, or missing features.",
@@ -89,6 +96,7 @@ export const serviceList: Service[] = [
   },
   {
     title: "Deployment setup",
+    icon: "rocket",
     short: "Docker-based setup on your own VPS, agreed per project.",
     summary: "Getting the application running on your own server.",
     goodFor: "Projects that need Docker-based setup on a VPS. Agreed per project.",

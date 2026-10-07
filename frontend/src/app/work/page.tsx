@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import ProjectCard from "@/components/ProjectCard";
 import PageHero from "@/components/PageHero";
 import CtaBand from "@/components/CtaBand";
-import { caseStudies } from "@/lib/caseStudies";
+import { projects } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Work",
@@ -18,25 +18,9 @@ export default function WorkPage() {
         title="Case studies"
         intro="Each project is labelled as my own product or a demo. I write what each system does, why it was built that way, and what its limits are."
       />
-      <div className="mx-auto max-w-6xl space-y-5 px-4 py-14 sm:px-6">
-        {caseStudies.map((c) => (
-          <Link
-            key={c.slug}
-            href={`/work/${c.slug}`}
-            className="group block rounded-xl border border-line bg-surface p-6 transition-colors hover:border-brand/50 sm:p-8"
-          >
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <span className="font-mono text-xs text-muted">{c.kind}</span>
-              <span className="rounded-full border border-brand/40 px-2.5 py-0.5 font-mono text-[11px] text-brand">
-                {c.status}
-              </span>
-            </div>
-            <h2 className="mt-4 text-2xl font-semibold tracking-tight">{c.title}</h2>
-            <p className="mt-3 max-w-2xl text-muted">{c.tagline}</p>
-            <span className="mt-5 inline-block text-sm font-medium text-brand group-hover:underline">
-              Read the case study →
-            </span>
-          </Link>
+      <div className="mx-auto grid max-w-6xl gap-5 px-4 py-14 sm:px-6 md:grid-cols-2 lg:grid-cols-3">
+        {projects.map((p) => (
+          <ProjectCard key={p.slug} project={p} />
         ))}
       </div>
       <CtaBand />

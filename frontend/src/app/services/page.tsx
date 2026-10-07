@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import ServiceIcon from "@/components/ServiceIcon";
 import PageHero from "@/components/PageHero";
 import CtaBand from "@/components/CtaBand";
 import { aiWorkflow, faq, notOffered, serviceList } from "@/lib/services";
@@ -21,8 +22,11 @@ export default function ServicesPage() {
       <div className="mx-auto max-w-6xl space-y-5 px-4 py-14 sm:px-6">
         {serviceList.map((s) => (
           <section key={s.title} className="rounded-xl border border-line bg-surface p-6 sm:p-8">
-            <h2 className="text-xl font-semibold tracking-tight">{s.title}</h2>
-            <p className="mt-2 max-w-2xl text-muted">{s.summary}</p>
+            <div className="flex items-center gap-4">
+              <ServiceIcon name={s.icon} />
+              <h2 className="text-xl font-semibold tracking-tight">{s.title}</h2>
+            </div>
+            <p className="mt-4 max-w-2xl text-muted">{s.summary}</p>
             <p className="mt-4 text-sm text-muted">
               <span className="font-semibold text-ink">Good for: </span>
               {s.goodFor}

@@ -15,7 +15,7 @@ export default function Header() {
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
         <Link href="/" className="flex items-center gap-2 font-semibold tracking-tight">
           <span className="grid h-8 w-8 place-items-center rounded-md border border-brand/40 bg-surface font-mono text-sm text-brand">
-            <Image src="/wahednur.jpg" alt="alt" width={64} height={64} /> 
+            <Image src="/wahednur.jpg" alt="" width={64} height={64} className="h-full w-full rounded-md object-cover" />
           </span>
           <span>Wahed Nur</span>
         </Link>

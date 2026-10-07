@@ -62,6 +62,18 @@ export default async function CaseStudyPage({
           </Link>
         </div>
 
+        <div className="mt-8 overflow-hidden rounded-xl border border-line bg-surface">
+          <Image
+            src={c.cover.src}
+            alt={c.cover.alt}
+            width={1200}
+            height={750}
+            priority
+            sizes="(min-width: 1152px) 1100px, 100vw"
+            className="h-auto w-full"
+          />
+        </div>
+
         <div className="mt-8">
           <Block title="Context">{c.context}</Block>
           <Block title="The problem">{c.problem}</Block>
@@ -118,10 +130,10 @@ export default async function CaseStudyPage({
             </Block>
           )}
 
-          {c.screenshots.length > 0 && (
+          {c.screenshots.filter((x) => x.src !== c.cover.src).length > 0 && (
             <Block title="Screens">
               <div className="grid gap-4 sm:grid-cols-2">
-                {c.screenshots.map((s) => (
+                {c.screenshots.filter((x) => x.src !== c.cover.src).map((s) => (
                   <Image
                     key={s.src}
                     src={s.src}

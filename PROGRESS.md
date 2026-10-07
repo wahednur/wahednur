@@ -1,6 +1,6 @@
 # PROGRESS
 
-**Last updated:** 2026-10-06 (session 11)
+**Last updated:** 2026-10-06 (session 12)
 
 ## Done
 - Earlier test portfolio (`legacy/`) deleted at the owner's request; history keeps it. Only the ekhaneikini home screenshot was kept (now on its case study).
@@ -33,6 +33,10 @@
 - EMIS case study completed from the `lms-demo` repo (stack, screens, five simulated roles, no backend, browser storage); home card stack filled in. No sensitive files found in that repo.
 - OpenGraph/Twitter share image and a site icon added (replaces the default Next.js favicon); `@types/node` set to ^24 (Node LTS).
 
+- **Images everywhere**: case-study cards (home and /work) now have a cover; case pages show the cover on top; home hero shows the ekhaneikini screenshot in a browser frame; About has the owner's photo; service and process cards have icons (lucide-react). EMIS images are real screenshots of the demo (sample data). The service-system cover is a labelled workflow *diagram*, not a screenshot (the real app needs login and real data).
+- **Package manager is bun** (owner's choice): `frontend/bun.lock` is the lockfile, `package-lock.json` removed, `frontend/Dockerfile` installs with `oven/bun` and builds/runs on Node 24 (verified with a real Docker build and run).
+- Fixed a build break from the footer's `new Date()` (Cache Components forbids it while prerendering) with `components/Year.tsx`; header image alt text fixed; duplicate `src/app/wahednur.jpg` and the generated `icon.png` removed (owner's favicon is used).
+
 ## In progress
 Nothing.
 
@@ -53,8 +57,7 @@ Nothing.
 - Confirm before launch: (1) whether the AI features are switched on in the live store (provider keys set in production); the site says they are *built into the platform*, not that they are live. (2) The "How I use AI when I build" section discloses AI-assisted development. It is true (the ekhaneikini repo is built that way) but it is the owner's choice to publish; delete `aiWorkflow` in `services.ts` to remove it. (3) "What I do not offer" says Messenger/WhatsApp bots and SaaS builds are not for sale yet; change it when that stops being true.
 - `NEXT_PUBLIC_API_URL` is baked in at build time. Set it in the host's build environment (Vercel/Dokploy), then rebuild; changing it at runtime has no effect. Add the site's real origin to the API's `CORS_ALLOWED_ORIGINS`.
 - The 5/hour limit counts per address. Several people behind one shared network (office, mobile carrier NAT) share it.
-- The ekhaneikini screenshot (`frontend/public/work/ekhaneikini/home.png`, from the old test site) shows an "EKAI" promo banner while EKAI is only planned. Replace it with a fresh screenshot of the live store, or accept the banner.
-- `@types/node` is `^20`; align with the Node LTS you run locally.
+- The EMIS screenshots show the institute's initials in the sidebar and the demo is public with its full name; the site text does not name it. Ask the institute before naming it in copy. The ekhaneikini screenshot (`frontend/public/work/ekhaneikini/home.png`, from the old test site) shows an "EKAI" promo banner while EKAI is only planned. Replace it with a fresh screenshot of the live store, or accept the banner.
 - Leads email has never been sent through the real Resend (blocked here). First real test after the key exists: submit the form once and confirm the email arrives and `notified_at` is set in Django admin.
 - `NUM_PROXIES` must match the proxies in front of the API (Dokploy/Traefik is usually 1). Wrong value = rate limit keys on the wrong address.
 - Lead text is stored as typed (not HTML-escaped); it is escaped on output (email, Django admin). Any future dashboard must escape it too (React does by default).
@@ -64,7 +67,6 @@ Nothing.
 - No Dockerfile or deploy config yet (Phase 6).
 - Copy to confirm with the owner: "source code and handover" (process step), "Deployment setup" as a service, the About line that the 2020-21 eCommerce system code was written by others, and the "Budget" ranges on the contact form (suggestions, not prices).
 - An unknown `/work/<slug>` returns 200 with `noindex` on the first request (documented Next.js behavior with Cache Components); `dynamicParams` is not allowed with `cacheComponents`.
-- Footer year is hardcoded (cache-components blocks `new Date()`); update yearly or move to a client component.
 - Contact is a `mailto:` link until the backend exists.
 - Project and résumé links were provided by the owner but not opened from this environment (blocked); open each once on a phone before launch.
 - Résumé PDF contains the owner's public phone and email; replace the file when the résumé changes.

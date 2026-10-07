@@ -32,6 +32,6 @@ See `docs/ARCHITECTURE.md` (version policy) for how upgrades are handled. Deploy
 
 ```bash
 cd frontend
-npm install
-npm run dev
+bun install
+bun run dev
 ```

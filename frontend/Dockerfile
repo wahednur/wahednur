@@ -1,10 +1,13 @@
 # syntax=docker/dockerfile:1
+ARG BUN_IMAGE=oven/bun:1
 ARG NODE_IMAGE=node:24-slim
 
-FROM ${NODE_IMAGE} AS deps
+# Dependencies are installed with bun (the project lockfile is bun.lock).
+# The build and the server run on Node, which is what Next.js targets.
+FROM ${BUN_IMAGE} AS deps
 WORKDIR /app
-COPY package.json package-lock.json ./
-RUN npm ci
+COPY package.json bun.lock ./
+RUN bun install --frozen-lockfile
 
 FROM ${NODE_IMAGE} AS build
 WORKDIR /app

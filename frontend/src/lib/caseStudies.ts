@@ -18,6 +18,7 @@ export type CaseStudy = {
   challenges: { title: string; text: string }[];
   statusText: string;
   limits: string[];
+  cover: { src: string; alt: string };
   screenshots: { src: string; alt: string }[];
   href?: string;
   linkLabel?: string;
@@ -103,6 +104,10 @@ export const caseStudies: CaseStudy[] = [
       "I am the only developer, so the roadmap moves at the pace of one person.",
       "The AI features are built and tested in the platform. A shopping assistant on Messenger and WhatsApp is still a plan.",
     ],
+    cover: {
+      src: "/work/ekhaneikini/home.png",
+      alt: "ekhaneikini.com home page with search, category banners and a shop-by-category section",
+    },
     screenshots: [
       {
         src: "/work/ekhaneikini/home.png",
@@ -173,6 +178,10 @@ export const caseStudies: CaseStudy[] = [
       "It is built around one kind of business. Another business would need its workflow reviewed first.",
       "No usage or profit figures are published here.",
     ],
+    cover: {
+      src: "/work/service-parts-management/workflow.svg",
+      alt: "Diagram: an open invoice collects dated jobs and parts, customers pay in parts, and the due amount and ledger update",
+    },
     screenshots: [],
     href: "https://nurain.vercel.app",
     linkLabel: "View the system",
@@ -225,7 +234,24 @@ export const caseStudies: CaseStudy[] = [
       "There is no server: data lives in the browser. A real system would need a backend, real login and secure storage.",
       "No real student or staff data is used.",
     ],
-    screenshots: [],
+    cover: {
+      src: "/work/education-management-demo/dashboard.png",
+      alt: "EMIS demo admin overview with student, teacher and department counts and charts of students per department and grade distribution",
+    },
+    screenshots: [
+      {
+        src: "/work/education-management-demo/dashboard.png",
+        alt: "EMIS demo admin overview with counts and charts",
+      },
+      {
+        src: "/work/education-management-demo/students.png",
+        alt: "EMIS demo student list with search and filters (sample data)",
+      },
+      {
+        src: "/work/education-management-demo/results.png",
+        alt: "EMIS demo results screen (sample data)",
+      },
+    ],
     href: "https://lms.wahednur.tech",
     linkLabel: "Open the demo",
   },
