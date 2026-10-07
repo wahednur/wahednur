@@ -53,7 +53,7 @@ Caddy gets the HTTPS certificate on first request (DNS must already point here a
 ## 5. Connect Vercel
 
 In Vercel, project settings:
-- **Root Directory**: `frontend`
+- **Root Directory**: `frontend` (`frontend/vercel.json` already sets the Next.js framework and bun commands; Vercel does not use the Dockerfile)
 - **Environment variable** `NEXT_PUBLIC_API_URL` = `https://api.wahednur.tech` (Production; add Preview if you want preview deployments to submit the form)
 - Redeploy after changing it: the value is baked in at build time.
 
@@ -86,10 +86,20 @@ Migrations run when `api` starts. Run `./deploy/backup.sh` first for any release
 
 ## 8. Checks and troubleshooting
 
+**502 Bad Gateway from `https://api...`** means the proxy is up but the API behind it is not answering. Run, on the VPS:
+```bash
+cd ~/wahednur
+docker compose ps                         # api should say "healthy"; if it is restarting or exited, that is the cause
+docker compose logs --tail=60 api         # the real error (missing env value, migration, database)
+docker compose logs --tail=30 caddy       # certificate or upstream errors
+curl -s -H "Host: api.wahednur.tech" -H "X-Forwarded-Proto: https" http://127.0.0.1:8000/api/health/   # only works if you temporarily publish 8000; otherwise: docker compose exec api python healthcheck.py && echo healthy
+```
+
 | Symptom | Look at |
 |---|---|
+| 502 with a Cloudflare-branded page | Cloudflare cannot reach the server: SSL mode must be Full (strict), ports 80/443 open, and the Caddy certificate issued |
 | No HTTPS certificate | `docker compose logs caddy`: DNS not pointing here yet, or port 80/443 blocked |
-| `api` restarting | `docker compose logs api`: usually a missing `.env` value |
+| 502, `api` exited or restarting | `docker compose logs api`: usually a missing `.env` value |
 | 400 from the API | `ALLOWED_HOSTS` does not match the hostname |
 | CORS error in the browser | the site origin is missing from `CORS_ALLOWED_ORIGINS` (exact, with `https://`) |
 | Form falls back to the email app | `NEXT_PUBLIC_API_URL` was empty at Vercel build time |

@@ -1,6 +1,6 @@
 # PROGRESS
 
-**Last updated:** 2026-10-06 (session 14)
+**Last updated:** 2026-10-06 (session 15)
 
 ## Done
 - Earlier test portfolio (`legacy/`) deleted at the owner's request; history keeps it. Only the ekhaneikini home screenshot was kept (now on its case study).
@@ -40,6 +40,8 @@
 - **Plain-VPS deployment path** (owner's choice; Dokploy and Vercel gave trouble): compose profiles (`proxy` = Caddy with automatic HTTPS, `frontend` = optional site), `deploy/Caddyfile`, `deploy/backup.sh`, `docs/VPS.md` (server setup, firewall, DNS, `.env`, Vercel hookup, backups, updates, troubleshooting). Verified in real Docker: profile selection, Caddy config validity, and backup, restore (250/250 rows on PostgreSQL 18.6), pruning, and failure handling. Not verified: real certificates, DNS, Resend.
 
 - **`main` is now the project**: `portfolio` merged into `main`; the previous site lives on in branch `backup/old-site` and tag `old-site` (commit 9cdfa2b). Vercel must use Root Directory `frontend` (see docs/VPS.md §5).
+
+- Vercel fix: `output: "standalone"` is now only enabled for the Docker build (`NEXT_OUTPUT=standalone` in the Dockerfile), so Vercel uses the default Next.js build; added `frontend/vercel.json`. 502 diagnosis steps added to `docs/VPS.md` §8.
 
 ## In progress
 Nothing.
