@@ -15,3 +15,4 @@ backend/private_media/
 
 # Redis dumps
 dump.rdb
+backend/public_media/

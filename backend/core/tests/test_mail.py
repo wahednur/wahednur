@@ -41,10 +41,17 @@ def test_task_posts_to_resend_with_bearer_and_idempotency_key(settings):
     assert "idempotency_key" not in kwargs["json"]
 
 
-@pytest.mark.parametrize("status", [401, 422, 429, 500])
-def test_task_raises_on_provider_errors(status):
-    with patch("core.tasks.httpx.post", return_value=MagicMock(status_code=status)):
+@pytest.mark.parametrize("status", [429, 500])
+def test_task_retries_on_temporary_provider_errors(status):
+    with patch("core.tasks.httpx.post", return_value=MagicMock(status_code=status, text="x")):
         with pytest.raises(tasks.MailError):
+            tasks.send_email.run(build_payload(_message()))
+
+
+@pytest.mark.parametrize("status", [401, 403, 422])
+def test_task_gives_up_on_refusals(status):
+    with patch("core.tasks.httpx.post", return_value=MagicMock(status_code=status, text="no")):
+        with pytest.raises(tasks.MailRejected):
             tasks.send_email.run(build_payload(_message()))
 
 

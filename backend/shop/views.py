@@ -1,12 +1,15 @@
+from django.http import Http404, HttpResponse
 from rest_framework import status as http
+from rest_framework.exceptions import ValidationError
+from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from accounts.permissions import IsStaffMember, IsVerifiedUser
 
+from . import images, services
 from . import serializers as s
-from . import services
 
 
 def _private(response):
@@ -36,6 +39,32 @@ class ProductDetail(Public):
 class ZoneList(Public):
     def get(self, request):
         return Response([s.zone_out(z) for z in services.active_zones()])
+
+
+class ImageUpload(APIView):
+    """Staff: upload a product photo, get back the address to put on the product."""
+
+    permission_classes = [IsStaffMember]
+    parser_classes = [MultiPartParser]
+
+    def post(self, request):
+        file = request.FILES.get("file")
+        if file is None:
+            raise ValidationError({"file": "Choose a photo."})
+        return Response({"url": images.store_product_image(file)}, status=http.HTTP_201_CREATED)
+
+
+class LocalImage(Public):
+    """Development only: serves photos stored on this machine."""
+
+    def get(self, request, name):
+        found = images.read_local_image(name)
+        if found is None or images._public_bucket_ready():
+            raise Http404
+        response = HttpResponse(found[0], content_type=found[1])
+        response["X-Content-Type-Options"] = "nosniff"
+        response["Cache-Control"] = "public, max-age=3600"
+        return response
 
 
 class OrderList(APIView):

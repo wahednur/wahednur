@@ -1,5 +1,8 @@
+from django import forms
 from django.contrib import admin
+from rest_framework.exceptions import ValidationError as DRFValidationError
 
+from . import images
 from .models import Product, ProductFile, ShippingZone, ShopOrder, StockMovement
 
 
@@ -8,8 +11,47 @@ class FileInline(admin.TabularInline):
     extra = 0
 
 
+class ProductForm(forms.ModelForm):
+    photo = forms.FileField(
+        required=False,
+        help_text="Upload a PNG, JPG or WEBP photo. It replaces the address below.",
+    )
+
+    class Meta:
+        model = Product
+        fields = [
+            "slug",
+            "title",
+            "summary",
+            "description",
+            "kind",
+            "price",
+            "currency",
+            "image_url",
+            "published",
+            "position",
+        ]
+
+    def clean_photo(self):
+        photo = self.cleaned_data.get("photo")
+        if photo:
+            try:
+                self._photo_url = images.store_product_image(photo)
+            except DRFValidationError as exc:
+                raise forms.ValidationError(" ".join(str(m) for m in exc.detail["file"])) from exc
+        return photo
+
+    def clean(self):
+        data = super().clean()
+        if getattr(self, "_photo_url", None):
+            data["image_url"] = self._photo_url
+            self.instance.image_url = self._photo_url
+        return data
+
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
+    form = ProductForm
     list_display = ("title", "kind", "price", "currency", "published", "units_in_stock")
     list_filter = ("kind", "published")
     prepopulated_fields = {"slug": ("title",)}

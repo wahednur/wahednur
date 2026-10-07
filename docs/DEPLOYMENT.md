@@ -111,3 +111,14 @@ API (VPS `.env`): `REVALIDATE_SECRET` (same value), optionally `AI_PROVIDERS=ant
 2. Django admin (`/manage-site/`): add Shipping zones (name and fee), Products (set Published last), attach the vault file under "Product files" for digital products, then add stock with *Stock movements* (reason Restock). Stock is never typed into a product: it is the sum of movements.
 3. Set `INVOICE_PAYMENT_NOTE` on the API (your bKash/Nagad/bank details, shown to buyers and printed on invoices) and, on Vercel, `NEXT_PUBLIC_SHOW_SHOP=true`.
 4. Unpaid orders return their stock after `SHOP_PAYMENT_HOURS` (default 48). Orders where the customer reported a payment wait for you.
+
+## Product photos
+Photos go to the **public** R2 bucket (`R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET`) and are shown from `R2_PUBLIC_URL`. In Cloudflare: open that bucket, Settings, connect a custom domain such as `cdn.wahednur.tech` (or switch on the r2.dev address), then put it in `R2_PUBLIC_URL` on the VPS and redeploy. In the Django admin, edit a product and use *Photo* to upload (PNG, JPG or WEBP, up to 5 MB; SVG is refused on purpose).
+Keep this bucket separate from the private vault bucket: everything in it is public.
+
+## If sign-in codes do not arrive
+Run these on the VPS, in this order:
+1. `docker compose exec api python manage.py send_test_email you@example.com` sends one email immediately and prints what Resend answered (missing key, unverified domain, wrong sender).
+2. `docker compose logs --tail=50 worker`: the worker sends sign-in emails in the background. If it is not running, or cannot reach Redis, nothing leaves the server.
+3. Resend dashboard, Emails: shows delivered, bounced or blocked.
+Common causes: the domain in `LEADS_FROM_EMAIL` is not verified in Resend (Resend then only delivers to your own account address), a wrong or revoked `RESEND_API_KEY`, or the worker container is stopped.

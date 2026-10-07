@@ -282,3 +282,11 @@ CELERY_BEAT_SCHEDULE["release-unpaid-shop-orders"] = {
     "task": "shop.tasks.release_unpaid_orders",
     "schedule": 60 * 60,
 }
+
+# Public images (product photos) live in the PUBLIC bucket (R2_*). R2_PUBLIC_URL is the address that
+# bucket is served from, for example https://cdn.wahednur.tech (no trailing slash).
+R2_PUBLIC_URL = env("R2_PUBLIC_URL", default="").rstrip("/")
+IMAGE_MAX_MB = env.int("IMAGE_MAX_MB", default=5)
+IMAGES_LOCAL_ROOT = BASE_DIR / "public_media"
+# Where this API is reachable (used to build photo addresses in development without R2).
+API_PUBLIC_URL = env("API_PUBLIC_URL", default="http://localhost:8000").rstrip("/")

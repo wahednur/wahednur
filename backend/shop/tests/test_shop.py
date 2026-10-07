@@ -389,3 +389,122 @@ def test_product_and_stock_changes_refresh_the_public_pages(
     with django_capture_on_commit_callbacks(execute=True):
         Product.objects.filter(pk=mug.pk).first().save()
     assert sent and "/shop" in sent[-1]
+
+
+# --- product photos -------------------------------------------------------------------------
+PNG = b"\x89PNG\r\n\x1a\n" + b"0" * 50
+
+
+@pytest.fixture
+def local_images(settings, tmp_path):
+    settings.IMAGES_LOCAL_ROOT = tmp_path / "img"
+    settings.R2_ACCOUNT_ID = settings.R2_BUCKET = ""
+
+
+def upload_image(user, name="photo.png", data=PNG):
+    return login(user).post(
+        "/api/shop/images/", {"file": SimpleUploadedFile(name, data)}, format="multipart"
+    )
+
+
+def test_staff_uploads_a_photo_and_it_is_served_publicly(staff, local_images):
+    r = upload_image(staff)
+    assert r.status_code == 201
+    url = r.json()["url"]
+    assert url.startswith("http://localhost:8000/api/shop/images/") and url.endswith(".png")
+    got = APIClient().get(url.removeprefix("http://localhost:8000"))
+    assert got.status_code == 200 and got["Content-Type"] == "image/png"
+    assert got["X-Content-Type-Options"] == "nosniff"
+
+
+def test_customers_cannot_upload_photos(alice, local_images):
+    assert upload_image(alice).status_code == 403
+    assert APIClient().post("/api/shop/images/", {}, format="multipart").status_code in (401, 403)
+
+
+@pytest.mark.parametrize(
+    "name,data",
+    [
+        ("logo.svg", b"<svg onload=alert(1)></svg>"),
+        ("page.html", b"<script>1</script>"),
+        ("fake.png", b"not an image"),
+        ("empty.png", b""),
+        ("../../evil.png", b"nope"),
+    ],
+)
+def test_only_real_raster_photos_are_accepted(staff, local_images, name, data):
+    assert upload_image(staff, name, data).status_code == 400
+
+
+def test_photo_size_limit(staff, local_images, settings):
+    settings.IMAGE_MAX_MB = 1
+    assert upload_image(staff, data=PNG + b"0" * (1024 * 1024)).status_code == 400
+
+
+def test_local_image_route_refuses_paths_and_unknown_names(local_images):
+    api = APIClient()
+    assert api.get("/api/shop/images/nothing.png").status_code == 404
+    assert api.get("/api/shop/images/..%2F..%2Fetc%2Fpasswd").status_code == 404
+    assert api.get("/api/shop/images/x.svg").status_code == 404
+
+
+def test_photo_goes_to_the_public_bucket_when_configured(staff, settings, monkeypatch):
+    from unittest.mock import MagicMock
+
+    from shop import images
+
+    settings.R2_ACCOUNT_ID, settings.R2_BUCKET = "acct", "public"
+    settings.R2_ACCESS_KEY_ID, settings.R2_SECRET_ACCESS_KEY = "AK", "SK"
+    settings.R2_PUBLIC_URL = "https://cdn.example.com"
+    fake = MagicMock()
+    monkeypatch.setattr(images, "_client", lambda: fake)
+    url = upload_image(staff).json()["url"]
+    assert url.startswith("https://cdn.example.com/products/") and url.endswith(".png")
+    kwargs = fake.put_object.call_args.kwargs
+    assert kwargs["Bucket"] == "public" and kwargs["ContentType"] == "image/png"
+    assert kwargs["Key"].startswith("products/")
+
+
+def test_a_missing_public_url_is_explained(staff, settings):
+    settings.R2_ACCOUNT_ID, settings.R2_BUCKET = "acct", "public"
+    settings.R2_ACCESS_KEY_ID, settings.R2_SECRET_ACCESS_KEY = "AK", "SK"
+    settings.R2_PUBLIC_URL = ""
+    r = upload_image(staff)
+    assert r.status_code == 400 and "R2_PUBLIC_URL" in str(r.json())
+
+
+def test_admin_form_stores_the_photo_on_the_product(local_images, mug):
+    from shop.admin import ProductForm
+
+    form = ProductForm(
+        data={
+            "slug": "mug",
+            "title": "Mug",
+            "kind": "physical",
+            "price": "450.00",
+            "currency": "BDT",
+            "position": 0,
+            "published": True,
+            "summary": "",
+            "description": "",
+            "image_url": "",
+        },
+        files={"photo": SimpleUploadedFile("m.png", PNG)},
+        instance=mug,
+    )
+    assert form.is_valid(), form.errors
+    obj = form.save()
+    assert obj.image_url.startswith("http://localhost:8000/api/shop/images/")
+    bad = ProductForm(
+        data={
+            "slug": "mug",
+            "title": "Mug",
+            "kind": "physical",
+            "price": "450.00",
+            "currency": "BDT",
+            "position": 0,
+        },
+        files={"photo": SimpleUploadedFile("m.svg", b"<svg/>")},
+        instance=mug,
+    )
+    assert not bad.is_valid() and "photo" in bad.errors
