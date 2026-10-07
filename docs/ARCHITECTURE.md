@@ -63,3 +63,10 @@ Short record of what was chosen and why.
 - Payments are recorded by staff (with 2FA). A row is locked while recording so two payments cannot overpay together.
 - Recurring cycles (monthly, yearly) are stored on items now; automatic recurring billing comes with subscriptions (phase 7).
 - PDFs are generated on demand with reportlab (no system packages, English text; Bengali glyphs need an embedded font, planned).
+
+## Accounting (phase 6)
+- Owner only (superuser + 2FA). Staff can run projects and billing but cannot read the books.
+- Single source of truth: income is the invoice payments, so a report can never disagree with an invoice. Only expenses are stored in `accounting`.
+- Everything is per currency; BDT and USD are never added together (no exchange rate is invented).
+- Cancelled invoices are excluded from income; drafts never count. "Still owed" is the outstanding balance of issued invoices; "overdue" is the unpaid part of installments past their due date.
+- CSV export prefixes cells that start with `= + - @` so a spreadsheet cannot run them as formulas.

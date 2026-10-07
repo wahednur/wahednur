@@ -181,3 +181,43 @@ export const METHODS: [string, string][] = [
   ["card", "Card or gateway"],
   ["other", "Other"],
 ];
+
+export type Expense = {
+  id: number;
+  spent_on: string;
+  category: string;
+  amount: string;
+  currency: "BDT" | "USD";
+  vendor: string;
+  description: string;
+  project: string | null;
+  project_title: string | null;
+};
+export type CurrencySummary = {
+  received: string;
+  spent: string;
+  net: string;
+  receivable: string;
+  overdue: string;
+  months: { month: string; received: string; spent: string; net: string }[];
+};
+export type ProjectProfit = {
+  project: string;
+  title: string;
+  currency: "BDT" | "USD";
+  invoiced: string;
+  received: string;
+  spent: string;
+  net: string;
+};
+export const EXPENSE_CATEGORIES: [string, string][] = [
+  ["hosting", "Hosting and servers"],
+  ["domain", "Domains"],
+  ["software", "Software and tools"],
+  ["contractor", "Contractors"],
+  ["marketing", "Marketing"],
+  ["transport", "Transport"],
+  ["fees", "Platform and bank fees"],
+  ["tax", "Tax and licences"],
+  ["other", "Other"],
+];
