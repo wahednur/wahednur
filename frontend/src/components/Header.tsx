@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { site } from "@/lib/site";
+import Image from "next/image";
 
 const nav = [
   { href: "/work", label: "Work" },
@@ -14,7 +15,7 @@ export default function Header() {
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
         <Link href="/" className="flex items-center gap-2 font-semibold tracking-tight">
           <span className="grid h-8 w-8 place-items-center rounded-md border border-brand/40 bg-surface font-mono text-sm text-brand">
-            wn
+            <Image src="/wahednur.jpg" alt="alt" width={64} height={64} /> 
           </span>
           <span>Wahed Nur</span>
         </Link>
@@ -29,7 +30,7 @@ export default function Header() {
           href={site.resume}
           className="rounded-md border border-line px-3.5 py-2 text-sm text-ink transition-colors hover:border-brand/60 hover:text-brand"
         >
-          Résumé
+          Resume
         </a>
       </div>
     </header>
