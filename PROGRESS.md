@@ -1,6 +1,6 @@
 # PROGRESS
 
-**Last updated:** 2026-10-06 (session 15)
+**Last updated:** 2026-10-06 (session 16)
 
 ## Done
 - Earlier test portfolio (`legacy/`) deleted at the owner's request; history keeps it. Only the ekhaneikini home screenshot was kept (now on its case study).
@@ -42,6 +42,8 @@
 - **`main` is now the project**: `portfolio` merged into `main`; the previous site lives on in branch `backup/old-site` and tag `old-site` (commit 9cdfa2b). Vercel must use Root Directory `frontend` (see docs/VPS.md §5).
 
 - Vercel fix: `output: "standalone"` is now only enabled for the Docker build (`NEXT_OUTPUT=standalone` in the Dockerfile), so Vercel uses the default Next.js build; added `frontend/vercel.json`. 502 diagnosis steps added to `docs/VPS.md` §8.
+
+- Deploy hardening after the owner's 502: container health check now uses `/api/health/live/` (no dependency checks), entrypoint run via `sh`, `.gitattributes` forces LF line endings, and the failure modes (missing env, unreachable DB with migrations on, bad Redis URL, wrong ALLOWED_HOSTS) were reproduced with the real image and written into `docs/VPS.md`.
 
 ## In progress
 Nothing.

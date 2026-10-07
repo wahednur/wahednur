@@ -86,6 +86,17 @@ Migrations run when `api` starts. Run `./deploy/backup.sh` first for any release
 
 ## 8. Checks and troubleshooting
 
+How the API reports health: `/api/health/live/` only says the process is up (the container health check uses it, so a database or Redis hiccup never restarts the app). `/api/health/` also checks the database and cache and returns 503 when degraded (use it for uptime monitoring).
+
+What the container log says when something is wrong (all reproduced with the real image):
+
+| Log line | Meaning |
+|---|---|
+| `ImproperlyConfigured: Set the SECRET_KEY environment variable` | a required value is missing (`SECRET_KEY`, `DATABASE_URL`, `RESEND_API_KEY`) |
+| `OperationalError: connection failed ... refused` right after start, container `Exited (1)` | `RUN_MIGRATIONS=1` and the database host/port/password is wrong or unreachable: the app exits and the platform restarts it in a loop, which shows as **502** |
+| `/api/health/` returns `"cache":"down"` | `REDIS_CACHE_URL` is wrong (one URL only, no spaces or commas) |
+| 400 on `api.wahednur.tech` only | the API host is missing from `ALLOWED_HOSTS` |
+
 **502 Bad Gateway from `https://api...`** means the proxy is up but the API behind it is not answering. Run, on the VPS:
 ```bash
 cd ~/wahednur

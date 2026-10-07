@@ -6,7 +6,7 @@ import urllib.request
 
 host = "localhost"  # always allowed in production, independent of ALLOWED_HOSTS
 request = urllib.request.Request(
-    "http://127.0.0.1:8000/api/health/",
+    "http://127.0.0.1:8000/api/health/live/",
     headers={"Host": host, "X-Forwarded-Proto": "https"},
 )
 try:

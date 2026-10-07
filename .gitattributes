@@ -1,0 +1,4 @@
+# Keep Unix line endings so scripts and Dockerfiles run inside Linux containers.
+*.sh text eol=lf
+Dockerfile text eol=lf
+*.py text eol=lf

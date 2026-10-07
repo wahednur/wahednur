@@ -46,3 +46,13 @@ def test_unknown_api_route_is_404_not_a_page():
 
 def test_celery_task_runs_eagerly_in_tests():
     assert tasks.ping.delay().get() == "pong"
+
+
+def test_liveness_ignores_database_and_cache_problems():
+    with (
+        patch("core.services.check_database", return_value=False),
+        patch("core.services.check_cache", return_value=False),
+    ):
+        response = APIClient().get("/api/health/live/")
+    assert response.status_code == 200
+    assert response.json() == {"status": "alive"}

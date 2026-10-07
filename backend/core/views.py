@@ -17,3 +17,14 @@ class HealthView(APIView):
         healthy = report["status"] == "ok"
         code = status.HTTP_200_OK if healthy else status.HTTP_503_SERVICE_UNAVAILABLE
         return Response(report, status=code)
+
+
+class LiveView(APIView):
+    """Liveness only: the process answers. The container health check uses this,
+    so a brief database or Redis problem cannot make Docker restart the app."""
+
+    permission_classes = [AllowAny]
+    throttle_classes: list = []
+
+    def get(self, request):
+        return Response({"status": "alive"})
