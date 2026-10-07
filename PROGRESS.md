@@ -48,7 +48,7 @@
 - **Email login**: custom `accounts.User` (email is the login, lowercase, unique ignoring case), admin registration, 11 new tests (45 total) including admin login by email and `createsuperuser`; verified `migrate` + `createsuperuser` on an empty PostgreSQL database. **An existing database must be reset once** (steps in `docs/VPS.md` §4) before this version is deployed.
 - `Download resume` spelling done; `NEXT_PUBLIC_API_URL` set on Vercel by the owner.
 
-- **Sign-in backend (phase 1)**: django-allauth headless, email code verification, password reset by code, Google (when keys are set), set-password after Google, TOTP two-factor required for staff and owner (API and Django admin), roles (owner/staff/client), DRF permission classes, `/api/auth/me/`, audit trail, Resend email backend (Celery), CSRF/CORS/cookie settings for the www/api split, branded emails. 83 tests pass; verified end to end over real HTTP (CSRF cookie, signup, code, HttpOnly session cookie, `/api/auth/me/`, missing CSRF 403, evil origin 403, logout). See `docs/AUTH.md`.
+- **Sign-in backend (phase 1)**: django-allauth headless, email code verification, password reset by code, Google (when keys are set), set-password after Google, TOTP two-factor required for staff and owner (API and Django admin), roles (owner/staff/client), DRF permission classes, `/api/auth/me/`, audit trail, Resend email backend (Celery), CSRF/CORS/cookie settings for the www/api split, branded emails. 82 tests pass; verified end to end over real HTTP (CSRF cookie, signup, code, HttpOnly session cookie, `/api/auth/me/`, missing CSRF 403, evil origin 403, logout). See `docs/AUTH.md`.
 
 ## In progress
 Nothing.
@@ -84,3 +84,6 @@ Nothing.
 - Contact is a `mailto:` link until the backend exists.
 - Project and résumé links were provided by the owner but not opened from this environment (blocked); open each once on a phone before launch.
 - Résumé PDF contains the owner's public phone and email; replace the file when the résumé changes.
+
+- **Sign-in frontend (phase 1–2)**: `/login`, `/register`, `/verify-email`, `/forgot-password`, `/reset-password`, private `/app` area and `/app/security` (password change/set, TOTP QR, recovery codes). `proxy.ts` gives optimistic redirects (no cookie -> login; cookie -> away from login/register); `AuthGate` + `/api/auth/me/` is authoritative. Browser E2E (Playwright, real API) passes, including TOTP login and reset. Google button appears only when the API lists the provider.
+- **Next**: phase 3 (R2 private document vault), then clients and projects.
