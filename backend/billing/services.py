@@ -1,0 +1,326 @@
+"""Billing rules. Money is Decimal; totals are computed here, never trusted from the UI."""
+
+from decimal import Decimal
+
+from django.conf import settings
+from django.core.mail import send_mail
+from django.db import transaction
+from django.db.models import Sum
+from django.utils import timezone
+from rest_framework.exceptions import NotFound, ValidationError
+
+from accounts.signals import record
+
+from .models import (
+    Counter,
+    Installment,
+    Invoice,
+    InvoiceItem,
+    Payment,
+    Quotation,
+    QuotationItem,
+    money,
+)
+
+ZERO = Decimal("0.00")
+
+
+def _fail(field, message):
+    raise ValidationError({field: message})
+
+
+# --- numbering ------------------------------------------------------------------
+def next_number(kind: str) -> str:
+    """QUO-2026-0001 / INV-2026-0001. Locked row, so two requests never get the same number."""
+    year = timezone.localdate().year
+    with transaction.atomic():
+        counter, _ = Counter.objects.select_for_update().get_or_create(kind=kind, year=year)
+        counter.last += 1
+        counter.save(update_fields=["last"])
+    return f"{kind}-{year}-{counter.last:04d}"
+
+
+# --- totals ---------------------------------------------------------------------
+def subtotal(doc) -> Decimal:
+    return sum((i.amount for i in doc.items.all()), ZERO)
+
+
+def total(doc) -> Decimal:
+    return money(subtotal(doc) - doc.discount)
+
+
+def _check_items(items, discount):
+    if not items:
+        _fail("items", "Add at least one item.")
+    for item in items:
+        if item["quantity"] <= 0 or item["unit_price"] < 0:
+            _fail("items", "Quantity must be above zero and price cannot be negative.")
+    gross = sum((money(i["quantity"] * i["unit_price"]) for i in items), ZERO)
+    if discount < 0 or discount > gross:
+        _fail("discount", "The discount cannot be negative or more than the subtotal.")
+    if gross - discount <= 0:
+        _fail("items", "The total must be above zero.")
+
+
+def _write_items(model, fk, doc, items):
+    model.objects.filter(**{fk: doc}).delete()
+    model.objects.bulk_create(
+        [model(**{fk: doc}, position=n, **item) for n, item in enumerate(items)]
+    )
+
+
+# --- visibility -------------------------------------------------------------------
+def visible_quotations(user):
+    qs = Quotation.objects.select_related("project__client").prefetch_related("items")
+    if user.is_staff:
+        return qs
+    return qs.filter(project__client=user).exclude(status=Quotation.Status.DRAFT)
+
+
+def visible_invoices(user):
+    qs = Invoice.objects.select_related("project__client").prefetch_related(
+        "items", "installments", "payments"
+    )
+    if user.is_staff:
+        return qs
+    return qs.filter(project__client=user).exclude(status=Invoice.Status.DRAFT)
+
+
+def _get(qs, pk):
+    try:
+        return qs.get(pk=pk)
+    except (qs.model.DoesNotExist, ValueError):
+        raise NotFound() from None
+
+
+def get_quotation(user, pk) -> Quotation:
+    return _get(visible_quotations(user), pk)
+
+
+def get_invoice(user, pk) -> Invoice:
+    return _get(visible_invoices(user), pk)
+
+
+# --- email ------------------------------------------------------------------------
+def _notify(doc, subject, line, path):
+    client = doc.project.client
+    send_mail(
+        subject,
+        f"{line}\n\nOpen it here: {settings.FRONTEND_URL}{path}\n\n{settings.BUSINESS_NAME}",
+        settings.DEFAULT_FROM_EMAIL,
+        [client.email],
+        fail_silently=True,  # the document is already saved; a mail problem must not undo it
+    )
+
+
+# --- quotations -------------------------------------------------------------------
+@transaction.atomic
+def save_quotation(*, user, items, quotation=None, project=None, **data) -> Quotation:
+    _check_items(items, data.get("discount", ZERO))
+    if quotation is None:
+        quotation = Quotation(number=next_number("QUO"), project=project, created_by=user, **data)
+    else:
+        if quotation.status != Quotation.Status.DRAFT:
+            _fail("detail", "Only a draft quotation can be edited.")
+        for field, value in data.items():
+            setattr(quotation, field, value)
+    quotation.save()
+    _write_items(QuotationItem, "quotation", quotation, items)
+    return quotation
+
+
+def send_quotation(*, quotation: Quotation, user, request=None) -> Quotation:
+    if quotation.status != Quotation.Status.DRAFT:
+        _fail("detail", "Only a draft can be sent.")
+    quotation.status = Quotation.Status.SENT
+    quotation.sent_at = timezone.now()
+    quotation.save(update_fields=["status", "sent_at"])
+    record("quotation_sent", request=request, user=user)
+    _notify(
+        quotation,
+        f"Quotation {quotation.number}",
+        f"A quotation ({quotation.number}) is ready for you to review.",
+        f"/app/billing/quotations/{quotation.pk}",
+    )
+    return quotation
+
+
+def decide_quotation(*, quotation: Quotation, accept: bool, user, request=None) -> Quotation:
+    if quotation.status != Quotation.Status.SENT:
+        _fail("detail", "Only a sent quotation can be accepted or declined.")
+    if quotation.valid_until and quotation.valid_until < timezone.localdate():
+        quotation.status = Quotation.Status.EXPIRED
+        quotation.save(update_fields=["status"])
+        _fail("detail", "This quotation has expired.")
+    quotation.status = Quotation.Status.ACCEPTED if accept else Quotation.Status.REJECTED
+    quotation.decided_at = timezone.now()
+    quotation.save(update_fields=["status", "decided_at"])
+    record("quotation_accepted" if accept else "quotation_rejected", request=request, user=user)
+    return quotation
+
+
+# --- invoices ---------------------------------------------------------------------
+def _installments(plan, grand_total):
+    """plan: [{label, percent | amount, due_date?}]. Must add up to the invoice total exactly."""
+    if not plan:
+        plan = [{"label": "Full payment", "percent": Decimal(100)}]
+    rows, running = [], ZERO
+    for n, step in enumerate(plan):
+        last = n == len(plan) - 1
+        if step.get("percent") is not None:
+            amount = money(grand_total * step["percent"] / 100)
+        elif step.get("amount") is not None:
+            amount = money(step["amount"])
+        else:
+            _fail("installments", "Each installment needs a percent or an amount.")
+        if last and step.get("percent") is not None:
+            amount = grand_total - running  # the last one absorbs rounding
+        if amount <= 0:
+            _fail("installments", "Each installment must be above zero.")
+        running += amount
+        rows.append({"label": step["label"], "amount": amount, "due_date": step.get("due_date")})
+    if running != grand_total:
+        _fail("installments", f"Installments add up to {running}, but the total is {grand_total}.")
+    return rows
+
+
+@transaction.atomic
+def save_invoice(
+    *, user, items, installments, invoice=None, project=None, quotation=None, **data
+) -> Invoice:
+    _check_items(items, data.get("discount", ZERO))
+    if invoice is None:
+        invoice = Invoice(
+            number=next_number("INV"),
+            project=project,
+            quotation=quotation,
+            created_by=user,
+            **data,
+        )
+    else:
+        if invoice.status != Invoice.Status.DRAFT:
+            _fail("detail", "An issued invoice cannot be edited. Cancel it and create a new one.")
+        for field, value in data.items():
+            setattr(invoice, field, value)
+    invoice.save()
+    _write_items(InvoiceItem, "invoice", invoice, items)
+    gross = sum((money(i["quantity"] * i["unit_price"]) for i in items), ZERO)
+    rows = _installments(installments, money(gross - invoice.discount))
+    invoice.installments.all().delete()
+    Installment.objects.bulk_create(
+        [Installment(invoice=invoice, position=n, **row) for n, row in enumerate(rows)]
+    )
+    return invoice
+
+
+@transaction.atomic
+def convert_quotation(
+    *, quotation: Quotation, installments, due_date, user, request=None
+) -> Invoice:
+    if quotation.status != Quotation.Status.ACCEPTED:
+        _fail("detail", "Only an accepted quotation can become an invoice.")
+    if Invoice.objects.filter(quotation=quotation).exists():
+        _fail("detail", "This quotation already has an invoice.")
+    items = [
+        {
+            "description": i.description,
+            "quantity": i.quantity,
+            "unit_price": i.unit_price,
+            "cycle": i.cycle,
+        }
+        for i in quotation.items.all()
+    ]
+    invoice = save_invoice(
+        user=user,
+        items=items,
+        installments=installments,
+        project=quotation.project,
+        quotation=quotation,
+        title=quotation.title,
+        currency=quotation.currency,
+        discount=quotation.discount,
+        notes=quotation.notes,
+        due_date=due_date,
+    )
+    record("invoice_from_quotation", request=request, user=user)
+    return invoice
+
+
+def issue_invoice(*, invoice: Invoice, user, request=None) -> Invoice:
+    if invoice.status != Invoice.Status.DRAFT:
+        _fail("detail", "Only a draft invoice can be issued.")
+    invoice.status = Invoice.Status.ISSUED
+    invoice.issued_at = timezone.now()
+    invoice.save(update_fields=["status", "issued_at"])
+    record("invoice_issued", request=request, user=user)
+    _notify(
+        invoice,
+        f"Invoice {invoice.number}",
+        f"Invoice {invoice.number} has been issued for {invoice.project.title}.",
+        f"/app/billing/invoices/{invoice.pk}",
+    )
+    return invoice
+
+
+def cancel_invoice(*, invoice: Invoice, user, request=None) -> Invoice:
+    if invoice.status == Invoice.Status.CANCELLED:
+        return invoice
+    if invoice.payments.exists():
+        _fail("detail", "An invoice with payments cannot be cancelled.")
+    invoice.status = Invoice.Status.CANCELLED
+    invoice.save(update_fields=["status"])
+    record("invoice_cancelled", request=request, user=user)
+    return invoice
+
+
+# --- payments ---------------------------------------------------------------------
+def paid_total(invoice) -> Decimal:
+    return invoice.payments.aggregate(t=Sum("amount"))["t"] or ZERO
+
+
+def outstanding(invoice) -> Decimal:
+    return total(invoice) - paid_total(invoice)
+
+
+def payment_state(invoice) -> str:
+    if invoice.status != Invoice.Status.ISSUED:
+        return invoice.status
+    paid = paid_total(invoice)
+    if paid >= total(invoice):
+        return "paid"
+    return "partial" if paid > 0 else "unpaid"
+
+
+def schedule(invoice):
+    """Spread what was paid over the installments in order. Nothing stored, so it cannot drift."""
+    left = paid_total(invoice)
+    today = timezone.localdate()
+    rows = []
+    for inst in invoice.installments.all():
+        paid = min(left, inst.amount)
+        left -= paid
+        if paid >= inst.amount:
+            state = "paid"
+        elif inst.due_date and inst.due_date < today:
+            state = "overdue"
+        else:
+            state = "partial" if paid > 0 else "due"
+        rows.append({"inst": inst, "paid": paid, "state": state})
+    return rows
+
+
+@transaction.atomic
+def record_payment(*, invoice: Invoice, user, request=None, **data) -> Payment:
+    invoice = Invoice.objects.select_for_update().get(pk=invoice.pk)  # serialise payments
+    if invoice.status != Invoice.Status.ISSUED:
+        _fail("detail", "Payments can only be recorded on an issued invoice.")
+    amount = money(data["amount"])
+    if amount <= 0:
+        _fail("amount", "The amount must be above zero.")
+    if amount > outstanding(invoice):
+        _fail("amount", f"This is more than the amount still due ({outstanding(invoice)}).")
+    payment = Payment.objects.create(
+        invoice=invoice, recorded_by=user, **{**data, "amount": amount}
+    )
+    record("payment_recorded", request=request, user=user)
+    return payment

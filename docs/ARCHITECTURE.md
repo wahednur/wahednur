@@ -55,3 +55,11 @@ Short record of what was chosen and why.
 - Status moves only along allowed paths (a proposal cannot jump to completed; cancelled is final; completed can be reopened).
 - Clients read their own projects and public notes. Internal notes are filtered on the server. Only staff with 2FA can write.
 - A document uploaded to a project is assigned to that project's client automatically.
+
+## Quotations and invoices (phase 5)
+- Money is Decimal end to end and leaves the API as strings (a float would show 20000.4000000000014).
+- A quotation is the offer; accepting it does not bill anything. Converting an accepted quotation creates a draft invoice with a payment plan; the plan must add up to the total exactly (the last percent installment absorbs rounding).
+- Issued invoices are frozen (cancel and recreate instead). Paid state per installment is calculated from the payment list in order, so it can never disagree with the payments.
+- Payments are recorded by staff (with 2FA). A row is locked while recording so two payments cannot overpay together.
+- Recurring cycles (monthly, yearly) are stored on items now; automatic recurring billing comes with subscriptions (phase 7).
+- PDFs are generated on demand with reportlab (no system packages, English text; Bengali glyphs need an embedded font, planned).

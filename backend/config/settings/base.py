@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     "leads",
     "documents",
     "projects",
+    "billing",
 ]
 
 MIDDLEWARE = [
@@ -239,3 +240,9 @@ R2_PRIVATE_BUCKET = env("R2_PRIVATE_BUCKET", default="")
 DOCUMENTS_MAX_MB = env.int("DOCUMENTS_MAX_MB", default=20)
 DOCUMENTS_URL_TTL = env.int("DOCUMENTS_URL_TTL", default=300)  # seconds a download link lives
 DOCUMENTS_LOCAL_ROOT = BASE_DIR / "private_media"
+
+# --- Billing (shown on quotation and invoice PDFs) ----------------------------
+BUSINESS_NAME = env("BUSINESS_NAME", default="Abdul Wahed Nur")
+BUSINESS_EMAIL = env("BUSINESS_EMAIL", default="wahednur@gmail.com")
+BUSINESS_ADDRESS = env("BUSINESS_ADDRESS", default="Sherpur, Bangladesh")
+INVOICE_PAYMENT_NOTE = env("INVOICE_PAYMENT_NOTE", default="")  # bank / bKash / Nagad details
