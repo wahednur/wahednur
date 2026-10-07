@@ -1,11 +1,20 @@
-"""Django email backend that sends through Resend in the background (Celery).
-Used by django-allauth for verification codes and password resets."""
+"""Django email backend that sends through Resend. Used by django-allauth for verification codes
+and password resets.
 
+The email is sent straight away, so a sign-in code arrives even if the background worker is down.
+Only when Resend is unreachable or has a temporary problem is the same email (same idempotency key,
+so it can never be sent twice) handed to the worker to retry. If Resend refuses it (for example an
+unverified domain) that is logged with Resend's reason and the request is not broken.
+"""
+
+import logging
 import uuid
 
 from django.core.mail.backends.base import BaseEmailBackend
 
-from .tasks import send_email
+from .tasks import MailError, MailRejected, send_email
+
+logger = logging.getLogger(__name__)
 
 
 def build_payload(message) -> dict:
@@ -30,6 +39,13 @@ class ResendEmailBackend(BaseEmailBackend):
         for message in email_messages:
             if not message.to:
                 continue
-            send_email.delay(build_payload(message))
+            payload = build_payload(message)
+            try:
+                send_email.run(payload)
+            except MailError:
+                send_email.delay(payload)  # temporary trouble: the worker keeps trying
+            except MailRejected:
+                logger.error("Email %r to %s was refused by Resend", message.subject, message.to)
+                continue
             count += 1
         return count

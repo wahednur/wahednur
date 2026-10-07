@@ -33,3 +33,9 @@ Ours: `GET /api/auth/me/` returns `{id, email, full_name, roles, email_verified,
 ## Known limits
 - If Redis is down, sign-in and sign-up fail (rate limits live in the cache). This is deliberate: security checks never fail open.
 - Passkeys (WebAuthn) are supported by the library and can be switched on later.
+
+
+## Email codes: limits and what "Conflict" means
+- A sign-up allows 3 resends of the verification code (allauth default) and 3 wrong attempts; a code lives about 15 minutes.
+- `POST /_allauth/browser/v1/auth/email/verify/resend` answers **409 Conflict** when the resend limit is used up, or when the browser no longer has a pending sign-up (session expired, cookie not kept). The page now says so and asks the person to sign up again.
+- If the first code never arrived, fix the sending first (`manage.py send_test_email`, see DEPLOYMENT.md); pressing resend repeatedly only burns the 3 resends.

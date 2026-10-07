@@ -23,10 +23,33 @@ def test_payload_has_text_html_and_an_idempotency_key():
     assert payload["idempotency_key"].startswith("mail-")
 
 
-def test_backend_queues_one_task_per_message():
-    with patch("core.mail.send_email.delay") as delay:
-        sent = ResendEmailBackend().send_messages([_message(), _message()])
-    assert sent == 2 and delay.call_count == 2
+def test_backend_sends_straight_away_without_needing_the_worker(settings):
+    settings.RESEND_API_KEY = "k"
+    with patch("core.tasks.httpx.post", return_value=MagicMock(status_code=200)) as post:
+        with patch("core.mail.send_email.delay") as delay:
+            sent = ResendEmailBackend().send_messages([_message(), _message()])
+    assert sent == 2 and post.call_count == 2 and delay.call_count == 0
+
+
+def test_backend_hands_the_same_email_to_the_worker_when_resend_is_unreachable(settings):
+    settings.RESEND_API_KEY = "k"
+    with patch("core.tasks.httpx.post", side_effect=httpx.ConnectTimeout("slow")):
+        with patch("core.mail.send_email.delay") as delay:
+            sent = ResendEmailBackend().send_messages([_message()])
+    assert sent == 1 and delay.call_count == 1
+    assert delay.call_args.args[0]["idempotency_key"].startswith(
+        "mail-"
+    )  # same key: no double send
+
+
+def test_backend_logs_a_refusal_and_does_not_break_the_request(settings, caplog):
+    settings.RESEND_API_KEY = "k"
+    refused = MagicMock(status_code=403, text="The wahednur.tech domain is not verified")
+    with patch("core.tasks.httpx.post", return_value=refused):
+        with patch("core.mail.send_email.delay") as delay:
+            sent = ResendEmailBackend().send_messages([_message()])
+    assert sent == 0 and delay.call_count == 0
+    assert "not verified" in caplog.text
 
 
 def test_task_posts_to_resend_with_bearer_and_idempotency_key(settings):

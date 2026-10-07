@@ -33,6 +33,9 @@ export default function VerifyEmailForm() {
     setInfo("");
     const result = await authFetch("POST", "/auth/email/verify/resend");
     if (result.status === 200 || result.status === 401) setInfo("A new code is on its way.");
+    else if (result.status === 409)
+      // The server allows only a few resends per sign-up, or this sign-up session has ended.
+      setError("You have used all the resends for this sign-up, or it has expired. Please sign up again to get a fresh code.");
     else setError(firstError(result));
   }
 
