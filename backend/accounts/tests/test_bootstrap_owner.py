@@ -9,6 +9,17 @@ pytestmark = pytest.mark.django_db
 PW = "an-owner-long-pass-123"
 
 
+def test_the_email_can_be_given_without_the_flag(monkeypatch):
+    monkeypatch.setenv("DJANGO_SUPERUSER_PASSWORD", "a-very-long-pass-123")
+    call_command("bootstrap_owner", "plain@example.com")
+    assert User.objects.get(email="plain@example.com").is_superuser
+
+
+def test_an_email_is_required(monkeypatch):
+    with pytest.raises(CommandError):
+        call_command("bootstrap_owner")
+
+
 def test_creates_a_superuser_with_a_verified_email_and_the_owner_group(monkeypatch):
     monkeypatch.setenv("DJANGO_SUPERUSER_PASSWORD", PW)
     call_command("bootstrap_owner", email="Boss@Example.com")

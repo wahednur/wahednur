@@ -24,11 +24,15 @@ class Command(BaseCommand):
     help = "Create or repair the owner account (superuser with a verified email)."
 
     def add_arguments(self, parser):
-        parser.add_argument("--email", required=True)
+        # Both forms work: `bootstrap_owner --email you@x.com` and `bootstrap_owner you@x.com`.
+        parser.add_argument("email_arg", nargs="?", metavar="EMAIL")
+        parser.add_argument("--email", dest="email")
 
     def handle(self, *args, **options):
         User = get_user_model()
-        email = options["email"].strip().lower()
+        email = (options.get("email") or options.get("email_arg") or "").strip().lower()
+        if not email:
+            raise CommandError("Give the owner's email: bootstrap_owner --email you@example.com")
         user = User.objects.filter(email__iexact=email).first()
         password = os.environ.get("DJANGO_SUPERUSER_PASSWORD")
         if not password and (user is None or not user.has_usable_password()):
