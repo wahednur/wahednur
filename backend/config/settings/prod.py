@@ -1,5 +1,4 @@
 from .base import *  # noqa: F403
-from .base import env
 
 # SECRET_KEY, DATABASE_URL and ALLOWED_HOSTS must be set in the environment;
 # startup fails loudly if they are missing.
@@ -16,8 +15,11 @@ SECURE_HSTS_SECONDS = 60 * 60 * 24 * 30
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 
-# Without a key, leads would be saved but the owner would never be told.
-RESEND_API_KEY = env("RESEND_API_KEY")
+# Without a way to send email, sign-in codes and lead notices would silently go nowhere.
+if not (EMAIL_HOST or RESEND_API_KEY):  # noqa: F405
+    from django.core.exceptions import ImproperlyConfigured
+
+    raise ImproperlyConfigured("Set EMAIL_HOST (SMTP) or RESEND_API_KEY so email can be sent.")
 
 # WhiteNoise serves the Django admin's static files (right after SecurityMiddleware).
 # Added here, not in base, so dev and tests do not need a collected staticfiles dir.

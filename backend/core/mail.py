@@ -11,6 +11,7 @@ import logging
 import uuid
 
 from django.core.mail.backends.base import BaseEmailBackend
+from django.core.mail.backends.smtp import EmailBackend as SmtpBackend
 
 from .tasks import MailError, MailRejected, send_email
 
@@ -49,3 +50,19 @@ class ResendEmailBackend(BaseEmailBackend):
                 continue
             count += 1
         return count
+
+
+class SafeSMTPBackend(SmtpBackend):
+    """Normal SMTP (Gmail and others), but a mail-server problem is logged, never a crash.
+
+    A sign-up must not turn into an error page because the mail server was slow; the person can
+    ask for the code again. The log line says exactly what the server answered.
+    """
+
+    def send_messages(self, email_messages):
+        try:
+            return super().send_messages(email_messages) or 0
+        except Exception as exc:  # noqa: BLE001  smtplib raises many different errors
+            subjects = [m.subject for m in email_messages]
+            logger.error("SMTP send failed (%s): %s. Emails: %s", self.host, exc, subjects)
+            return 0

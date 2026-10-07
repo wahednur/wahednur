@@ -216,18 +216,35 @@ LOGGING = {
     "root": {"handlers": ["console"], "level": "INFO"},
 }
 
-# --- Leads: email notification through Resend ------------------------------
+# --- Email -------------------------------------------------------------------------------
+# Pick ONE way to send:
+#   SMTP    EMAIL_HOST (+ user and password): Gmail, Zoho, Brevo, your own mail server...
+#   Resend  RESEND_API_KEY
+#   neither: emails are printed to the console (development only)
+# The names used in the owner's other projects work too (EMAIL_SERVER_HOST, SMTP_USER...).
 RESEND_API_KEY = env("RESEND_API_KEY", default="")
-LEADS_NOTIFY_TO = env("LEADS_NOTIFY_TO", default="wahednur@gmail.com")
-LEADS_FROM_EMAIL = env("LEADS_FROM_EMAIL", default="onboarding@resend.dev")
+EMAIL_HOST = env("EMAIL_HOST", default="") or env("EMAIL_SERVER_HOST", default="")
+EMAIL_PORT = env.int("EMAIL_PORT", default=0) or env.int("EMAIL_SERVER_PORT", default=0) or 465
+EMAIL_HOST_USER = env("EMAIL_HOST_USER", default="") or env("SMTP_USER", default="")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default="") or env("SMTP_PASS", default="")
+EMAIL_USE_SSL = env.bool("EMAIL_USE_SSL", default=EMAIL_PORT == 465)  # 465 = SSL from the start
+EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS", default=EMAIL_PORT == 587)  # 587 = STARTTLS
+EMAIL_TIMEOUT = 10
+EMAIL_FROM = env("EMAIL_FROM", default="")
 
-# --- Email: Resend through Celery; printed to the console when no key is set --
-DEFAULT_FROM_EMAIL = LEADS_FROM_EMAIL
-EMAIL_BACKEND = (
-    "core.mail.ResendEmailBackend"
-    if RESEND_API_KEY
-    else "django.core.mail.backends.console.EmailBackend"
+LEADS_NOTIFY_TO = env("LEADS_NOTIFY_TO", default="") or "wahednur@gmail.com"
+LEADS_FROM_EMAIL = env("LEADS_FROM_EMAIL", default="") or "onboarding@resend.dev"
+
+# The sender must be an address the mail service allows. Gmail only sends as the Gmail account.
+DEFAULT_FROM_EMAIL = (
+    (EMAIL_FROM or EMAIL_HOST_USER or LEADS_FROM_EMAIL) if EMAIL_HOST else LEADS_FROM_EMAIL
 )
+if EMAIL_HOST:
+    EMAIL_BACKEND = "core.mail.SafeSMTPBackend"
+elif RESEND_API_KEY:
+    EMAIL_BACKEND = "core.mail.ResendEmailBackend"
+else:
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 # --- Cloudflare R2 -----------------------------------------------------------
 # Two separate buckets and two separate tokens:

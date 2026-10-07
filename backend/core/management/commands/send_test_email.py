@@ -25,10 +25,13 @@ class Command(BaseCommand):
         out = self.stdout.write
         out(f"Email backend : {settings.EMAIL_BACKEND}")
         out(f"From address  : {settings.DEFAULT_FROM_EMAIL}")
+        if settings.EMAIL_HOST:
+            self._smtp(to)
+            return
         out(f"Resend key set: {'yes' if settings.RESEND_API_KEY else 'NO'}")
         out(f"Queue         : {settings.CELERY_BROKER_URL.split('@')[-1]}")
         if not settings.RESEND_API_KEY:
-            raise CommandError("RESEND_API_KEY is empty, so no email can leave the server.")
+            raise CommandError("No way to send email is set: fill EMAIL_HOST or RESEND_API_KEY.")
         payload = {
             "from": settings.DEFAULT_FROM_EMAIL,
             "to": [to],
@@ -45,5 +48,30 @@ class Command(BaseCommand):
         self.stdout.write(
             self.style.SUCCESS(f"Resend accepted the email for {to}. Check the inbox and spam.")
         )
-        out("Codes still missing? Then the worker is the problem:")
-        out("  docker compose logs --tail=50 worker")
+
+    def _smtp(self, to):
+        from django.core.mail import get_connection, send_mail
+
+        s = settings
+        mode = "SSL" if s.EMAIL_USE_SSL else "STARTTLS" if s.EMAIL_USE_TLS else "plain"
+        self.stdout.write(f"SMTP server   : {s.EMAIL_HOST}:{s.EMAIL_PORT} ({mode})")
+        self.stdout.write(f"SMTP user set : {'yes' if s.EMAIL_HOST_USER else 'NO'}")
+        self.stdout.write(f"SMTP password : {'set' if s.EMAIL_HOST_PASSWORD else 'NOT SET'}")
+        try:
+            send_mail(
+                "Test email from wahednur.tech",
+                "If you can read this, sending works.",
+                s.DEFAULT_FROM_EMAIL,
+                [to],
+                connection=get_connection("django.core.mail.backends.smtp.EmailBackend"),
+                fail_silently=False,
+            )
+        except Exception as exc:  # noqa: BLE001
+            raise CommandError(
+                f"The mail server refused or could not be reached: {exc.__class__.__name__}: {exc}"
+            ) from exc
+        self.stdout.write(
+            self.style.SUCCESS(
+                f"The mail server accepted the email for {to}. Check the inbox and spam."
+            )
+        )

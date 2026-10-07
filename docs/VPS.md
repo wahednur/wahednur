@@ -155,3 +155,40 @@ Routine care: `docker system prune -f` now and then, `apt upgrade` monthly, watc
 5. Django admin (`/manage-site/`): add your services, packages, products, delivery zones and stock.
 6. Place one small test shop order and one test invoice payment end to end, then cancel or refund them.
 7. Set up the nightly backup (section 6) and test a restore once.
+
+
+## 10. Where the `.env` goes, and which variables you actually need
+
+- `docker compose` reads **`.env` in the same folder as `docker-compose.yml`** (the repository root, on the VPS). It does **not** read `backend/.env`; that file is only for running `python manage.py` on your own computer. If compose says a variable "is missing a value" although you wrote it, you edited the wrong file or are in the wrong folder (`ls -la .env` next to `docker-compose.yml`).
+- This compose file starts its **own** PostgreSQL and Redis. So it needs `POSTGRES_PASSWORD` and `REDIS_PASSWORD` and builds `DATABASE_URL`, `REDIS_CACHE_URL` and `CELERY_BROKER_URL` itself. Do not put those three in the root `.env`.
+- Do not run `docker compose up` on your Windows computer for development. Use `python manage.py runserver` and `bun run dev` there.
+- Never point your computer's `backend/.env` at the live database: `migrate`, `bootstrap_owner` and tests would then change live data. Keep a separate local database.
+- On the live site `FRONTEND_URL` must be `https://www.wahednur.tech` (not `http://localhost:3000`): it decides which site may sign in and where email links point.
+- `SECRET_KEY` must be a long random value (`openssl rand -hex 32`), never a word.
+
+Minimal root `.env` for the VPS (replace every value; never paste real ones in chat):
+```
+COMPOSE_PROFILES=proxy
+API_DOMAIN=api.wahednur.tech
+SECRET_KEY=<openssl rand -hex 32>
+POSTGRES_PASSWORD=<openssl rand -hex 24>
+REDIS_PASSWORD=<openssl rand -hex 24>
+ALLOWED_HOSTS=api.wahednur.tech
+CORS_ALLOWED_ORIGINS=https://www.wahednur.tech,https://wahednur.tech
+CSRF_TRUSTED_ORIGINS=https://api.wahednur.tech
+FRONTEND_URL=https://www.wahednur.tech
+COOKIE_DOMAIN=.wahednur.tech
+REQUIRE_STAFF_MFA=true
+NUM_PROXIES=1
+LEADS_NOTIFY_TO=wahednur@gmail.com
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=465
+EMAIL_HOST_USER=wahednur@gmail.com
+EMAIL_HOST_PASSWORD=<gmail app password>
+EMAIL_FROM=wahednur@gmail.com
+R2_PRIVATE_ACCOUNT_ID=...  R2_PRIVATE_ACCESS_KEY_ID=...  R2_PRIVATE_SECRET_ACCESS_KEY=...  R2_PRIVATE_BUCKET=wahednur-private
+```
+Check it before starting: `docker compose config > /dev/null && echo OK` prints nothing but OK when every required value is present.
+
+### Dokploy instead of a plain VPS
+If the API runs on Dokploy, there is no `.env` file: paste the same variables into the service's **Environment** tab, leave `COMPOSE_PROFILES` empty, and use Dokploy's own domain/HTTPS. Database and Redis then come from this same compose file unless you remove them and give `DATABASE_URL`, `REDIS_CACHE_URL`, `CELERY_BROKER_URL` yourself.

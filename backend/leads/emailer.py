@@ -34,8 +34,31 @@ def build_message(lead: Lead) -> tuple[str, str, str]:
     return subject, text, f"{body}<hr><p>{details}</p>"
 
 
+def _send_by_smtp(lead: Lead, subject: str, text: str, body_html: str) -> None:
+    from django.core.mail import EmailMultiAlternatives, get_connection
+
+    message = EmailMultiAlternatives(
+        subject,
+        text,
+        settings.DEFAULT_FROM_EMAIL,
+        [settings.LEADS_NOTIFY_TO],
+        reply_to=[lead.email],
+        # A plain connection (not the "safe" backend) so a failure reaches the retry logic.
+        connection=get_connection("django.core.mail.backends.smtp.EmailBackend"),
+    )
+    message.attach_alternative(body_html, "text/html")
+    try:
+        message.send(fail_silently=False)
+    except Exception as exc:  # noqa: BLE001
+        raise EmailError(f"SMTP send failed: {exc.__class__.__name__}") from exc
+
+
 def send_lead_email(lead: Lead) -> None:
     subject, text, body_html = build_message(lead)
+
+    if settings.EMAIL_HOST:
+        _send_by_smtp(lead, subject, text, body_html)
+        return
 
     if not settings.RESEND_API_KEY:
         # Local development: no key, so show the message instead of sending it.
