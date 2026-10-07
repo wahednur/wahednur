@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" role="img" aria-labelledby="t d">
+<title id="t">Workflow of the service and parts management system</title>
+<desc id="d">An open invoice collects dated jobs and parts, customers pay in parts, and the due amount and ledger update.</desc>
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#111a2f"/><stop offset="1" stop-color="#0a1020"/></linearGradient>
+<marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#2dd4bf"/></marker></defs>
+<rect width="1200" height="750" fill="url(#g)"/>
+<g font-family="Inter,Segoe UI,Arial,sans-serif" fill="#e2e8f0">
+<text x="60" y="80" font-size="22" fill="#2dd4bf" letter-spacing="4" font-family="ui-monospace,Consolas,monospace">HOW AN INVOICE WORKS</text>
+<text x="60" y="130" font-size="40" font-weight="600">One open invoice, paid in parts</text>
+<g stroke="#2dd4bf" stroke-width="3" fill="none" marker-end="url(#a)"><path d="M315 400H365"/><path d="M615 400H665"/><path d="M865 400H915"/></g>
+<g>
+<rect x="60" y="270" width="255" height="260" rx="18" fill="#16223c" stroke="#334155"/><text x="90" y="325" font-size="22" fill="#2dd4bf" font-family="ui-monospace,Consolas,monospace">01</text><text x="90" y="375" font-size="28" font-weight="600">Open invoice</text><text x="90" y="418" font-size="20" fill="#a3b2c7">One per customer,</text><text x="90" y="446" font-size="20" fill="#a3b2c7">kept open until paid</text>
+<rect x="365" y="270" width="250" height="260" rx="18" fill="#16223c" stroke="#334155"/><text x="395" y="325" font-size="22" fill="#2dd4bf" font-family="ui-monospace,Consolas,monospace">02</text><text x="395" y="375" font-size="28" font-weight="600">Jobs and parts</text><text x="395" y="418" font-size="20" fill="#a3b2c7">Added over time,</text><text x="395" y="446" font-size="20" fill="#a3b2c7">each with date and time</text>
+<rect x="665" y="270" width="200" height="260" rx="18" fill="#16223c" stroke="#334155"/><text x="695" y="325" font-size="22" fill="#2dd4bf" font-family="ui-monospace,Consolas,monospace">03</text><text x="695" y="375" font-size="28" font-weight="600">Payments</text><text x="695" y="418" font-size="20" fill="#a3b2c7">Part now,</text><text x="695" y="446" font-size="20" fill="#a3b2c7">the rest later</text>
+<rect x="915" y="270" width="225" height="260" rx="18" fill="#16223c" stroke="#2dd4bf"/><text x="945" y="325" font-size="22" fill="#2dd4bf" font-family="ui-monospace,Consolas,monospace">04</text><text x="945" y="375" font-size="28" font-weight="600">Due and ledger</text><text x="945" y="418" font-size="20" fill="#a3b2c7">Balance comes from</text><text x="945" y="446" font-size="20" fill="#a3b2c7">the records</text>
+</g>
+<text x="60" y="640" font-size="22" fill="#a3b2c7">Also: parts inventory, supplier ledger, expenses, cashbook and reports.</text>
+<text x="60" y="700" font-size="18" fill="#64748b">Illustration of the workflow, not a screenshot.</text>
+</g></svg>

@@ -1,0 +1,110 @@
+# Production stack. Always on: db, redis, api, worker.
+# Optional, switched on with COMPOSE_PROFILES in .env:
+#   proxy     Caddy in front of the API with automatic HTTPS (plain VPS, see docs/VPS.md)
+#   frontend  the Next.js site, if you host it here instead of on Vercel
+# Only Caddy publishes host ports (80/443). Behind Dokploy, leave `proxy` off and
+# attach domains to `api` (8000) and `frontend` (3000) in Dokploy.
+name: wahednur
+
+x-backend: &backend
+  build: ./backend
+  image: wahednur-backend:latest
+  restart: unless-stopped
+  environment: &backend-env
+    SECRET_KEY: ${SECRET_KEY:?set SECRET_KEY}
+    DATABASE_URL: postgres://${POSTGRES_USER:-wahednur}:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-wahednur}
+    ALLOWED_HOSTS: ${ALLOWED_HOSTS:?set ALLOWED_HOSTS}
+    CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:?set CORS_ALLOWED_ORIGINS}
+    CSRF_TRUSTED_ORIGINS: ${CSRF_TRUSTED_ORIGINS:-}
+    REDIS_CACHE_URL: redis://:${REDIS_PASSWORD:?set REDIS_PASSWORD}@redis:6379/1
+    CELERY_BROKER_URL: redis://:${REDIS_PASSWORD}@redis:6379/0
+    RESEND_API_KEY: ${RESEND_API_KEY:?set RESEND_API_KEY}
+    LEADS_FROM_EMAIL: ${LEADS_FROM_EMAIL:?set LEADS_FROM_EMAIL}
+    LEADS_NOTIFY_TO: ${LEADS_NOTIFY_TO:?set LEADS_NOTIFY_TO}
+    NUM_PROXIES: ${NUM_PROXIES:-1}
+    ADMIN_URL: ${ADMIN_URL:-manage-site/}
+  depends_on:
+    db:
+      condition: service_healthy
+    redis:
+      condition: service_healthy
+
+services:
+  db:
+    image: postgres:18
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-wahednur}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-wahednur}
+    volumes:
+      # PostgreSQL 18 images keep data under a versioned folder inside this path.
+      - pgdata:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-wahednur} -d ${POSTGRES_DB:-wahednur}"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+
+  redis:
+    image: redis:8-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes", "--requirepass", "${REDIS_PASSWORD:?set REDIS_PASSWORD}"]
+    environment:
+      REDISCLI_AUTH: ${REDIS_PASSWORD}
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep -q PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+
+  api:
+    <<: *backend
+    environment:
+      <<: *backend-env
+      RUN_MIGRATIONS: "1"
+    expose:
+      - "8000"
+
+  worker:
+    <<: *backend
+    command: ["celery", "-A", "config", "worker", "-l", "info", "--concurrency", "2"]
+    healthcheck:
+      disable: true
+
+  frontend:
+    profiles: ["frontend"]
+    build:
+      context: ./frontend
+      args:
+        # Baked into the site at build time. Required when this profile is used.
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-}
+    image: wahednur-frontend:latest
+    restart: unless-stopped
+    expose:
+      - "3000"
+
+  caddy:
+    profiles: ["proxy"]
+    image: caddy:2-alpine
+    restart: unless-stopped
+    environment:
+      API_DOMAIN: ${API_DOMAIN:-localhost}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - api
+
+volumes:
+  pgdata:
+  redisdata:
+  caddy_data:
+  caddy_config:

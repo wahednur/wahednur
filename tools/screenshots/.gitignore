@@ -1,0 +1,4 @@
+node_modules/
+# Saved logins are live sessions. Never commit them.
+.auth/
+output/

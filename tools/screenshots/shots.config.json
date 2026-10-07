@@ -1,0 +1,378 @@
+{
+  "settings": {
+    "outputDir": "output",
+    "navTimeoutMs": 45000,
+    "actionTimeoutMs": 15000,
+    "desktop": {
+      "width": 1440,
+      "height": 900,
+      "deviceScaleFactor": 1
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "deviceScaleFactor": 2
+    },
+    "allowText": [
+      "01700000000",
+      "demo@example.com"
+    ],
+    "blockHosts": [
+      "connect.facebook.net",
+      "www.facebook.com",
+      "www.googletagmanager.com",
+      "www.google-analytics.com",
+      "analytics.google.com"
+    ]
+  },
+  "sites": {
+    "store": {
+      "baseUrl": "https://ekhaneikini.com",
+      "auth": false
+    },
+    "admin": {
+      "baseUrl": "https://admin.ekhaneikini.com",
+      "auth": true,
+      "loginPath": "/login"
+    },
+    "meter": {
+      "baseUrl": "https://nurain.vercel.app",
+      "auth": true,
+      "loginPath": "/login"
+    },
+    "meter-public": {
+      "baseUrl": "https://nurain.vercel.app",
+      "auth": false
+    }
+  },
+  "shots": [
+    {
+      "name": "store-home",
+      "site": "store",
+      "viewport": "desktop",
+      "steps": [
+        {
+          "goto": "/"
+        }
+      ]
+    },
+    {
+      "name": "store-product",
+      "site": "store",
+      "viewport": "desktop",
+      "steps": [
+        {
+          "goto": "/"
+        },
+        {
+          "click": "a[href^=\"/product/\"]"
+        },
+        {
+          "waitFor": "h1"
+        }
+      ]
+    },
+    {
+      "name": "store-checkout",
+      "site": "store",
+      "viewport": "desktop",
+      "steps": [
+        {
+          "goto": "/"
+        },
+        {
+          "click": "a[href^=\"/product/\"]"
+        },
+        {
+          "waitFor": "button:has-text(\"Add to cart\")"
+        },
+        {
+          "click": "button:has-text(\"Add to cart\")"
+        },
+        {
+          "wait": 1200
+        },
+        {
+          "goto": "/checkout"
+        }
+      ]
+    },
+    {
+      "name": "store-mobile-home",
+      "site": "store",
+      "viewport": "mobile",
+      "steps": [
+        {
+          "goto": "/"
+        }
+      ]
+    },
+    {
+      "name": "store-mobile-product",
+      "site": "store",
+      "viewport": "mobile",
+      "steps": [
+        {
+          "goto": "/"
+        },
+        {
+          "click": "a[href^=\"/product/\"]"
+        },
+        {
+          "waitFor": "h1"
+        }
+      ]
+    },
+    {
+      "name": "admin-dashboard",
+      "site": "admin",
+      "viewport": "desktop",
+      "steps": [
+        {
+          "goto": "/"
+        }
+      ]
+    },
+    {
+      "name": "admin-orders",
+      "site": "admin",
+      "viewport": "desktop",
+      "steps": [
+        {
+          "goto": "/orders"
+        }
+      ]
+    },
+    {
+      "name": "admin-order-detail",
+      "site": "admin",
+      "viewport": "desktop",
+      "steps": [
+        {
+          "goto": "/orders"
+        },
+        {
+          "click": "a[href^=\"/orders/\"]:not([href=\"/orders/new\"])"
+        },
+        {
+          "wait": 1500
+        }
+      ]
+    },
+    {
+      "name": "admin-products",
+      "site": "admin",
+      "viewport": "desktop",
+      "steps": [
+        {
+          "goto": "/catalog/products"
+        }
+      ]
+    },
+    {
+      "name": "admin-analytics",
+      "site": "admin",
+      "viewport": "desktop",
+      "steps": [
+        {
+          "goto": "/analytics"
+        }
+      ]
+    },
+    {
+      "name": "meter-dashboard",
+      "site": "meter",
+      "viewport": "desktop",
+      "_note": "The free-tier server can take up to a minute to wake up, hence the long timeout.",
+      "blur": [
+        "[data-sidebar=\"header\"], [data-slot=\"sidebar-header\"]"
+      ],
+      "steps": [
+        {
+          "goto": "/dashboard"
+        },
+        {
+          "waitFor": "h1:has-text(\"Admin Dashboard\")",
+          "timeout": 90000
+        },
+        {
+          "wait": 1500
+        }
+      ]
+    },
+    {
+      "name": "meter-invoices",
+      "site": "meter",
+      "viewport": "desktop",
+      "_note": "Blurs the shop name and the Customer column.",
+      "blur": [
+        "[data-sidebar=\"header\"], [data-slot=\"sidebar-header\"]",
+        "tbody td:nth-child(2)"
+      ],
+      "steps": [
+        {
+          "goto": "/invoices"
+        },
+        {
+          "waitFor": "tbody tr",
+          "timeout": 90000
+        },
+        {
+          "wait": 800
+        }
+      ]
+    },
+    {
+      "name": "meter-invoice-detail",
+      "site": "meter",
+      "viewport": "desktop",
+      "_note": "Opens the first invoice in the list. Blurs the shop name and every customer link. Check the result for other names (notes, line items).",
+      "blur": [
+        "[data-sidebar=\"header\"], [data-slot=\"sidebar-header\"]",
+        "a[href^=\"/customers/\"]"
+      ],
+      "steps": [
+        {
+          "goto": "/invoices"
+        },
+        {
+          "waitFor": "tbody tr",
+          "timeout": 90000
+        },
+        {
+          "click": "tbody a[href^=\"/invoices/\"]:not([href=\"/invoices/new\"])"
+        },
+        {
+          "waitFor": "h2:has-text(\"Payments\")",
+          "timeout": 60000
+        },
+        {
+          "wait": 1000
+        }
+      ]
+    },
+    {
+      "name": "meter-customer-ledger",
+      "site": "meter",
+      "viewport": "desktop",
+      "_note": "Needs a test customer named exactly 'Demo Customer' with the fake phone 01700000000 (already allow-listed). Never use a real customer here.",
+      "blur": [
+        "[data-sidebar=\"header\"], [data-slot=\"sidebar-header\"]"
+      ],
+      "steps": [
+        {
+          "goto": "/customers"
+        },
+        {
+          "waitFor": "input[placeholder^=\"Search by name\"]",
+          "timeout": 90000
+        },
+        {
+          "fill": "input[placeholder^=\"Search by name\"]",
+          "value": "Demo Customer"
+        },
+        {
+          "wait": 1500
+        },
+        {
+          "click": "tbody a[href^=\"/customers/\"]"
+        },
+        {
+          "waitFor": "text=Customer Ledger",
+          "timeout": 60000
+        },
+        {
+          "wait": 1000
+        }
+      ]
+    },
+    {
+      "name": "meter-products",
+      "site": "meter",
+      "viewport": "desktop",
+      "_note": "Blurs the shop name, the Supplier column and the Buy Price column (your costs and sources should not be public).",
+      "blur": [
+        "[data-sidebar=\"header\"], [data-slot=\"sidebar-header\"]",
+        "tbody td:nth-child(3)",
+        "tbody td:nth-child(4)"
+      ],
+      "steps": [
+        {
+          "goto": "/products"
+        },
+        {
+          "waitFor": "tbody tr",
+          "timeout": 90000
+        },
+        {
+          "wait": 800
+        }
+      ]
+    },
+    {
+      "name": "meter-mobile-invoices",
+      "site": "meter",
+      "viewport": "mobile",
+      "blur": [
+        "[data-sidebar=\"header\"], [data-slot=\"sidebar-header\"]",
+        "tbody td:nth-child(2)"
+      ],
+      "steps": [
+        {
+          "goto": "/invoices"
+        },
+        {
+          "waitFor": "tbody tr",
+          "timeout": 90000
+        },
+        {
+          "wait": 800
+        }
+      ]
+    },
+    {
+      "name": "meter-report-profit-loss",
+      "site": "meter",
+      "viewport": "desktop",
+      "enabled": false,
+      "_note": "OFF by default: this shows your real income and profit. Turn on only after you decide what to blur, or use a date range with no real data.",
+      "blur": [
+        "[data-sidebar=\"header\"], [data-slot=\"sidebar-header\"]"
+      ],
+      "steps": [
+        {
+          "goto": "/reports"
+        },
+        {
+          "waitFor": "[role=\"tab\"]:has-text(\"Profit/Loss\")",
+          "timeout": 90000
+        },
+        {
+          "click": "[role=\"tab\"]:has-text(\"Profit/Loss\")"
+        },
+        {
+          "wait": 2000
+        }
+      ]
+    },
+    {
+      "name": "meter-public-invoice",
+      "site": "meter-public",
+      "viewport": "desktop",
+      "enabled": false,
+      "_note": "OFF by default. In the app, open a DEMO customer's invoice, press 'Copy Public Link', and paste the token (the part after /invoice/) in place of PASTE_PUBLIC_TOKEN. The page shows the shop name and customer name: check the result.",
+      "steps": [
+        {
+          "goto": "/invoice/PASTE_PUBLIC_TOKEN"
+        },
+        {
+          "waitFor": "table",
+          "timeout": 60000
+        },
+        {
+          "wait": 800
+        }
+      ]
+    }
+  ]
+}
