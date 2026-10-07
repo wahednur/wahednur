@@ -15,6 +15,7 @@ export default function OrderButton({ packageId }: { packageId: number }) {
     setError("");
     const r = await api("POST", "/catalog/orders/", { package: packageId });
     if (r.status === 401 || r.status === 403) {
+      setState("idle"); // Next keeps this page alive behind the sign-in screen: be ready when they return
       router.push("/login?next=%2Fpackages");
       return;
     }
