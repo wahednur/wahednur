@@ -19,7 +19,7 @@ TRANSITIONS = {
 
 def visible_to(user):
     """Staff see every project; a client sees only their own."""
-    qs = Project.objects.filter(deleted_at__isnull=True).select_related("client")
+    qs = Project.objects.filter(deleted_at__isnull=True, is_system=False).select_related("client")
     return qs if user.is_staff else qs.filter(client=user)
 
 

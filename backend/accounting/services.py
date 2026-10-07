@@ -136,7 +136,9 @@ def project_profit(start=None, end=None) -> list[dict]:
     """Per project and currency: invoiced, received, expenses and what is left."""
     rows: dict = {}
 
-    def cell(project_id, title, cur):
+    def cell(project_id, title, cur, system=False):
+        if system:  # every customer's shop invoices are reported as one "Shop sales" line
+            project_id, title = None, "Shop sales"
         return rows.setdefault(
             (project_id, cur),
             {
@@ -154,13 +156,20 @@ def project_profit(start=None, end=None) -> list[dict]:
         .select_related("project")
         .prefetch_related("items")
     ):
-        cell(inv.project_id, inv.project.title, inv.currency)["invoiced"] += billing.total(inv)
-    for pid, title, cur, total in (
+        cell(inv.project_id, inv.project.title, inv.currency, inv.project.is_system)[
+            "invoiced"
+        ] += billing.total(inv)
+    for pid, title, cur, system, total in (
         _payments(start, end)
-        .values_list("invoice__project_id", "invoice__project__title", "invoice__currency")
+        .values_list(
+            "invoice__project_id",
+            "invoice__project__title",
+            "invoice__currency",
+            "invoice__project__is_system",
+        )
         .annotate(t=Sum("amount"))
     ):
-        cell(pid, title, cur)["received"] += total
+        cell(pid, title, cur, system)["received"] += total
     for pid, title, cur, total in (
         date_range(expenses_qs().filter(project__isnull=False), "spent_on", start, end)
         .values_list("project_id", "project__title", "currency")

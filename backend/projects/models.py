@@ -41,6 +41,8 @@ class Project(models.Model):
     completed_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     deleted_at = models.DateTimeField(null=True, blank=True)
+    # Holds a customer's shop invoices. Never shown in project lists.
+    is_system = models.BooleanField(default=False)
 
     class Meta:
         ordering = ["-created_at"]

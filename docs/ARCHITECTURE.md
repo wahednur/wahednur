@@ -84,3 +84,11 @@ Short record of what was chosen and why.
 - Hand-written SEO sets a lock; the generator will not touch it until the lock is removed.
 - A generation result is saved only if the content is still the same as when the job started (compared under a row lock), so a slow job cannot overwrite a newer edit.
 - After a change the API calls the website's `/api/revalidate` (shared secret) so the pages refresh immediately; Celery retries on failure. Pages still expire on their own timer, so a missed call only delays the update.
+
+## Shop (phase 9)
+- One order = one billing invoice (kept in a hidden per-customer "Shop orders" project). Payments, PDFs, emails and accounting therefore need no second implementation; accounting shows all shop money as one "Shop sales" line.
+- Order status is derived (cancelled, awaiting payment, payment under review, processing, shipped, delivered, completed) from the invoice and the shipping dates. Recording a payment on the invoice screen has the same effect as confirming it in the shop screen.
+- Stock is a ledger (`StockMovement`). An order reserves stock inside the same database transaction, with the product rows locked, so the last unit cannot be sold twice. Cancelling or the hourly release job writes the opposite movement; it cannot run twice for the same order.
+- Digital files stay in the private vault. A buyer gets a short-lived link only for a paid, not-cancelled order that contains that file; a leaked link does not work for anyone else.
+- Manual payment: the customer reports the method and transaction ID, staff check it against their bKash/Nagad/bank and confirm. Unreviewed orders are never released while a claim is waiting.
+- Not built on purpose: online gateway (needs a merchant account), coupons, product variants, cost-of-goods profit. Each can be added later without changing this core.

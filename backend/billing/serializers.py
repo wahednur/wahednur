@@ -87,6 +87,7 @@ def _base(doc):
         "title": doc.title,
         "project": doc.project_id,
         "project_title": doc.project.title,
+        "project_system": doc.project.is_system,
         "client_email": doc.project.client.email,
         "currency": doc.currency,
         "discount": doc.discount,

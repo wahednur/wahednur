@@ -2,6 +2,7 @@ from django.conf import settings
 from django.core import signing
 from django.http import FileResponse, Http404
 from rest_framework import status
+from rest_framework.exceptions import NotFound
 from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -9,6 +10,7 @@ from rest_framework.views import APIView
 from accounts.permissions import IsStaffMember, IsVerifiedUser
 
 from . import services
+from .models import Document
 from .serializers import DocumentSerializer, SharingSerializer, UploadSerializer
 from .storage import LOCAL_SALT, LocalStorage, get_storage
 
@@ -88,7 +90,15 @@ class LocalDownloadView(APIView):
             raise Http404 from None
         if payload["u"] != request.user.pk:
             raise Http404
-        doc = services.get_visible(request.user, payload["d"])
+        try:
+            doc = services.get_visible(request.user, payload["d"])
+        except NotFound:
+            # A customer may fetch a file they bought (paid order), nothing else.
+            from shop.services import buyer_can_download
+
+            doc = Document.objects.filter(pk=payload["d"], deleted_at__isnull=True).first()
+            if doc is None or not buyer_can_download(request.user, doc.pk):
+                raise
         response = FileResponse(
             storage.open(doc.file_key), as_attachment=True, filename=doc.original_name
         )

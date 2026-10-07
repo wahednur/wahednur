@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "catalog",
     "subscriptions",
     "cms",
+    "shop",
 ]
 
 MIDDLEWARE = [
@@ -273,3 +274,11 @@ AI_MODELS = {
 }
 # Shared secret the API sends to the website so it refreshes pages right after a change.
 REVALIDATE_SECRET = env("REVALIDATE_SECRET", default="")
+
+# --- Shop ---------------------------------------------------------------------------
+# Unpaid orders are released (stock returns) after this many hours.
+SHOP_PAYMENT_HOURS = env.int("SHOP_PAYMENT_HOURS", default=48)
+CELERY_BEAT_SCHEDULE["release-unpaid-shop-orders"] = {
+    "task": "shop.tasks.release_unpaid_orders",
+    "schedule": 60 * 60,
+}
