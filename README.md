@@ -2,7 +2,7 @@
 
 Personal portfolio and services platform of **Abdul Wahed Nur**, Full-Stack Developer (Django + Next.js).
 
-> Status: built from scratch. The earlier test portfolio was removed; it stays in git history (commit `9cdfa2b`) if anything is ever needed.
+> Status: built from scratch. The earlier test portfolio is kept as a backup in the branch `backup/old-site` (tag `old-site`, commit `9cdfa2b`). It is no longer deployed or maintained.
 
 ## Layout
 
