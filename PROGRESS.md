@@ -86,4 +86,5 @@ Nothing.
 - Résumé PDF contains the owner's public phone and email; replace the file when the résumé changes.
 
 - **Sign-in frontend (phase 1–2)**: `/login`, `/register`, `/verify-email`, `/forgot-password`, `/reset-password`, private `/app` area and `/app/security` (password change/set, TOTP QR, recovery codes). `proxy.ts` gives optimistic redirects (no cookie -> login; cookie -> away from login/register); `AuthGate` + `/api/auth/me/` is authoritative. Browser E2E (Playwright, real API) passes, including TOTP login and reset. Google button appears only when the API lists the provider.
-- **Next**: phase 3 (R2 private document vault), then clients and projects.
+- **Document vault (phase 3, backend)**: `documents` app. R2 private storage (local fallback in dev), upload with type/content/size checks, short-lived download links, per-client sharing, soft delete, audit events, 18 tests (100 total). Frontend page not built yet.
+- **Next**: vault page in `/app` (upload, list, download), then phase 4 clients and projects.

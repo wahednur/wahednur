@@ -9,3 +9,4 @@ celery>=5.5
 httpx>=0.28
 django-allauth[mfa,socialaccount]>=65.19
 whitenoise>=6.9
+boto3>=1.35

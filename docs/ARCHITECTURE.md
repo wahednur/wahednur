@@ -40,3 +40,11 @@ Short record of what was chosen and why.
 ## Not decided yet
 - Authentication for the admin dashboard (likely SimpleJWT).
 - File storage for uploads (case-study images), if the backend ever serves them.
+
+## Document vault (phase 3)
+- Contracts and invoices are private. The bucket has no public access and no public domain; files are never linked directly.
+- Upload goes through the API (type allow-list, magic-byte check, size limit, our own random storage key), so every file is checked before it is stored.
+- Download: the API checks access on every request, then returns a link that works for 5 minutes (R2 presigned URL). Locally the link is a signed API URL bound to the same user.
+- Staff see all documents; a client sees only documents of theirs that were explicitly shared. "Not yours" and "does not exist" both answer 404.
+- Delete is soft (file kept). Every upload, download and delete is written to the audit trail.
+- R2 setup: create a private bucket; create an API token with Object Read & Write for that bucket only; set the four `R2_*` variables. No CORS needed because the browser never uploads to R2 directly.

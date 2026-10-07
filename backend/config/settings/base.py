@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     "core",
     "accounts",
     "leads",
+    "documents",
 ]
 
 MIDDLEWARE = [
@@ -220,3 +221,13 @@ EMAIL_BACKEND = (
     if RESEND_API_KEY
     else "django.core.mail.backends.console.EmailBackend"
 )
+
+# --- Document vault (Cloudflare R2, private bucket) ---------------------------
+# Without R2 keys the vault falls back to a local private folder (dev and tests only).
+R2_ACCOUNT_ID = env("R2_ACCOUNT_ID", default="")
+R2_ACCESS_KEY_ID = env("R2_ACCESS_KEY_ID", default="")
+R2_SECRET_ACCESS_KEY = env("R2_SECRET_ACCESS_KEY", default="")
+R2_BUCKET = env("R2_BUCKET", default="")
+DOCUMENTS_MAX_MB = env.int("DOCUMENTS_MAX_MB", default=20)
+DOCUMENTS_URL_TTL = env.int("DOCUMENTS_URL_TTL", default=300)  # seconds a download link lives
+DOCUMENTS_LOCAL_ROOT = BASE_DIR / "private_media"
