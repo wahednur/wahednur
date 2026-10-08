@@ -430,3 +430,15 @@ export type ConversionReport = {
     waterfall_covers: number;
   };
 };
+
+/** Two decimals, halves round up, done on the text so 103.445 becomes 103.45 (toFixed would say 103.44). */
+export function to2(value: string): string {
+  const negative = value.startsWith("-");
+  const [whole, fraction = ""] = value.replace("-", "").split(".");
+  const padded = (fraction + "000").slice(0, 3);
+  let cents = parseInt(whole + padded.slice(0, 2), 10);
+  if (padded[2] >= "5") cents += 1;
+  const digits = String(cents).padStart(3, "0");
+  const text = `${digits.slice(0, -2)}.${digits.slice(-2)}`;
+  return negative && cents !== 0 ? `-${text}` : text;
+}

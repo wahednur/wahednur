@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Alert } from "@/components/auth/ui";
 import { ghost } from "@/components/app/billing/Bits";
 import Form, { type Field } from "@/components/app/manage/Form";
-import { api, fmt, type ConversionReport, type SettlementRow, type Waterfall } from "@/lib/api";
+import { api, fmt, to2, type ConversionReport, type SettlementRow, type Waterfall } from "@/lib/api";
 
 const SOURCES: [string, string][] = [
   ["upwork", "Upwork"], ["fiverr", "Fiverr"], ["payoneer", "Payoneer"], ["wise", "Wise"],
@@ -112,8 +112,8 @@ export default function ConversionsPanel({ start, end, onChange }: { start: stri
                 ["Dollars earned", fmt("USD", usd.earned)],
                 ["Fees taken in dollars", fmt("USD", String(Number(usd.marketplace_fees) + Number(usd.transfer_fees)))],
                 ["Taka that reached you", fmt("BDT", usd.received_bdt)],
-                ["Taka you keep per dollar earned", `৳${Number(usd.keep_per_dollar).toFixed(2)}`],
-                ["Average rate you got (per dollar sold)", `৳${Number(usd.average_rate).toFixed(2)}`],
+                ["Taka you keep per dollar earned", `৳${to2(usd.keep_per_dollar)}`],
+                ["Average rate you got (per dollar sold)", `৳${to2(usd.average_rate)}`],
                 ["Bank charges and VAT", fmt("BDT", String(Number(usd.bank_charges) + Number(usd.vat) + Number(usd.other_charges)))],
                 ["Tax held at source", fmt("BDT", usd.tax_withheld)],
                 ["Payouts recorded", String(usd.count)],
@@ -142,8 +142,8 @@ export default function ConversionsPanel({ start, end, onChange }: { start: stri
                 {fmt("USD", s.earned_usd)} → {fmt("BDT", s.received_bdt)}
               </p>
               <p className="mt-1 font-mono text-[11px] text-muted">
-                {s.settled_on} · {SOURCES.find(([k]) => k === s.source)?.[1]} · rate got ৳{Number(s.effective_rate).toFixed(2)} · keep ৳
-                {Number(s.keep_per_dollar).toFixed(2)} per dollar{s.note && ` · ${s.note}`}
+                {s.settled_on} · {SOURCES.find(([k]) => k === s.source)?.[1]} · rate got ৳{to2(s.effective_rate)} · keep ৳
+                {to2(s.keep_per_dollar)} per dollar{s.note && ` · ${s.note}`}
               </p>
             </div>
             <button
