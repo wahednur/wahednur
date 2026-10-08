@@ -3,9 +3,9 @@
 A separate app in `admin/` for the owner and staff. It is a single-page app with no search-engine pages, so it uses React and Vite instead of Next.js. It talks to the same API as the website and uses the same sign-in (email, password and the two-step code). It never holds a secret: the session cookie is HttpOnly and set by the API.
 
 ## Screens
-Overview (what needs you), Projects (create, move status), Billing (create and edit draft quotations and invoices with a live total and a payment plan; send, mark accepted or rejected, turn an accepted quotation into an invoice; invoice detail with payments, issue, cancel, PDF), Package requests (accept or decline), Shop orders (confirm payment, ship, deliver), Subscriptions (pause, resume, cancel), Clients, Content (publish or hide; writing and the SEO panel stay in the website's editor), Accounting (owner only).
+Overview (what needs you), Projects (create, move status), Billing (create and edit draft quotations and invoices with a live total and a payment plan; send, mark accepted or rejected, turn an accepted quotation into an invoice; invoice detail with payments, issue, cancel, PDF), Services & packages (add, edit, hide or delete services and their packages: price, currency, billing cycle, delivery days, revisions, what is included), Package requests (accept or decline), Shop orders (confirm payment, ship, deliver), Subscriptions (pause, resume, cancel), Clients, Content (publish or hide; writing and the SEO panel stay in the website's editor), Accounting (owner only).
 
-Still on the website for now: writing and editing posts, products and stock, delivery areas, services and packages, milestones and project notes, documents. They will move here one at a time.
+Still on the website for now: writing and editing posts, products and stock, delivery areas, milestones and project notes, documents. They will move here one at a time.
 
 ## Security
 - Only staff and the owner get past the sign-in; the API checks every call again, the screens only mirror it. Staff actions need two-step sign-in (the API refuses without it).

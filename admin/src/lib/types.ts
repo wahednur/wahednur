@@ -131,3 +131,27 @@ export type Summary = Record<
   string,
   { received: string; spent: string; net: string; receivable: string; overdue: string; tax_withheld: string; months: { month: string; received: string; spent: string; net: string }[] }
 >;
+
+export type ManagedPackage = {
+  id: number;
+  name: string;
+  tagline: string;
+  features: string[];
+  price: string;
+  currency: "BDT" | "USD";
+  cycle: "one_time" | "monthly" | "yearly";
+  delivery_days: number | null;
+  revisions: number | null;
+  position: number;
+  published: boolean;
+};
+export type ManagedService = {
+  id: number;
+  slug: string;
+  title: string;
+  summary: string;
+  description: string;
+  position: number;
+  published: boolean;
+  packages: ManagedPackage[];
+};

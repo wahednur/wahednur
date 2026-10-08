@@ -13,6 +13,7 @@ import Overview from "@/pages/Overview";
 import Projects from "@/pages/Projects";
 import QuotationDetail from "@/pages/QuotationDetail";
 import Requests from "@/pages/Requests";
+import Services from "@/pages/Services";
 import Shop from "@/pages/Shop";
 import Subscriptions from "@/pages/Subscriptions";
 
@@ -42,6 +43,7 @@ export default function App() {
             <Route path="billing/quotation/:id/edit" element={<DocumentNew kind="quotation" />} />
             <Route path="billing/invoice/:id/edit" element={<DocumentNew kind="invoice" />} />
             <Route path="requests" element={<Requests />} />
+            <Route path="services" element={<Services />} />
             <Route path="shop" element={<Shop />} />
             <Route path="subscriptions" element={<Subscriptions />} />
             <Route path="clients" element={<Clients />} />
