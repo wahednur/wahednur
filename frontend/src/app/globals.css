@@ -107,3 +107,41 @@ body {
   .pulse-dot::after, .drift { animation: none; }
   svg .packet { display: none; }
 }
+
+/* Hover border: a soft teal light travels once around the edge. Subtle by design. */
+@property --ang {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+@keyframes ang-spin {
+  to { --ang: 360deg; }
+}
+.glow-border {
+  position: relative;
+  transition: transform 0.35s ease, background-color 0.35s ease;
+}
+.glow-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(from var(--ang), transparent 0 55%, rgba(45, 212, 191, 0.95) 75%, transparent 95%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+.glow-border:hover::before,
+.glow-border:focus-within::before {
+  opacity: 1;
+  animation: ang-spin 3.2s linear infinite;
+}
+.glow-border:hover { transform: translateY(-2px); }
+@media (prefers-reduced-motion: reduce) {
+  .glow-border, .glow-border:hover { transform: none; transition: none; }
+  .glow-border:hover::before, .glow-border:focus-within::before { animation: none; background: rgba(45, 212, 191, 0.6); }
+}

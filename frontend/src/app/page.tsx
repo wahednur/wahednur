@@ -3,6 +3,8 @@ import CtaBand from "@/components/CtaBand";
 import ProjectCard from "@/components/ProjectCard";
 import ServiceIcon from "@/components/ServiceIcon";
 import Section from "@/components/Section";
+import { Different, MissionVision } from "@/components/home/WhyMe";
+import TechStack from "@/components/home/TechStack";
 import Faq from "@/components/home/Faq";
 import HeroFlow from "@/components/home/HeroFlow";
 import LiveProof from "@/components/home/LiveProof";
@@ -80,6 +82,14 @@ export default function Home() {
         <TrustPillars />
       </Section>
 
+      <Section id="different" label="Why me" title="Why work with me, and what sets me apart">
+        <Different />
+      </Section>
+
+      <Section id="stack" label="Technology" title="The tools I use, and why">
+        <TechStack />
+      </Section>
+
       {/* Work */}
       <Section id="work" label="Selected work" title="Live systems I built and run">
         <div className="grid gap-5 lg:grid-cols-3">
@@ -93,7 +103,7 @@ export default function Home() {
       <Section id="services" label="Services" title="What I can build for you">
         <div className="grid gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-3">
           {serviceList.map((s) => (
-            <div key={s.title} className="bg-surface p-6">
+            <div key={s.title} className="glow-border bg-surface p-6 hover:bg-surface-2">
               <ServiceIcon name={s.icon} />
               <h3 className="mt-4 font-semibold">{s.title}</h3>
               <p className="mt-2 text-sm leading-6 text-muted">{s.short}</p>
@@ -129,6 +139,10 @@ export default function Home() {
             them running. I work with clients in English and Bangla.
           </p>
         </div>
+      </Section>
+
+      <Section id="mission" label="Mission · Vision" title="What I am here to do">
+        <MissionVision />
       </Section>
 
       <Section id="faq" label="Questions" title="Answers before you ask">

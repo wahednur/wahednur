@@ -14,12 +14,14 @@ export default function TrustPillars() {
   return (
     <div className="grid gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-3">
       {PILLARS.map((p, i) => (
-        <Reveal key={p.title} delay={i * 70} className="group relative bg-surface p-6 transition-colors hover:bg-surface-2">
+        <Reveal key={p.title} delay={i * 70} className="bg-surface">
+          <div className="glow-border group h-full bg-surface p-6 hover:bg-surface-2">
           <span className="grid h-10 w-10 place-items-center rounded-lg border border-brand/30 bg-bg text-brand transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:border-brand/70">
             <p.icon className="h-5 w-5" aria-hidden />
           </span>
           <h3 className="mt-4 font-semibold">{p.title}</h3>
           <p className="mt-2 text-sm leading-6 text-muted">{p.text}</p>
+          </div>
         </Reveal>
       ))}
     </div>

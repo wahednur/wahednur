@@ -141,3 +141,8 @@ Nothing.
 - New home: remote-engineering hero with animated request-flow diagram, verifiable fact strip, live reachability check (measured from the visitor's browser), six trust pillars, live systems, six-step process, sample client-area preview (labelled sample data), time-zone overlap tool, services, FAQ, CTA.
 - Motion respects `prefers-reduced-motion`. Components in `frontend/src/components/home/`.
 - Owner to confirm: working hours default in `site.hours` (10:00-19:00 Bangladesh), the public 40/30/30 wording, "years" facts (`startedWeb` 2014, `storeSince` 2016).
+
+## Home: tech stack, differentiators, mission/vision, hover border
+- `.glow-border` (globals.css): subtle travelling teal border + 2px lift on hover/focus; static under reduced motion. Applied to pillars, services, project cards and new cards.
+- New sections: "Why me" (6 differences), "Technology" (4 layers, brief + where used, no ratings), "Mission · Vision" + three principles from the brand moto. Copy lives in `frontend/src/lib/tech.ts`.
+- Owner to confirm: mission and vision wording (drafted by me), and the "Used in" tags.

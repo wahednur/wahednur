@@ -6,7 +6,7 @@ import type { Project } from "@/lib/site";
 export default function ProjectCard({ project: p }: { project: Project }) {
   const cover = getCaseStudy(p.slug)?.cover;
   return (
-    <article className="group flex flex-col overflow-hidden rounded-xl border border-line bg-surface transition-colors hover:border-brand/50">
+    <article className="glow-border group flex flex-col overflow-hidden rounded-xl border border-line bg-surface">
       {cover && (
         <Link href={`/work/${p.slug}`} tabIndex={-1} aria-hidden className="relative block aspect-[16/10] overflow-hidden border-b border-line bg-surface-2">
           <Image
