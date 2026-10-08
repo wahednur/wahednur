@@ -6,10 +6,12 @@ import Accounting from "@/pages/Accounting";
 import Billing from "@/pages/Billing";
 import Clients from "@/pages/Clients";
 import Content from "@/pages/Content";
+import DocumentNew from "@/pages/DocumentNew";
 import InvoiceDetail from "@/pages/InvoiceDetail";
 import Login from "@/pages/Login";
 import Overview from "@/pages/Overview";
 import Projects from "@/pages/Projects";
+import QuotationDetail from "@/pages/QuotationDetail";
 import Requests from "@/pages/Requests";
 import Shop from "@/pages/Shop";
 import Subscriptions from "@/pages/Subscriptions";
@@ -34,6 +36,11 @@ export default function App() {
             <Route path="projects" element={<Projects />} />
             <Route path="billing" element={<Billing />} />
             <Route path="billing/invoices/:id" element={<InvoiceDetail />} />
+            <Route path="billing/quotations/:id" element={<QuotationDetail />} />
+            <Route path="billing/new/quotation" element={<DocumentNew kind="quotation" />} />
+            <Route path="billing/new/invoice" element={<DocumentNew kind="invoice" />} />
+            <Route path="billing/quotation/:id/edit" element={<DocumentNew kind="quotation" />} />
+            <Route path="billing/invoice/:id/edit" element={<DocumentNew kind="invoice" />} />
             <Route path="requests" element={<Requests />} />
             <Route path="shop" element={<Shop />} />
             <Route path="subscriptions" element={<Subscriptions />} />

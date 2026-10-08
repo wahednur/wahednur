@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { Badge, Button, Card, field, Loading, Notice, PageHeader, useLoad } from "@/components/ui";
 import { day, money } from "@/lib/format";
 import { api, download } from "@/lib/http";
@@ -16,6 +16,7 @@ const METHODS = [
 
 export default function InvoiceDetail() {
   const { id } = useParams();
+  const nav = useNavigate();
   const { data: inv, error, reload } = useLoad<Invoice>(`/invoices/${id}/`);
   const [msg, setMsg] = useState("");
   const [ok, setOk] = useState("");
@@ -60,6 +61,7 @@ export default function InvoiceDetail() {
           action={
             <div className="flex gap-2">
               <Button small onClick={async () => setMsg(await download(`/invoices/${id}/pdf/`, `${inv.number}.pdf`))}>PDF</Button>
+              {draft && <Button small onClick={() => nav(`/billing/invoice/${id}/edit`)}>Edit</Button>}
               {draft && <Button small tone="brand" onClick={() => act("issue")}>Issue</Button>}
               {inv.status !== "cancelled" && Number(inv.paid_total) === 0 && (
                 <Button small tone="danger" onClick={() => confirm("Cancel this invoice?") && act("cancel")}>Cancel</Button>

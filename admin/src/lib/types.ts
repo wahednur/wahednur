@@ -48,7 +48,15 @@ export type BillRow = {
   invoice_id?: string | null;
   created_at: string;
 };
+export type Quotation = BillRow & {
+  project: string;
+  discount: string;
+  notes: string;
+  subtotal: string;
+  items: { description: string; quantity: string; unit_price: string; amount?: string }[];
+};
 export type Invoice = BillRow & {
+  project: string;
   discount: string;
   notes: string;
   subtotal: string;
