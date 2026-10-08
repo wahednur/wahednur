@@ -57,3 +57,9 @@ body {
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
 }
+
+/* Printing a quotation: only the document, on white paper. */
+@media print {
+  body { background: #fff !important; }
+  .no-print, header, footer { display: none !important; }
+}

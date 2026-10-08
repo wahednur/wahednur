@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Alert } from "@/components/auth/ui";
 import { api, PLANS, type Invoice, type Quotation } from "@/lib/api";
 import { Badge, btn, field, ghost, PdfButton } from "./Bits";
-import { ItemsTable } from "./Totals";
+import QuoteDocument from "./QuoteDocument";
 
 export default function QuotationView({ id, staff }: { id: string; staff: boolean }) {
   const [q, setQ] = useState<Quotation | null>(null);
@@ -33,25 +33,27 @@ export default function QuotationView({ id, staff }: { id: string; staff: boolea
 
   return (
     <div className="space-y-6">
-      <header className="flex flex-wrap items-start justify-between gap-3">
+      <div className="no-print flex flex-wrap items-start justify-between gap-3">
         <div>
           <p className="font-mono text-xs text-muted">{q.number}</p>
-          <h1 className="text-2xl font-semibold tracking-tight">{q.title}</h1>
           <p className="mt-1 text-sm text-muted">
             <Link href={`/app/projects/${q.project}`} className="hover:text-brand">
               {q.project_title}
             </Link>
             {staff && ` · ${q.client_email}`}
-            {q.valid_until && ` · valid until ${q.valid_until}`}
           </p>
         </div>
         <Badge value={q.status} />
-      </header>
+      </div>
       {error && <Alert>{error}</Alert>}
-      <ItemsTable doc={q} />
-      {q.notes && <p className="whitespace-pre-wrap text-sm text-muted">{q.notes}</p>}
+      <div className="overflow-hidden rounded-2xl border border-line print:border-0">
+        <QuoteDocument q={q} />
+      </div>
 
-      <div className="flex flex-wrap items-center gap-3">
+      <div className="no-print flex flex-wrap items-center gap-3">
+        <button type="button" className={ghost} onClick={() => window.print()}>
+          Print or save as PDF
+        </button>
         <PdfButton path={`/quotations/${id}/pdf/`} name={`${q.number}.pdf`} />
         {staff && q.status === "draft" && (
           <button className={btn} onClick={() => window.confirm("Send this quotation to the client?") && act("send")}>
@@ -77,7 +79,7 @@ export default function QuotationView({ id, staff }: { id: string; staff: boolea
 
       {staff && q.status === "accepted" && !q.invoice_id && (
         <form
-          className="space-y-3 rounded-xl border border-line bg-surface p-5 text-sm"
+          className="no-print space-y-3 rounded-xl border border-line bg-surface p-5 text-sm"
           onSubmit={(e) => {
             e.preventDefault();
             const f = new FormData(e.currentTarget);

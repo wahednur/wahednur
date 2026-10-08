@@ -24,7 +24,7 @@ export default async function AuthGate({ children }: { children: React.ReactNode
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line pb-4">
+      <div className="no-print flex flex-wrap items-center justify-between gap-3 border-b border-line pb-4">
         <AppNav items={items} />
         <div className="flex items-center gap-3 text-sm">
           <span className="hidden text-muted sm:inline">{me.email}</span>

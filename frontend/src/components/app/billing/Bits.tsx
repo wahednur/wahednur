@@ -15,13 +15,14 @@ const TONE: Record<string, string> = {
   accepted: "border-brand/50 text-brand",
   overdue: "border-red-400/50 text-red-300",
   rejected: "border-red-400/50 text-red-300",
+  dead: "border-line text-muted",
   cancelled: "border-red-400/50 text-red-300",
   expired: "border-red-400/50 text-red-300",
 };
 export function Badge({ value }: { value: string }) {
   return (
     <span className={`shrink-0 rounded-full border px-2.5 py-0.5 font-mono text-[11px] ${TONE[value] ?? "border-line text-muted"}`}>
-      {value.replace("_", " ")}
+      {({ sent: "delivered", rejected: "lost" } as Record<string, string>)[value] ?? value.replace("_", " ")}
     </span>
   );
 }

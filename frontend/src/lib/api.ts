@@ -142,9 +142,32 @@ export type BillBase = {
   items: BillItem[];
   created_at: string;
 };
-export type Quotation = BillBase & {
+export type SheetItem = BillItem & {
+  unit_price_max: string | null;
+  details: string;
+  time_estimate: string;
+  risk: "" | "low" | "mid" | "high";
+  work_state: "" | "new" | "partial" | "done";
+  note: string;
+  counted: boolean;
+};
+export type Quotation = Omit<BillBase, "items"> & {
+  items: SheetItem[];
   valid_until: string | null;
   invoice_id: string | null;
+  issue_date: string;
+  subtitle: string;
+  revision: string;
+  bill_to_name: string;
+  bill_to_address: string;
+  tax_name: string;
+  tax_rate: string;
+  tax: string;
+  subtotal_max: string | null;
+  proposal_text: string;
+  sections: { heading: string; body: string }[];
+  risks: { risk: string; impact: string }[];
+  payment_plan: { label: string; percent: string; note: string }[];
 };
 export type InstallmentRow = { id: number; label: string; amount: string; due_date: string | null; paid: string; state: string };
 export type PaymentRow = { id: number; amount: string; method: string; reference: string; paid_on: string; note: string };
