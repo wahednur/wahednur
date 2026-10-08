@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "subscriptions",
     "cms",
     "shop",
+    "dashboard",
 ]
 
 MIDDLEWARE = [

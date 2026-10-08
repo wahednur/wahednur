@@ -17,4 +17,5 @@ urlpatterns = [
     path("api/", include("subscriptions.urls")),
     path("api/", include("cms.urls")),
     path("api/", include("shop.urls")),
+    path("api/", include("dashboard.urls")),
 ]

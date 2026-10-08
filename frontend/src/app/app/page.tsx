@@ -1,4 +1,5 @@
 import Link from "next/link";
+import DashboardView from "@/components/app/dashboard/DashboardView";
 import { getMe } from "@/lib/auth/server";
 
 export default async function Dashboard() {
@@ -32,30 +33,7 @@ export default async function Dashboard() {
         </div>
       )}
 
-      <div className="grid gap-4 sm:grid-cols-3">
-        {[
-          ["Projects", "Your projects, milestones and progress.", "/app/projects"],
-          ["Documents", "Agreements and other project files.", "/app/documents"],
-          ["Billing", "Quotations, invoices and payments.", "/app/billing"],
-        ].map(([title, text, href]) => {
-          const card = (
-            <>
-              <h2 className="font-semibold">{title}</h2>
-              <p className="mt-2 text-sm leading-6 text-muted">{text}</p>
-              {!href && <p className="mt-3 font-mono text-[11px] text-muted">Coming soon</p>}
-            </>
-          );
-          return href ? (
-            <Link key={title} href={href} className="rounded-xl border border-line bg-surface p-5 hover:border-brand/60">
-              {card}
-            </Link>
-          ) : (
-            <div key={title} className="rounded-xl border border-line bg-surface p-5">
-              {card}
-            </div>
-          );
-        })}
-      </div>
+      <DashboardView />
     </div>
   );
 }

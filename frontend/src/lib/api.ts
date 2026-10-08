@@ -327,3 +327,13 @@ export const ORDER_STATUS_LABEL: Record<ShopOrderOut["status"], string> = {
   completed: "Complete",
   cancelled: "Cancelled",
 };
+
+export type AttentionItem = { key: string; label: string; count: number; href: string };
+export type DashboardData = {
+  role: "staff" | "client";
+  attention: AttentionItem[];
+  stats: Record<string, number>;
+  money: Record<string, { owed: string; overdue: string }>;
+  projects: { id: string; title: string; status: Project["status"]; progress: number; due_date: string | null }[];
+  this_month?: Record<string, { received: string; spent: string; net: string }>;
+};
