@@ -52,3 +52,22 @@ class Lead(models.Model):
 
     def __str__(self) -> str:
         return f"{self.name} <{self.email}> ({self.get_need_display()})"
+
+
+class LeadReply(models.Model):
+    """An answer sent from the admin dashboard. Kept so the thread is visible next to the enquiry."""
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    lead = models.ForeignKey(Lead, on_delete=models.CASCADE, related_name="replies")
+    subject = models.CharField(max_length=200)
+    body = models.TextField(max_length=10000)
+    sent_by = models.ForeignKey("accounts.User", null=True, blank=True, on_delete=models.SET_NULL, related_name="+")
+    sent_at = models.DateTimeField(null=True, blank=True)
+    error = models.CharField(max_length=500, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["created_at"]
+
+    def __str__(self) -> str:
+        return f"Reply to {self.lead.email}: {self.subject}"

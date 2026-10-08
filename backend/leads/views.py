@@ -49,6 +49,10 @@ def lead_out(lead: Lead) -> dict:
         "emailed": lead.notified_at is not None,
         "email_error": lead.notify_error,
         "created_at": lead.created_at,
+        "replies": [
+            {"id": r.id, "subject": r.subject, "body": r.body, "sent": r.sent_at is not None, "error": r.error, "created_at": r.created_at}
+            for r in lead.replies.all()
+        ],
     }
 
 
@@ -93,4 +97,26 @@ class LeadResend(APIView):
         except EmailError:
             pass
         lead.refresh_from_db()
+        return Response(lead_out(lead))
+
+
+class LeadReplyView(APIView):
+    """Staff only: answer an enquiry by email from the dashboard."""
+
+    permission_classes = [IsStaffMember]
+
+    def post(self, request, pk):
+        from .services import reply_to_lead
+
+        lead = get_object_or_404(Lead, pk=pk)
+        subject = str(request.data.get("subject", "")).strip()
+        body = str(request.data.get("body", "")).strip()
+        errors = {}
+        if not subject or len(subject) > 200 or "\n" in subject or "\r" in subject:
+            errors["subject"] = "Write a subject on one line, up to 200 characters."
+        if not body or len(body) > 10000:
+            errors["body"] = "Write a message, up to 10,000 characters."
+        if errors:
+            return Response(errors, status=status.HTTP_400_BAD_REQUEST)
+        reply_to_lead(lead, subject=subject, body=body, user=request.user)
         return Response(lead_out(lead))

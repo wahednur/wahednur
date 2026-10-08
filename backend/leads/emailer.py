@@ -84,3 +84,42 @@ def send_lead_email(lead: Lead) -> None:
         raise EmailError(f"Resend request failed: {exc.__class__.__name__}") from exc
     if response.status_code >= 300:
         raise EmailError(f"Resend returned HTTP {response.status_code}")
+
+
+def send_reply_email(*, to: str, subject: str, body: str) -> None:
+    """Send the owner's answer to an enquirer. Replies to it come back to the owner's inbox."""
+    if settings.EMAIL_USE_SMTP:
+        from django.core.mail import EmailMessage, get_connection
+
+        message = EmailMessage(
+            subject,
+            body,
+            settings.DEFAULT_FROM_EMAIL,
+            [to],
+            reply_to=[settings.LEADS_NOTIFY_TO],
+            connection=get_connection("django.core.mail.backends.smtp.EmailBackend"),
+        )
+        try:
+            message.send(fail_silently=False)
+        except Exception as exc:  # noqa: BLE001
+            raise EmailError(f"SMTP send failed: {exc.__class__.__name__}: {str(exc)[:180]}") from exc
+        return
+
+    if not settings.RESEND_API_KEY:
+        logger.info("Email not configured. Would send reply to %s: %s\n%s", to, subject, body)
+        return
+
+    payload = {
+        "from": settings.LEADS_FROM_EMAIL,
+        "to": [to],
+        "subject": subject,
+        "text": body,
+        "reply_to": settings.LEADS_NOTIFY_TO,
+    }
+    headers = {"Authorization": f"Bearer {settings.RESEND_API_KEY}"}
+    try:
+        response = httpx.post(RESEND_URL, json=payload, headers=headers, timeout=10.0)
+    except httpx.HTTPError as exc:
+        raise EmailError(f"Resend request failed: {exc.__class__.__name__}") from exc
+    if response.status_code >= 300:
+        raise EmailError(f"Resend returned HTTP {response.status_code}")

@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Badge, Button, Card, Empty, Loading, Notice, PageHeader, Search, Tabs, useLoad } from "@/components/ui";
+import { Badge, Button, Card, Empty, Loading, Notice, PageHeader, Search, Tabs, field, useLoad } from "@/components/ui";
 import { api } from "@/lib/http";
 import type { Lead } from "@/lib/types";
 
@@ -11,6 +11,39 @@ const TABS: [string, string][] = [
   ["all", "All"],
 ];
 
+/** Write and send an answer without leaving the dashboard. The enquirer's replies come back to your own inbox. */
+function ReplyBox({ lead, onDone }: { lead: Lead; onDone: (note: string) => void }) {
+  const [subject, setSubject] = useState(`Re: ${lead.need_label}`);
+  const [body, setBody] = useState(`Hi ${lead.name.split(" ")[0]},\n\n\n\nBest regards,\nWahed Nur`);
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState("");
+
+  async function send() {
+    setBusy(true);
+    setErr("");
+    const r = await api<Lead>("POST", `/leads/inbox/${lead.id}/reply/`, { subject, body });
+    setBusy(false);
+    if (!r.ok) return setErr(r.error);
+    const last = r.data?.replies.at(-1);
+    if (last && !last.sent) return setErr(`Saved, but the email could not be sent: ${last.error || "unknown error"}`);
+    onDone(`Reply sent to ${lead.email}.`);
+  }
+
+  return (
+    <div className="space-y-2 rounded-lg border border-line bg-bg/40 p-3">
+      <p className="text-xs text-muted">Sends to {lead.email}. Their answer will arrive in your own inbox.</p>
+      <label className="block text-xs text-muted">Subject
+        <input className={field} value={subject} onChange={(e) => setSubject(e.target.value)} maxLength={200} />
+      </label>
+      <label className="block text-xs text-muted">Message
+        <textarea className={field} rows={8} value={body} onChange={(e) => setBody(e.target.value)} maxLength={10000} />
+      </label>
+      {err && <Notice>{err}</Notice>}
+      <Button tone="brand" disabled={busy || !subject.trim() || !body.trim()} onClick={send}>{busy ? "Sending…" : "Send reply"}</Button>
+    </div>
+  );
+}
+
 /** Every message from the website's contact form. They are saved even when the email to you fails. */
 export default function Messages() {
   const { data, error, reload } = useLoad<Lead[]>("/leads/inbox/");
@@ -18,6 +51,8 @@ export default function Messages() {
   const [q, setQ] = useState("");
   const [open, setOpen] = useState<string | null>(null);
   const [msg, setMsg] = useState("");
+  const [okMsg, setOkMsg] = useState("");
+  const [writing, setWriting] = useState<string | null>(null);
 
   const rows = useMemo(
     () =>
@@ -31,6 +66,7 @@ export default function Messages() {
 
   async function setStatus(l: Lead, status: Lead["status"]) {
     setMsg("");
+    setOkMsg("");
     const r = await api("PATCH", `/leads/inbox/${l.id}/`, { status });
     if (!r.ok) setMsg(r.error);
     reload();
@@ -54,6 +90,7 @@ export default function Messages() {
         </div>
       )}
       {msg && <div className="mb-4"><Notice>{msg}</Notice></div>}
+      {okMsg && <div className="mb-4"><Notice kind="ok">{okMsg}</Notice></div>}
       <Tabs tabs={TABS.map(([k, l]) => [k, k === "all" ? l : `${l}${count(k) ? ` (${count(k)})` : ""}`] as [string, string])} value={tab} onChange={setTab} />
       <div className="mb-4"><Search value={q} onChange={setQ} placeholder="Search name, email or text" /></div>
       {error && <Notice>{error}</Notice>}
@@ -94,18 +131,30 @@ export default function Messages() {
                     </p>
                   )}
                   <div className="flex flex-wrap gap-2">
-                    <a
-                      href={`mailto:${l.email}?subject=${encodeURIComponent("Re: your enquiry")}`}
-                      onClick={() => l.status !== "replied" && void setStatus(l, "replied")}
-                      className="rounded-lg bg-brand px-4 py-2 text-sm font-medium text-bg hover:opacity-90"
-                    >
-                      Reply by email
-                    </a>
+                    <Button tone="brand" onClick={() => setWriting(writing === l.id ? null : l.id)}>{writing === l.id ? "Close reply" : "Reply"}</Button>
                     {l.status !== "replied" && <Button onClick={() => setStatus(l, "replied")}>Mark replied</Button>}
                     {l.status !== "archived" && <Button onClick={() => setStatus(l, "archived")}>Archive</Button>}
                     {l.status === "archived" && <Button onClick={() => setStatus(l, "read")}>Restore</Button>}
                     {!l.emailed && <Button onClick={() => resend(l)}>Send the email again</Button>}
                   </div>
+                  {writing === l.id && (
+                    <ReplyBox lead={l} onDone={(n) => { setWriting(null); setOkMsg(n); reload(); }} />
+                  )}
+                  {l.replies.length > 0 && (
+                    <div className="space-y-2">
+                      <p className="text-xs uppercase tracking-wide text-muted">Your replies</p>
+                      {l.replies.map((r) => (
+                        <div key={r.id} className="rounded-lg border border-line p-3">
+                          <p className="flex flex-wrap justify-between gap-2 text-xs text-muted">
+                            <span>{r.subject}</span>
+                            <span>{r.sent ? "sent" : "not sent"} · {r.created_at.slice(0, 16).replace("T", " ")}</span>
+                          </p>
+                          <p className="mt-1 whitespace-pre-line">{r.body}</p>
+                          {!r.sent && r.error && <p className="mt-1 text-xs text-amber-200">{r.error}</p>}
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
             </Card>

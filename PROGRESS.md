@@ -146,3 +146,8 @@ Nothing.
 - `.glow-border` (globals.css): subtle travelling teal border + 2px lift on hover/focus; static under reduced motion. Applied to pillars, services, project cards and new cards.
 - New sections: "Why me" (6 differences), "Technology" (4 layers, brief + where used, no ratings), "Mission · Vision" + three principles from the brand moto. Copy lives in `frontend/src/lib/tech.ts`.
 - Owner to confirm: mission and vision wording (drafted by me), and the "Used in" tags.
+
+## Reply to enquiries from the admin dashboard; home animations
+- Messages page: "Reply" opens a prefilled subject and message; sending emails the enquirer (SMTP or Resend, replies come back to LEADS_NOTIFY_TO), keeps a copy (`LeadReply`, migration `leads/0002`), marks the enquiry Replied only if the email went out. A failed send is kept and shows the reason. Tests in `leads/tests/test_inbox.py`; browser check `tools/e2e/admin/12-reply-from-dashboard.cjs`.
+- Deploy: run `python manage.py migrate`, redeploy API and admin. Gmail SMTP must be configured (EMAIL_HOST etc.) for real sending.
+- Home: scroll-driven six-step timeline, "after step 6" care loop (secure, trusted, reliable, long-term support, happy client), tech icons with gap fillers.

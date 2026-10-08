@@ -112,3 +112,35 @@ def test_the_dashboard_counts_new_messages_for_staff():
     data = staff().get("/api/dashboard/").json()
     item = next(a for a in data["attention"] if a["key"] == "enquiries")
     assert item["count"] == 1 and item["href"] == "/app/messages"
+
+
+def test_staff_can_reply_from_the_dashboard():
+    c = staff()
+    lead = Lead.objects.create(**DATA)
+    with patch("leads.services.send_reply_email") as send:
+        r = c.post(f"/api/leads/inbox/{lead.pk}/reply/", {"subject": "Re: your shop", "body": "Happy to help."}, format="json")
+    assert r.status_code == 200
+    send.assert_called_once_with(to="r@example.com", subject="Re: your shop", body="Happy to help.")
+    lead.refresh_from_db()
+    assert lead.status == "replied"
+    assert r.data["replies"][0]["sent"] is True
+
+
+def test_a_failed_reply_is_kept_and_does_not_mark_replied():
+    c = staff()
+    lead = Lead.objects.create(**DATA)
+    with patch("leads.services.send_reply_email", side_effect=emailer.EmailError("SMTP send failed")):
+        r = c.post(f"/api/leads/inbox/{lead.pk}/reply/", {"subject": "Hi", "body": "Text"}, format="json")
+    assert r.status_code == 200
+    lead.refresh_from_db()
+    assert lead.status == "new"
+    assert r.data["replies"][0]["sent"] is False
+    assert "SMTP" in r.data["replies"][0]["error"]
+
+
+def test_reply_rejects_empty_or_multiline_subject_and_anonymous_users():
+    c = staff()
+    lead = Lead.objects.create(**DATA)
+    assert c.post(f"/api/leads/inbox/{lead.pk}/reply/", {"subject": "", "body": "x"}, format="json").status_code == 400
+    assert c.post(f"/api/leads/inbox/{lead.pk}/reply/", {"subject": "a\nBcc: x@y.z", "body": "x"}, format="json").status_code == 400
+    assert APIClient().post(f"/api/leads/inbox/{lead.pk}/reply/", {"subject": "a", "body": "x"}, format="json").status_code in (401, 403)

@@ -283,4 +283,5 @@ export type Lead = {
   emailed: boolean;
   email_error: string;
   created_at: string;
+  replies: { id: string; subject: string; body: string; sent: boolean; error: string; created_at: string }[];
 };

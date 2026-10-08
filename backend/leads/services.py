@@ -3,11 +3,12 @@
 import logging
 
 from django.db import transaction
+from django.utils import timezone
 
 from core.utils import hash_ip
 
-from .emailer import EmailError
-from .models import Lead
+from .emailer import EmailError, send_reply_email
+from .models import Lead, LeadReply
 from .tasks import notify, send_lead_notification
 
 logger = logging.getLogger(__name__)
@@ -40,3 +41,22 @@ def _notify_now(lead_id: str) -> None:
             send_lead_notification.delay(lead_id)
         except Exception:  # noqa: BLE001
             logger.exception("Lead %s: could not queue the retry either", lead_id)
+
+
+def reply_to_lead(lead: Lead, *, subject: str, body: str, user=None) -> LeadReply:
+    """Email the enquirer and keep a copy. The row is saved even when sending fails, so nothing typed is lost.
+
+    On success the enquiry is marked as replied."""
+    reply = LeadReply.objects.create(lead=lead, subject=subject.strip(), body=body.strip(), sent_by=user)
+    try:
+        send_reply_email(to=lead.email, subject=reply.subject, body=reply.body)
+    except EmailError as exc:
+        reply.error = str(exc)[:500]
+        reply.save(update_fields=["error"])
+        return reply
+    reply.sent_at = timezone.now()
+    reply.save(update_fields=["sent_at"])
+    if lead.status != Lead.Status.REPLIED:
+        lead.status = Lead.Status.REPLIED
+        lead.save(update_fields=["status"])
+    return reply
