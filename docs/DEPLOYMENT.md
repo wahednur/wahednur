@@ -129,3 +129,22 @@ Common causes: the domain in `LEADS_FROM_EMAIL` is not verified in Resend (Resen
 - **Settings**: only the service's **Environment** tab counts. Paste `KEY=value` lines, one per line, no quotes, no `<placeholders>`; leave `COMPOSE_PROFILES` empty. Press **Save**, then **Deploy** (a changed value needs a redeploy).
 - **Run a command** (for example `python manage.py send_test_email you@example.com` or `python manage.py bootstrap_owner you@example.com`): service → **Advanced → Terminal**, choose the container `api`, run the command without `docker compose exec`. Over SSH instead: `docker ps` to find the name, then `docker exec -it <api-container-name> python manage.py ...`.
 - **Logs**: service → **Logs**, choose `api` or `worker`.
+
+
+## Setting up Resend from the start
+1. **Account**: resend.com, sign up with your email.
+2. **Domain**: Domains, Add Domain, enter `wahednur.tech`. Resend shows a few DNS records (an SPF `TXT`, a DKIM `TXT` named like `resend._domainkey`, and an `MX` for bounces, on a `send` sub-name). Add every one exactly as shown at the place where the domain's DNS is managed (the registrar or Cloudflare), then press Verify. It takes minutes, sometimes an hour. The status must say **Verified**.
+3. **API key**: API Keys, Create API Key, permission **Sending access**, domain `wahednur.tech`. Copy the key (`re_...`) at once; it is shown only one time.
+4. **Sender**: any name on the verified domain works: `Wahed Nur <noreply@wahednur.tech>`. A Gmail address or `onboarding@resend.dev` only delivers to your own account.
+5. **Dokploy, Environment tab** (then Save and Deploy):
+   ```
+   EMAIL_PROVIDER=resend
+   RESEND_API_KEY=re_...
+   LEADS_FROM_EMAIL=Wahed Nur <noreply@wahednur.tech>
+   LEADS_NOTIFY_TO=wahednur@gmail.com
+   ```
+   `EMAIL_PROVIDER=resend` makes Resend win even if old `EMAIL_HOST`/`SMTP_*` lines are still there. Cleaner still: delete those lines.
+6. **Test**: Dokploy, Advanced, Terminal, container `api`: `python manage.py send_test_email you@example.com`. It must print `Email backend : core.mail.ResendEmailBackend` and `Resend accepted the email`. Then sign up in a private window. Resend dashboard, Emails, shows delivered / bounced for every message.
+7. If it fails, the message names the cause: `401` wrong or revoked key; `403 ... domain is not verified` the sender domain is not verified; `422` the sender format is wrong.
+
+Redis and the worker are not needed for this any more: the sign-in code is sent straight from the request. The worker (which uses Redis as its queue) only retries when Resend is briefly down, and runs the scheduled jobs (subscription billing, shop order release).

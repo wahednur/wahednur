@@ -16,7 +16,7 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 
 # Without a way to send email, sign-in codes and lead notices would silently go nowhere.
-if not (EMAIL_HOST or RESEND_API_KEY):  # noqa: F405
+if not (EMAIL_USE_SMTP or RESEND_API_KEY):  # noqa: F405
     from django.core.exceptions import ImproperlyConfigured
 
     raise ImproperlyConfigured("Set EMAIL_HOST (SMTP) or RESEND_API_KEY so email can be sent.")

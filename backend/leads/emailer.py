@@ -56,7 +56,7 @@ def _send_by_smtp(lead: Lead, subject: str, text: str, body_html: str) -> None:
 def send_lead_email(lead: Lead) -> None:
     subject, text, body_html = build_message(lead)
 
-    if settings.EMAIL_HOST:
+    if settings.EMAIL_USE_SMTP:
         _send_by_smtp(lead, subject, text, body_html)
         return
 

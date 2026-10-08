@@ -231,15 +231,19 @@ EMAIL_USE_SSL = env.bool("EMAIL_USE_SSL", default=EMAIL_PORT == 465)  # 465 = SS
 EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS", default=EMAIL_PORT == 587)  # 587 = STARTTLS
 EMAIL_TIMEOUT = 10
 EMAIL_FROM = env("EMAIL_FROM", default="")
+# Say it outright to avoid surprises: EMAIL_PROVIDER=resend or smtp. Left empty, SMTP is used when
+# EMAIL_HOST is filled, otherwise Resend when RESEND_API_KEY is filled.
+EMAIL_PROVIDER = env("EMAIL_PROVIDER", default="").lower()
+EMAIL_USE_SMTP = bool(EMAIL_HOST) and EMAIL_PROVIDER != "resend"
 
 LEADS_NOTIFY_TO = env("LEADS_NOTIFY_TO", default="") or "wahednur@gmail.com"
 LEADS_FROM_EMAIL = env("LEADS_FROM_EMAIL", default="") or "onboarding@resend.dev"
 
 # The sender must be an address the mail service allows. Gmail only sends as the Gmail account.
 DEFAULT_FROM_EMAIL = (
-    (EMAIL_FROM or EMAIL_HOST_USER or LEADS_FROM_EMAIL) if EMAIL_HOST else LEADS_FROM_EMAIL
+    (EMAIL_FROM or EMAIL_HOST_USER or LEADS_FROM_EMAIL) if EMAIL_USE_SMTP else LEADS_FROM_EMAIL
 )
-if EMAIL_HOST:
+if EMAIL_USE_SMTP:
     EMAIL_BACKEND = "core.mail.SafeSMTPBackend"
 elif RESEND_API_KEY:
     EMAIL_BACKEND = "core.mail.ResendEmailBackend"

@@ -25,13 +25,15 @@ class Command(BaseCommand):
         out = self.stdout.write
         out(f"Email backend : {settings.EMAIL_BACKEND}")
         out(f"From address  : {settings.DEFAULT_FROM_EMAIL}")
-        if settings.EMAIL_HOST:
+        if settings.EMAIL_USE_SMTP:
             self._smtp(to)
             return
         out(f"Resend key set: {'yes' if settings.RESEND_API_KEY else 'NO'}")
         out(f"Queue         : {settings.CELERY_BROKER_URL.split('@')[-1]}")
         if not settings.RESEND_API_KEY:
-            raise CommandError("No way to send email is set: fill EMAIL_HOST or RESEND_API_KEY.")
+            raise CommandError(
+                "No way to send email is set: fill RESEND_API_KEY (or EMAIL_HOST for SMTP)."
+            )
         payload = {
             "from": settings.DEFAULT_FROM_EMAIL,
             "to": [to],

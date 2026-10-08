@@ -100,6 +100,7 @@ def test_lead_notice_goes_through_smtp_when_it_is_configured(settings, mailoutbo
     from leads.models import Lead
 
     settings.EMAIL_HOST, settings.RESEND_API_KEY = "smtp.example.com", ""
+    settings.EMAIL_USE_SMTP = True
     settings.DEFAULT_FROM_EMAIL, settings.LEADS_NOTIFY_TO = "me@example.com", "owner@example.com"
     lead = Lead(name="Rahim", email="rahim@example.com", need="ecommerce", details="Hi")
     with patch(
@@ -119,6 +120,7 @@ def test_lead_smtp_failure_reaches_the_retry_logic(settings):
     from leads.models import Lead
 
     settings.EMAIL_HOST, settings.EMAIL_PORT, settings.EMAIL_TIMEOUT = "127.0.0.1", 1, 1
+    settings.EMAIL_USE_SMTP = True
     settings.EMAIL_USE_SSL = settings.EMAIL_USE_TLS = False
     lead = Lead(name="Rahim", email="rahim@example.com", need="ecommerce", details="Hi")
     with pytest.raises(emailer.EmailError):
@@ -130,6 +132,27 @@ def test_send_test_email_command_explains_a_smtp_failure(settings):
     from django.core.management.base import CommandError
 
     settings.EMAIL_HOST, settings.EMAIL_PORT, settings.EMAIL_TIMEOUT = "127.0.0.1", 1, 1
+    settings.EMAIL_USE_SMTP = True
     settings.EMAIL_USE_SSL = settings.EMAIL_USE_TLS = False
     with pytest.raises(CommandError, match="mail server"):
         call_command("send_test_email", "a@b.c")
+
+
+def test_email_provider_switch_picks_resend_even_when_smtp_values_are_left_in(monkeypatch):
+    """EMAIL_PROVIDER=resend must win over a forgotten EMAIL_HOST."""
+    import importlib
+
+    from config.settings import base
+
+    monkeypatch.setenv("EMAIL_HOST", "smtp.gmail.com")
+    monkeypatch.setenv("RESEND_API_KEY", "re_x")
+    try:
+        monkeypatch.setenv("EMAIL_PROVIDER", "resend")
+        assert importlib.reload(base).EMAIL_BACKEND == "core.mail.ResendEmailBackend"
+        monkeypatch.setenv("EMAIL_PROVIDER", "")
+        assert importlib.reload(base).EMAIL_BACKEND == "core.mail.SafeSMTPBackend"
+        monkeypatch.delenv("EMAIL_HOST")
+        assert importlib.reload(base).EMAIL_BACKEND == "core.mail.ResendEmailBackend"
+    finally:
+        monkeypatch.undo()
+        importlib.reload(base)
