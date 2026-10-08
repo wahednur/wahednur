@@ -65,3 +65,15 @@ def test_admin_is_closed_to_anonymous_visitors(settings):
     response = Client().get(f"/{settings.ADMIN_URL}")
     assert response.status_code == 302
     assert "login" in response.url
+
+
+def test_me_says_whether_the_orders_menus_have_anything_behind_them():
+    from rest_framework.test import APIClient
+
+    from catalog.models import Order as PackageOrder  # noqa: F401  (import check)
+
+    user = User.objects.create_user("buyer@example.com", "s3cret-pass-123")
+    c = APIClient()
+    c.force_login(user)
+    me = c.get("/api/auth/me/").json()
+    assert me["has_shop_orders"] is False and me["has_package_orders"] is False

@@ -17,6 +17,13 @@ class MeView(APIView):
         verified = EmailAddress.objects.filter(
             user=user, email__iexact=user.email, verified=True
         ).exists()
+        # Menu hints: the Shop orders and Package requests links only show when there is something behind them.
+        from catalog.models import Order as PackageOrder
+        from shop.models import ShopOrder
+
+        team = user.is_staff or user.is_superuser
+        shop = ShopOrder.objects.all() if team else ShopOrder.objects.filter(customer=user)
+        packages = PackageOrder.objects.all() if team else PackageOrder.objects.filter(client=user)
         return Response(
             {
                 "id": user.pk,
@@ -26,5 +33,7 @@ class MeView(APIView):
                 "email_verified": verified,
                 "has_password": user.has_usable_password(),
                 "mfa_enabled": is_mfa_enabled(user),
+                "has_shop_orders": shop.exists(),
+                "has_package_orders": packages.exists(),
             }
         )

@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { site } from "@/lib/site";
 import Image from "next/image";
-import { mainNav as nav } from "@/lib/nav";
+import { getMainNav } from "@/lib/nav";
 import AuthNav from "./auth/AuthNav";
 import MobileNav from "./MobileNav";
 
-export default function Header() {
+export default async function Header() {
+  const nav = await getMainNav();
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-bg/80 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">

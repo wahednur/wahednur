@@ -9,7 +9,7 @@ export default async function AuthGate({ children }: { children: React.ReactNode
 
   const owner = me.roles.includes("owner");
   const team = owner || me.roles.includes("staff");
-  const groups: ShellGroup[] = [
+  const all: ShellGroup[] = [
     {
       title: "Workspace",
       items: [
@@ -29,8 +29,8 @@ export default async function AuthGate({ children }: { children: React.ReactNode
     {
       title: "Orders",
       items: [
-        { href: "/app/shop", label: "Shop orders", icon: "orders" },
-        { href: "/app/orders", label: "Package requests", icon: "packages" },
+        ...(me.has_shop_orders ? [{ href: "/app/shop", label: "Shop orders", icon: "orders" }] : []),
+        ...(me.has_package_orders ? [{ href: "/app/orders", label: "Package requests", icon: "packages" }] : []),
       ],
     },
     ...(team
@@ -44,6 +44,8 @@ export default async function AuthGate({ children }: { children: React.ReactNode
       : []),
     { title: "Account", items: [{ href: "/app/security", label: "Security", icon: "security" }] },
   ];
+
+  const groups = all.filter((g) => g.items.length > 0);
 
   return (
     <AppShell groups={groups} user={{ email: me.email, name: me.full_name, roles: me.roles, mfa: me.mfa_enabled }}>

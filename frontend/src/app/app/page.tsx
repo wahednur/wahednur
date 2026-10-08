@@ -41,7 +41,7 @@ export default async function Dashboard() {
                 {label as string}
               </li>
             ))}
-            {me.roles.map((r) => (
+            {me.roles.filter((r) => r !== "client").map((r) => (
               <li key={r} className="rounded-full border border-line px-3 py-1 font-mono text-muted">{r}</li>
             ))}
           </ul>
@@ -60,7 +60,7 @@ export default async function Dashboard() {
         </div>
       )}
 
-      <DashboardView />
+      <DashboardView shop={me.has_shop_orders} />
     </div>
   );
 }

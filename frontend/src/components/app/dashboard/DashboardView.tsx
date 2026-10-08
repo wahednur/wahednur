@@ -23,9 +23,8 @@ const SHORTCUTS = [
   { href: "/app/projects", label: "Projects", hint: "Progress and updates", icon: "projects" },
   { href: "/app/billing", label: "Quotations & invoices", hint: "Accept, pay, download", icon: "billing" },
   { href: "/app/documents", label: "Documents", hint: "Your private files", icon: "documents" },
-  { href: "/app/shop", label: "Orders", hint: "Shop purchases", icon: "orders" },
+  { href: "/app/shop", label: "Orders", hint: "Shop purchases", icon: "orders", needs: "shop" },
   { href: "/app/subscriptions", label: "Subscriptions", hint: "Monthly and yearly plans", icon: "subscriptions" },
-  { href: "/packages", label: "Packages", hint: "Ready-made offers", icon: "packages" },
 ];
 
 const card = "rounded-2xl border border-line bg-surface";
@@ -55,7 +54,7 @@ function Skeleton() {
   );
 }
 
-export default function DashboardView() {
+export default function DashboardView({ shop = false }: { shop?: boolean }) {
   const [data, setData] = useState<DashboardData | null>(null);
   const [error, setError] = useState("");
 
@@ -75,7 +74,7 @@ export default function DashboardView() {
         <section aria-labelledby="go">
           <Heading id="go">Quick links</Heading>
           <ul className="mt-3 grid grid-cols-2 gap-3 lg:grid-cols-3">
-            {SHORTCUTS.map((s) => (
+            {SHORTCUTS.filter((s) => s.needs !== "shop" || shop).map((s) => (
               <li key={s.href}>
                 <Link
                   href={s.href}

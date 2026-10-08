@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import Icon from "@/components/app/dashboard/Icons";
-import SignOutButton from "./SignOutButton";
+import UserMenu from "./UserMenu";
 
 export type ShellItem = { href: string; label: string; icon: string };
 export type ShellGroup = { title: string; items: ShellItem[] };
@@ -103,7 +103,7 @@ export default function AppShell({ groups, user, children }: { groups: ShellGrou
       </span>
       <span className="leading-tight">
         <span className="block text-sm font-semibold tracking-tight">Wahed Nur</span>
-        <span className="block font-mono text-[10px] uppercase tracking-[0.2em] text-brand">Client area</span>
+        <span className="block font-mono text-[10px] uppercase tracking-[0.2em] text-brand">My account</span>
       </span>
     </Link>
   );
@@ -142,19 +142,15 @@ export default function AppShell({ groups, user, children }: { groups: ShellGrou
             <Icon name="menu" />
           </button>
           <p className="min-w-0 flex-1 truncate text-sm">
-            <span className="hidden text-muted sm:inline">Client area / </span>
+            <span className="hidden text-muted sm:inline">My account / </span>
             <span className="font-medium">{here?.label ?? "Dashboard"}</span>
           </p>
           <span className="hidden items-center gap-1.5 rounded-full border border-brand/30 bg-brand/[0.07] px-2.5 py-1 font-mono text-[11px] text-brand sm:inline-flex">
             <Icon name="lock" size={13} /> Secure
           </span>
           <Link href="/" className="hidden rounded-md px-2.5 py-1.5 text-sm text-muted hover:text-ink md:block">Website</Link>
-          <div className="flex items-center gap-2.5 border-l border-line pl-3">
-            <span className="grid h-8 w-8 place-items-center rounded-full bg-brand/15 text-sm font-semibold text-brand" aria-hidden>
-              {(user.name || user.email).charAt(0).toUpperCase()}
-            </span>
-            <span className="hidden max-w-[11rem] truncate text-sm text-muted md:block">{user.email}</span>
-            <SignOutButton />
+          <div className="border-l border-line pl-3">
+            <UserMenu email={user.email} name={user.name} roles={user.roles.filter((r) => r !== "client")} />
           </div>
         </header>
 
@@ -167,7 +163,7 @@ export default function AppShell({ groups, user, children }: { groups: ShellGrou
               <span className="text-brand"><Icon name="lock" size={15} /></span>
               Your files and invoices are private to you. Downloads use short-lived links.
             </p>
-            <nav aria-label="Client area footer" className="flex flex-wrap gap-x-5 gap-y-1">
+            <nav aria-label="Account footer" className="flex flex-wrap gap-x-5 gap-y-1">
               <Link href="/app/security" className="hover:text-ink">Security</Link>
               <Link href="/contact" className="hover:text-ink">Contact me</Link>
               <Link href="/" className="hover:text-ink">Back to website</Link>

@@ -6,6 +6,8 @@ export type Me = {
   email_verified: boolean;
   has_password: boolean;
   mfa_enabled: boolean;
+  has_shop_orders: boolean;
+  has_package_orders: boolean;
 };
 
 export type ApiError = { message: string; code?: string; param?: string };

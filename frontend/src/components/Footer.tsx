@@ -1,9 +1,10 @@
 import Link from "next/link";
-import { mainNav } from "@/lib/nav";
+import { getMainNav } from "@/lib/nav";
 import { site } from "@/lib/site";
 import Year from "./Year";
 
-export default function Footer() {
+export default async function Footer() {
+  const mainNav = await getMainNav();
   return (
     <footer className="border-t border-line">
       <nav aria-label="Footer" className="mx-auto flex max-w-6xl flex-wrap gap-x-6 gap-y-2 px-4 pt-8 text-sm text-muted sm:px-6">
