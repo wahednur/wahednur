@@ -55,3 +55,15 @@ def test_bad_header_is_refused(tmp_path, owner):
 def test_shipped_posts_all_parse(owner):
     folder = Path(__file__).resolve().parents[2] / "content" / "posts"
     assert "Preview only" in run(folder)
+
+
+def test_publish_reports_published_count_and_missing_secret(tmp_path, owner, settings):
+    settings.REVALIDATE_SECRET = ""
+    (tmp_path / "a.md").write_text(POST, encoding="utf-8")
+    out = run(tmp_path, apply=True, publish=True)
+    assert "Published posts now: 1" in out and "REVALIDATE_SECRET is not set" in out
+
+
+def test_draft_load_says_nothing_is_public(tmp_path, owner):
+    (tmp_path / "a.md").write_text(POST, encoding="utf-8")
+    assert "Nothing is public yet" in run(tmp_path, apply=True)

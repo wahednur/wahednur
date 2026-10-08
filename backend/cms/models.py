@@ -46,6 +46,8 @@ class Page(models.Model):
 
     class Meta:
         ordering = ["-published_at", "-created_at"]
+        verbose_name = "blog post or page"
+        verbose_name_plural = "blog posts and pages"
 
     def __str__(self) -> str:
         return self.title

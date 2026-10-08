@@ -83,4 +83,43 @@ class Command(BaseCommand):
         except Rollback:
             self.stdout.write("Preview only. Nothing saved. Add --apply to save.")
             return
-        self.stdout.write(self.style.SUCCESS(f"Saved {len(files)} posts."))
+        live = Page.objects.filter(
+            kind=Page.Kind.POST, status=Page.Status.PUBLISHED, deleted_at__isnull=True
+        ).count()
+        self.stdout.write(
+            self.style.SUCCESS(f"Saved {len(files)} posts. Published posts now: {live}.")
+        )
+        if not live:
+            self.stdout.write("Nothing is public yet. Add --publish, or publish from /app/content.")
+            return
+        self._refresh_website()
+
+    def _refresh_website(self):
+        """Ask the website to drop its cached blog pages now, and say plainly if that fails."""
+        from django.conf import settings
+
+        from cms.tasks import RevalidateError, revalidate_frontend
+
+        if not settings.REVALIDATE_SECRET:
+            self.stdout.write(
+                self.style.WARNING(
+                    "REVALIDATE_SECRET is not set here, so the website cannot be refreshed. "
+                    "Set it (same value on Vercel and on the API) or wait for the cache to expire."
+                )
+            )
+            return
+        slugs = Page.objects.filter(kind=Page.Kind.POST, status=Page.Status.PUBLISHED).values_list(
+            "slug", flat=True
+        )
+        paths = ["/blog", "/sitemap.xml", *[f"/blog/{s}" for s in slugs]]
+        try:
+            revalidate_frontend(paths)
+        except RevalidateError as err:
+            self.stdout.write(
+                self.style.WARNING(
+                    f"The website did not accept the refresh ({err}). Check FRONTEND_URL and "
+                    "REVALIDATE_SECRET on the API and on Vercel."
+                )
+            )
+            return
+        self.stdout.write(f"Website refreshed ({settings.FRONTEND_URL}/blog).")
