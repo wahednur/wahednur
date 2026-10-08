@@ -8,7 +8,7 @@ import { btn, field as input } from "@/components/app/billing/Bits";
 export type Field = {
   name: string;
   label: string;
-  type?: "text" | "textarea" | "number" | "select" | "checkbox" | "lines" | "image";
+  type?: "text" | "textarea" | "number" | "select" | "checkbox" | "lines" | "image" | "date";
   options?: [string, string][];
   required?: boolean;
   step?: string;

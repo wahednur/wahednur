@@ -13,6 +13,8 @@ import {
   type ProjectProfit,
 } from "@/lib/api";
 import { btn, field, ghost } from "@/components/app/billing/Bits";
+import ConversionsPanel from "./ConversionsPanel";
+import IncomePanel from "./IncomePanel";
 
 const label = (v: string) => EXPENSE_CATEGORIES.find(([k]) => k === v)?.[1] ?? v;
 
@@ -106,6 +108,12 @@ export default function AccountingView() {
                   ["Net", s.net],
                   ["Still owed to you", s.receivable],
                   ["Overdue", s.overdue],
+                  ...(Number(s.tax_withheld) > 0
+                    ? ([
+                        ["Tax held at source (counts towards your tax)", s.tax_withheld],
+                        ["Net after tax held", s.net_after_tax_withheld],
+                      ] as const)
+                    : []),
                 ] as const
               ).map(([name, value]) => (
                 <div key={name} className="rounded-xl border border-line bg-surface p-4">
@@ -175,6 +183,10 @@ export default function AccountingView() {
           </div>
         </section>
       )}
+
+      <IncomePanel start={range.from} end={range.to} onChange={() => setTick((t) => t + 1)} />
+
+      <ConversionsPanel start={range.from} end={range.to} onChange={() => setTick((t) => t + 1)} />
 
       <section aria-labelledby="ex" className="space-y-4">
         <h2 id="ex" className="text-lg font-semibold">

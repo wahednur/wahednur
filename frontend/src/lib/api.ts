@@ -197,6 +197,8 @@ export type CurrencySummary = {
   received: string;
   spent: string;
   net: string;
+  tax_withheld: string;
+  net_after_tax_withheld: string;
   receivable: string;
   overdue: string;
   months: { month: string; received: string; spent: string; net: string }[];
@@ -379,3 +381,52 @@ export type ManagedProduct = {
 export type ManagedZone = { id: number; name: string; fee: string; currency: "BDT" | "USD"; active: boolean; position: number };
 export type StockRow = { id: number; delta: number; reason: string; note: string; by: string | null; at: string };
 export type ClientFull = { id: number; email: string; full_name: string; company: string; phone: string; address: string; internal_notes: string };
+
+export type IncomeRow = { id: number; earned_on: string; source: string; description: string; amount: string; currency: "BDT" | "USD" };
+export type SettlementRow = {
+  id: number;
+  settled_on: string;
+  source: string;
+  note: string;
+  earned_usd: string;
+  marketplace_fee_usd: string;
+  transfer_fee_usd: string;
+  reference_rate: string | null;
+  received_bdt: string;
+  bank_charge_bdt: string;
+  vat_bdt: string;
+  tax_withheld_bdt: string;
+  other_charge_bdt: string;
+  converted_usd: string;
+  effective_rate: string;
+  keep_per_dollar: string;
+};
+export type Waterfall = {
+  value_at_reference_rate: string;
+  marketplace_fee: string;
+  transfer_fee: string;
+  rate_difference: string;
+  bank_charge: string;
+  vat: string;
+  tax_withheld: string;
+  other: string;
+  received: string;
+};
+export type ConversionReport = {
+  USD?: {
+    count: number;
+    earned: string;
+    marketplace_fees: string;
+    transfer_fees: string;
+    converted: string;
+    received_bdt: string;
+    bank_charges: string;
+    vat: string;
+    tax_withheld: string;
+    other_charges: string;
+    average_rate: string;
+    keep_per_dollar: string;
+    waterfall: Waterfall | null;
+    waterfall_covers: number;
+  };
+};

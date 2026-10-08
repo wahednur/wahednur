@@ -1,5 +1,5 @@
 {
-  "_how_to_use": "Copy this file to content/catalog.json, fill in what is true for you, then run: python manage.py load_content content/catalog.json   (preview) and again with --apply. Items with price null are skipped, so fill a little at a time. Do not invent numbers: leave null what you do not know.",
+  "_how_to_use": "DRAFT tiers, not final. The three levels per service are a starting layout built only from what each service already lists on the website (Basic = the first items, Standard = more, Premium = all). Nothing is priced and nothing is published: set price (and delivery_days, revisions) on the ones you really sell, set published to true, and edit the lists freely. Items with price null are skipped by the loader. Copy this file to content/catalog.json, then run: python manage.py load_content content/catalog.json (preview) and again with --apply.",
   "services": [
     {
       "slug": "custom-ecommerce-development",
@@ -11,15 +11,53 @@
       "packages": [
         {
           "name": "Basic",
-          "tagline": "TODO: one line",
-          "features": [],
+          "tagline": "Core of the service",
+          "features": [
+            "Product catalog with categories and variations",
+            "Cart and checkout (guest and member)"
+          ],
           "price": null,
           "currency": "BDT",
           "cycle": "one_time",
           "delivery_days": null,
           "revisions": null,
           "position": 0,
-          "published": true
+          "published": false
+        },
+        {
+          "name": "Standard",
+          "tagline": "Core plus more",
+          "features": [
+            "Product catalog with categories and variations",
+            "Cart and checkout (guest and member)",
+            "Cash on Delivery and online payment (for example SSLCommerz)",
+            "Order status workflow and courier integration where an API exists"
+          ],
+          "price": null,
+          "currency": "BDT",
+          "cycle": "one_time",
+          "delivery_days": null,
+          "revisions": null,
+          "position": 1,
+          "published": false
+        },
+        {
+          "name": "Premium",
+          "tagline": "The whole service",
+          "features": [
+            "Product catalog with categories and variations",
+            "Cart and checkout (guest and member)",
+            "Cash on Delivery and online payment (for example SSLCommerz)",
+            "Order status workflow and courier integration where an API exists",
+            "Admin panel with permission-based access"
+          ],
+          "price": null,
+          "currency": "BDT",
+          "cycle": "one_time",
+          "delivery_days": null,
+          "revisions": null,
+          "position": 2,
+          "published": false
         }
       ]
     },
@@ -33,15 +71,53 @@
       "packages": [
         {
           "name": "Basic",
-          "tagline": "TODO: one line",
-          "features": [],
+          "tagline": "Core of the service",
+          "features": [
+            "Customers and suppliers with ledgers",
+            "Products, stock, purchase and sales entries"
+          ],
           "price": null,
           "currency": "BDT",
           "cycle": "one_time",
           "delivery_days": null,
           "revisions": null,
           "position": 0,
-          "published": true
+          "published": false
+        },
+        {
+          "name": "Standard",
+          "tagline": "Core plus more",
+          "features": [
+            "Customers and suppliers with ledgers",
+            "Products, stock, purchase and sales entries",
+            "Invoices with partial payments and due tracking",
+            "Expenses and cashbook"
+          ],
+          "price": null,
+          "currency": "BDT",
+          "cycle": "one_time",
+          "delivery_days": null,
+          "revisions": null,
+          "position": 1,
+          "published": false
+        },
+        {
+          "name": "Premium",
+          "tagline": "The whole service",
+          "features": [
+            "Customers and suppliers with ledgers",
+            "Products, stock, purchase and sales entries",
+            "Invoices with partial payments and due tracking",
+            "Expenses and cashbook",
+            "Sales, stock and profit/loss reports"
+          ],
+          "price": null,
+          "currency": "BDT",
+          "cycle": "one_time",
+          "delivery_days": null,
+          "revisions": null,
+          "position": 2,
+          "published": false
         }
       ]
     },
@@ -55,15 +131,51 @@
       "packages": [
         {
           "name": "Basic",
-          "tagline": "TODO: one line",
-          "features": [],
+          "tagline": "Core of the service",
+          "features": [
+            "Tables, filters and search for orders, stock and customers",
+            "Reports and charts"
+          ],
           "price": null,
           "currency": "BDT",
           "cycle": "one_time",
           "delivery_days": null,
           "revisions": null,
           "position": 0,
-          "published": true
+          "published": false
+        },
+        {
+          "name": "Standard",
+          "tagline": "Core plus more",
+          "features": [
+            "Tables, filters and search for orders, stock and customers",
+            "Reports and charts",
+            "User permissions"
+          ],
+          "price": null,
+          "currency": "BDT",
+          "cycle": "one_time",
+          "delivery_days": null,
+          "revisions": null,
+          "position": 1,
+          "published": false
+        },
+        {
+          "name": "Premium",
+          "tagline": "The whole service",
+          "features": [
+            "Tables, filters and search for orders, stock and customers",
+            "Reports and charts",
+            "User permissions",
+            "Built with React and TypeScript"
+          ],
+          "price": null,
+          "currency": "BDT",
+          "cycle": "one_time",
+          "delivery_days": null,
+          "revisions": null,
+          "position": 2,
+          "published": false
         }
       ]
     },
@@ -77,15 +189,51 @@
       "packages": [
         {
           "name": "Basic",
-          "tagline": "TODO: one line",
-          "features": [],
+          "tagline": "Core of the service",
+          "features": [
+            "Authentication (JWT) and permissions",
+            "PostgreSQL data model"
+          ],
           "price": null,
           "currency": "BDT",
           "cycle": "one_time",
           "delivery_days": null,
           "revisions": null,
           "position": 0,
-          "published": true
+          "published": false
+        },
+        {
+          "name": "Standard",
+          "tagline": "Core plus more",
+          "features": [
+            "Authentication (JWT) and permissions",
+            "PostgreSQL data model",
+            "Background jobs with Celery and Redis"
+          ],
+          "price": null,
+          "currency": "BDT",
+          "cycle": "one_time",
+          "delivery_days": null,
+          "revisions": null,
+          "position": 1,
+          "published": false
+        },
+        {
+          "name": "Premium",
+          "tagline": "The whole service",
+          "features": [
+            "Authentication (JWT) and permissions",
+            "PostgreSQL data model",
+            "Background jobs with Celery and Redis",
+            "Payment gateway and courier integration"
+          ],
+          "price": null,
+          "currency": "BDT",
+          "cycle": "one_time",
+          "delivery_days": null,
+          "revisions": null,
+          "position": 2,
+          "published": false
         }
       ]
     },
@@ -99,15 +247,53 @@
       "packages": [
         {
           "name": "Basic",
-          "tagline": "TODO: one line",
-          "features": [],
+          "tagline": "Core of the service",
+          "features": [
+            "Product questions answered only from your product data. Price, stock and warranty come from the system, never from the AI",
+            "AI-assisted search that understands what shoppers mean"
+          ],
           "price": null,
           "currency": "BDT",
           "cycle": "one_time",
           "delivery_days": null,
           "revisions": null,
           "position": 0,
-          "published": true
+          "published": false
+        },
+        {
+          "name": "Standard",
+          "tagline": "Core plus more",
+          "features": [
+            "Product questions answered only from your product data. Price, stock and warranty come from the system, never from the AI",
+            "AI-assisted search that understands what shoppers mean",
+            "Draft product descriptions, SEO titles and comparison summaries, reviewed by a person before publishing",
+            "Suggested replies for your support staff, which a person always sends"
+          ],
+          "price": null,
+          "currency": "BDT",
+          "cycle": "one_time",
+          "delivery_days": null,
+          "revisions": null,
+          "position": 1,
+          "published": false
+        },
+        {
+          "name": "Premium",
+          "tagline": "The whole service",
+          "features": [
+            "Product questions answered only from your product data. Price, stock and warranty come from the system, never from the AI",
+            "AI-assisted search that understands what shoppers mean",
+            "Draft product descriptions, SEO titles and comparison summaries, reviewed by a person before publishing",
+            "Suggested replies for your support staff, which a person always sends",
+            "Fallback when an AI provider is down, answer caching, and usage and cost tracking"
+          ],
+          "price": null,
+          "currency": "BDT",
+          "cycle": "one_time",
+          "delivery_days": null,
+          "revisions": null,
+          "position": 2,
+          "published": false
         }
       ]
     },
@@ -121,15 +307,34 @@
       "packages": [
         {
           "name": "Basic",
-          "tagline": "TODO: one line",
-          "features": [],
+          "tagline": "Core of the service",
+          "features": [
+            "Code and workflow review",
+            "Bug fixes and new features"
+          ],
           "price": null,
           "currency": "BDT",
           "cycle": "one_time",
           "delivery_days": null,
           "revisions": null,
           "position": 0,
-          "published": true
+          "published": false
+        },
+        {
+          "name": "Premium",
+          "tagline": "The whole service",
+          "features": [
+            "Code and workflow review",
+            "Bug fixes and new features",
+            "No rewrite unless it is clearly the better option"
+          ],
+          "price": null,
+          "currency": "BDT",
+          "cycle": "one_time",
+          "delivery_days": null,
+          "revisions": null,
+          "position": 1,
+          "published": false
         }
       ]
     },
@@ -143,15 +348,34 @@
       "packages": [
         {
           "name": "Basic",
-          "tagline": "TODO: one line",
-          "features": [],
+          "tagline": "Core of the service",
+          "features": [
+            "Docker and Docker Compose configuration",
+            "VPS deployment with Dokploy"
+          ],
           "price": null,
           "currency": "BDT",
           "cycle": "one_time",
           "delivery_days": null,
           "revisions": null,
           "position": 0,
-          "published": true
+          "published": false
+        },
+        {
+          "name": "Premium",
+          "tagline": "The whole service",
+          "features": [
+            "Docker and Docker Compose configuration",
+            "VPS deployment with Dokploy",
+            "Domain and Cloudflare setup"
+          ],
+          "price": null,
+          "currency": "BDT",
+          "cycle": "one_time",
+          "delivery_days": null,
+          "revisions": null,
+          "position": 1,
+          "published": false
         }
       ]
     }
