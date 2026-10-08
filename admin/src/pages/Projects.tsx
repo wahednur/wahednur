@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { Badge, Button, Empty, field, Loading, Notice, PageHeader, Search, Table, Td, useLoad } from "@/components/ui";
 import { day } from "@/lib/format";
 import { api } from "@/lib/http";
@@ -108,7 +109,7 @@ export default function Projects() {
         <Table head={["Project", "Client", "Status", "Progress", "Due", "Move to"]}>
           {rows.map((p) => (
             <tr key={p.id}>
-              <Td className="font-medium">{p.title}</Td>
+              <Td className="font-medium"><Link to={`/projects/${p.id}`} className="hover:text-brand">{p.title}</Link></Td>
               <Td className="text-muted">{p.client_email}</Td>
               <Td><Badge value={p.status} /></Td>
               <Td>

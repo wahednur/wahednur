@@ -161,3 +161,14 @@ export type ManagedService = {
   published: boolean;
   packages: ManagedPackage[];
 };
+
+export type Milestone = {
+  id: number;
+  title: string;
+  description: string;
+  status: "todo" | "in_progress" | "done";
+  position: number;
+  due_date: string | null;
+};
+export type ProjectUpdate = { id: number; message: string; is_public: boolean; author_email: string | null; created_at: string };
+export type ProjectDetailData = Project & { milestones: Milestone[]; updates: ProjectUpdate[] };

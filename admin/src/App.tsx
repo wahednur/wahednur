@@ -11,6 +11,7 @@ import DocumentNew from "@/pages/DocumentNew";
 import InvoiceDetail from "@/pages/InvoiceDetail";
 import Login from "@/pages/Login";
 import Overview from "@/pages/Overview";
+import ProjectDetail from "@/pages/ProjectDetail";
 import Projects from "@/pages/Projects";
 import QuotationDetail from "@/pages/QuotationDetail";
 import Requests from "@/pages/Requests";
@@ -36,6 +37,7 @@ export default function App() {
           <Route element={<Guard />}>
             <Route index element={<Overview />} />
             <Route path="projects" element={<Projects />} />
+            <Route path="projects/:id" element={<ProjectDetail />} />
             <Route path="billing" element={<Billing />} />
             <Route path="billing/invoices/:id" element={<InvoiceDetail />} />
             <Route path="billing/quotations/:id" element={<QuotationDetail />} />
