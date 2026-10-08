@@ -37,3 +37,9 @@ The admin has its own `admin/Dockerfile` (bun builds the static files, nginx ser
 - **Dokploy:** add `admin` to `COMPOSE_PROFILES` (with `frontend` if you host the site there too), set `VITE_API_URL` and `VITE_SITE_URL`, deploy, then add the domain `admin.wahednur.tech` to service `admin`, port `8080`, with HTTPS on.
 - **Plain VPS with Caddy:** add `ADMIN_DOMAIN=admin.wahednur.tech` to `.env`; the Caddyfile proxies it to the service when the `admin` profile is on.
 - Either way the API still needs `https://admin.wahednur.tech` in `CORS_ALLOWED_ORIGINS` and `COOKIE_DOMAIN=.wahednur.tech`.
+
+## Quote as a scope-of-work proposal
+A quotation can be written like a scope-of-work sheet: each line is a "sheet" with its own points, time, risk, where the work stands, a note and a price range; the quote also has a subtitle, a revision (Rev A), a proposal text, payment milestones (percent, must add up to 100), a risk table and extra sections. A sheet can be shown but not counted (work already done as a free proof). Only the price is billed; the top of a range is shown as "estimate up to".
+- **Print or save as PDF:** on the quote page, "Print or save as PDF" opens a clean page for the browser's print dialog. Use it for Bengali text, which the server PDF (English only) cannot shape.
+- **Start from your EMIS document:** `python manage.py load_quote content/quotes/emis.template.json --client CLIENT_EMAIL` previews, add `--apply` to create the draft. The client must exist (Clients → New client); the institute's name comes from the client's profile.
+- Converting an accepted quote to an invoice uses the quote's own payment milestones as the installments.

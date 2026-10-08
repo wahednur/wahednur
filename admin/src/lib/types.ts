@@ -87,7 +87,27 @@ export type RecurringInv = {
   items: { description: string; quantity: string; unit_price: string }[];
   invoices: { id: string; number: string; run_date: string; status: string }[];
 };
+export type SheetItem = {
+  description: string;
+  quantity: string;
+  unit_price: string;
+  unit_price_max: string | null;
+  details: string;
+  time_estimate: string;
+  risk: "" | "low" | "mid" | "high";
+  work_state: "" | "new" | "partial" | "done";
+  note: string;
+  counted: boolean;
+  amount?: string;
+};
 export type Quotation = BillRow & {
+  subtitle: string;
+  revision: string;
+  bill_to_name: string;
+  subtotal_max: string | null;
+  sections: { heading: string; body: string }[];
+  risks: { risk: string; impact: string }[];
+  payment_plan: { label: string; percent: string; note: string }[];
   project: string;
   client: number;
   number_prefix: string;
@@ -100,9 +120,12 @@ export type Quotation = BillRow & {
   discount: string;
   notes: string;
   subtotal: string;
-  items: { description: string; quantity: string; unit_price: string; amount?: string }[];
+  items: SheetItem[];
 };
 export type Invoice = BillRow & {
+  subtitle: string;
+  revision: string;
+  bill_to_name: string;
   project: string;
   client: number;
   number_prefix: string;

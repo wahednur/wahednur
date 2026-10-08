@@ -1,4 +1,4 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Outlet, Route, Routes } from "react-router-dom";
 import Shell from "@/components/Shell";
 import { Loading } from "@/components/ui";
 import { AuthProvider, useAuth } from "@/lib/auth";
@@ -17,6 +17,7 @@ import Products from "@/pages/Products";
 import Projects from "@/pages/Projects";
 import RecurringDetail from "@/pages/RecurringDetail";
 import QuotationDetail from "@/pages/QuotationDetail";
+import QuotePrint from "@/pages/QuotePrint";
 import Requests from "@/pages/Requests";
 import Services from "@/pages/Services";
 import Shop from "@/pages/Shop";
@@ -31,12 +32,22 @@ function Guard({ owner }: { owner?: boolean }) {
   return <Shell />;
 }
 
+function BareGuard() {
+  const { me, loading, isStaff } = useAuth();
+  if (loading) return <div className="p-8"><Loading /></div>;
+  if (!me || !isStaff) return <Navigate to="/login" replace />;
+  return <Outlet />;
+}
+
 export default function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route element={<BareGuard />}>
+            <Route path="/print/quotation/:id" element={<QuotePrint />} />
+          </Route>
           <Route element={<Guard />}>
             <Route index element={<Overview />} />
             <Route path="projects" element={<Projects />} />

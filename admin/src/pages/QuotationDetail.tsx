@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { InstallmentsEditor, presetSteps, stepsToApi, type Step } from "@/components/DocumentEditor";
+import QuoteDocument from "@/components/QuoteDocument";
 import { Badge, Button, Card, field, Loading, Notice, PageHeader, useLoad } from "@/components/ui";
-import { day, money } from "@/lib/format";
+import { day } from "@/lib/format";
 import { api, download } from "@/lib/http";
 import type { Quotation } from "@/lib/types";
 
@@ -63,47 +64,30 @@ export default function QuotationDetail() {
                   <option value="dead">Dead</option>
                 </select>
               )}
-              {q.status === "accepted" && !q.invoice_id && <Button small tone="brand" onClick={() => setConverting((v) => !v)}>Create invoice</Button>}
+              {q.status === "accepted" && !q.invoice_id && (
+                <Button
+                  small
+                  tone="brand"
+                  onClick={() => {
+                    if (!converting && q.payment_plan.length)
+                      setSteps(q.payment_plan.map((p) => ({ label: p.label, mode: "percent" as const, value: String(Number(p.percent)), due_date: "" })));
+                    setConverting((v) => !v);
+                  }}
+                >
+                  Create invoice
+                </Button>
+              )}
             </div>
           }
         />
       </div>
       {msg && <div className="mb-4"><Notice>{msg}</Notice></div>}
-      <Card className="p-5">
-        {q.bill_to_address && <p className="mb-4 whitespace-pre-line text-sm text-muted">{q.bill_to_address}</p>}
-        {q.proposal_text && (
-          <div className="mb-5 rounded-lg border border-line bg-bg/40 p-4">
-            <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted">Proposal</p>
-            <p className="whitespace-pre-line text-sm">{q.proposal_text}</p>
-          </div>
-        )}
-        <div className="mb-3 flex items-center gap-3">
-          <Badge value={q.status} />
-          {q.invoice_id && <Link className="text-sm text-brand hover:underline" to={`/billing/invoices/${q.invoice_id}`}>Open its invoice</Link>}
-        </div>
-        <table className="w-full text-sm">
-          <thead className="text-xs uppercase text-muted">
-            <tr><th className="py-2 text-left font-medium">Item</th><th className="text-right font-medium">Qty</th><th className="text-right font-medium">Price</th><th className="text-right font-medium">Amount</th></tr>
-          </thead>
-          <tbody className="divide-y divide-line">
-            {q.items.map((i, n) => (
-              <tr key={n}>
-                <td className="py-2">{i.description}</td>
-                <td className="text-right">{i.quantity}</td>
-                <td className="text-right">{money(q.currency, i.unit_price)}</td>
-                <td className="text-right">{money(q.currency, i.amount ?? "0")}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <dl className="mt-4 space-y-1 border-t border-line pt-3 text-sm">
-          <div className="flex justify-between"><dt className="text-muted">Subtotal</dt><dd>{money(q.currency, q.subtotal)}</dd></div>
-          {Number(q.discount) > 0 && <div className="flex justify-between"><dt className="text-muted">Discount</dt><dd>-{money(q.currency, q.discount)}</dd></div>}
-          {Number(q.tax) > 0 && <div className="flex justify-between"><dt className="text-muted">{q.tax_name} ({Number(q.tax_rate)}%)</dt><dd>{money(q.currency, q.tax)}</dd></div>}
-          <div className="flex justify-between font-semibold"><dt>Total</dt><dd>{money(q.currency, q.total)}</dd></div>
-        </dl>
-        {q.notes && <p className="mt-4 whitespace-pre-line border-t border-line pt-3 text-sm text-muted">{q.notes}</p>}
-      </Card>
+      <div className="mb-3 flex flex-wrap items-center gap-3">
+        <Badge value={q.status} />
+        {q.invoice_id && <Link className="text-sm text-brand hover:underline" to={`/billing/invoices/${q.invoice_id}`}>Open its invoice</Link>}
+        <a className="text-sm text-brand hover:underline" href={`/print/quotation/${q.id}`} target="_blank" rel="noreferrer">Print or save as PDF (Bengali works) ↗</a>
+      </div>
+      <div className="overflow-hidden rounded-2xl border border-line"><QuoteDocument q={q} from="Abdul Wahed Nur" /></div>
 
       {converting && (
         <Card className="mt-5 p-5">
