@@ -145,3 +145,13 @@ body {
   .glow-border, .glow-border:hover { transform: none; transition: none; }
   .glow-border:hover::before, .glow-border:focus-within::before { animation: none; background: rgba(45, 212, 191, 0.6); }
 }
+
+/* Step timeline + care loop */
+@keyframes step-now { 0%,100% { box-shadow: 0 0 0 6px var(--wn-bg), 0 0 0 6px rgba(45,212,191,0); } 50% { box-shadow: 0 0 0 6px var(--wn-bg), 0 0 0 12px rgba(45,212,191,0.22); } }
+.step-now { animation: step-now 2.4s ease-in-out infinite; }
+@keyframes loop-node { 0%,100% { opacity: 0; } 4%,16% { opacity: 0.9; } 24% { opacity: 0; } }
+.loop-node { opacity: 0; animation: loop-node 10s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .step-now, .loop-node { animation: none; }
+  .loop-node { opacity: 0.25; }
+}

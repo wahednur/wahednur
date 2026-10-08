@@ -5,6 +5,7 @@ import ServiceIcon from "@/components/ServiceIcon";
 import Section from "@/components/Section";
 import { Different, MissionVision } from "@/components/home/WhyMe";
 import TechStack from "@/components/home/TechStack";
+import CareLoop from "@/components/home/CareLoop";
 import Faq from "@/components/home/Faq";
 import HeroFlow from "@/components/home/HeroFlow";
 import LiveProof from "@/components/home/LiveProof";
@@ -115,6 +116,7 @@ export default function Home() {
 
       <Section id="process" label="How we work" title="From first call to handover, in six clear steps">
         <ProcessTimeline />
+        <CareLoop />
       </Section>
 
       <Section id="portal" label="Client area" title="You see progress without asking for it">
