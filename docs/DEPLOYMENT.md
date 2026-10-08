@@ -102,7 +102,7 @@ Check the container name filter matches (`docker ps`). Test a restore into a scr
 ## Website settings for content and packages
 Set these in Vercel (Environment Variables), then redeploy:
 - `REVALIDATE_SECRET`: the same long random value as on the API. Without it the instant page refresh is switched off (pages still refresh within an hour).
-- `NEXT_PUBLIC_SHOW_BLOG=true` and `NEXT_PUBLIC_SHOW_PACKAGES=true`: show the Blog and Packages links in the header once there is real content.
+- `NEXT_PUBLIC_SHOW_BLOG`, `NEXT_PUBLIC_SHOW_PACKAGES`, `NEXT_PUBLIC_SHOW_SHOP`: the Blog, Packages and Shop links are on by default. Set one to `false` to hide it (then redeploy).
 
 API (VPS `.env`): `REVALIDATE_SECRET` (same value), optionally `AI_PROVIDERS=anthropic` with `ANTHROPIC_API_KEY` (or gemini / groq). Leave `AI_PROVIDERS` empty to use the free rule-based SEO text. The worker container must run (it also bills subscriptions and writes SEO text).
 
