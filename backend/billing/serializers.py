@@ -13,6 +13,15 @@ class ItemIn(serializers.Serializer):
     description = serializers.CharField(max_length=300)
     quantity = serializers.DecimalField(max_digits=10, decimal_places=2, default=1)
     unit_price = serializers.DecimalField(max_digits=12, decimal_places=2)
+    unit_price_max = serializers.DecimalField(
+        max_digits=12, decimal_places=2, required=False, allow_null=True
+    )
+    details = serializers.CharField(max_length=2000, required=False, allow_blank=True)
+    time_estimate = serializers.CharField(max_length=60, required=False, allow_blank=True)
+    risk = serializers.ChoiceField(choices=["", "low", "mid", "high"], required=False)
+    work_state = serializers.ChoiceField(choices=["", "new", "partial", "done"], required=False)
+    note = serializers.CharField(max_length=300, required=False, allow_blank=True)
+    counted = serializers.BooleanField(default=True)
     cycle = serializers.ChoiceField(choices=Cycle.choices, default=Cycle.ONE_TIME)
 
 
@@ -36,6 +45,8 @@ class DocumentIn(serializers.Serializer):
     bill_to_address = serializers.CharField(max_length=500, required=False, allow_blank=True)
     tax_name = serializers.CharField(max_length=40, required=False, allow_blank=True)
     tax_rate = serializers.DecimalField(max_digits=5, decimal_places=2, default=0)
+    subtitle = serializers.CharField(max_length=300, required=False, allow_blank=True)
+    revision = serializers.CharField(max_length=20, required=False, allow_blank=True)
     title = serializers.CharField(max_length=200)
     currency = serializers.ChoiceField(choices=Currency.choices, default=Currency.BDT)
     discount = serializers.DecimalField(max_digits=12, decimal_places=2, default=0)
@@ -43,7 +54,26 @@ class DocumentIn(serializers.Serializer):
     items = ItemIn(many=True)
 
 
+class SectionIn(serializers.Serializer):
+    heading = serializers.CharField(max_length=120)
+    body = serializers.CharField(max_length=3000, allow_blank=True)
+
+
+class RiskIn(serializers.Serializer):
+    risk = serializers.CharField(max_length=160)
+    impact = serializers.CharField(max_length=400, allow_blank=True)
+
+
+class PlanStepIn(serializers.Serializer):
+    label = serializers.CharField(max_length=80)
+    percent = serializers.DecimalField(max_digits=5, decimal_places=2, min_value=0, max_value=100)
+    note = serializers.CharField(max_length=200, required=False, allow_blank=True)
+
+
 class QuotationIn(DocumentIn):
+    sections = SectionIn(many=True, required=False, max_length=12)
+    risks = RiskIn(many=True, required=False, max_length=20)
+    payment_plan = PlanStepIn(many=True, required=False, max_length=8)
     valid_until = serializers.DateField(required=False, allow_null=True)
     proposal_text = serializers.CharField(max_length=5000, required=False, allow_blank=True)
 
@@ -121,9 +151,21 @@ def _items(doc):
             "unit_price": i.unit_price,
             "cycle": i.cycle,
             "amount": i.amount,
+            "unit_price_max": i.unit_price_max,
+            "details": i.details,
+            "time_estimate": i.time_estimate,
+            "risk": i.risk,
+            "work_state": i.work_state,
+            "note": i.note,
+            "counted": i.counted,
         }
         for i in doc.items.all()
     ]
+
+
+def _bill_to_name(doc) -> str:
+    profile = getattr(doc.project.client, "client_profile", None)
+    return (profile.company or profile.full_name) if profile else ""
 
 
 def _base(doc):
@@ -139,6 +181,9 @@ def _base(doc):
         "number_prefix": doc.prefix,
         "issue_date": doc.issue_date,
         "bill_to_address": doc.bill_to_address,
+        "bill_to_name": _bill_to_name(doc),
+        "subtitle": doc.subtitle,
+        "revision": doc.revision,
         "currency": doc.currency,
         "discount": doc.discount,
         "tax_name": doc.tax_name,
@@ -147,6 +192,7 @@ def _base(doc):
         "notes": doc.notes,
         "status": doc.status,
         "subtotal": services.subtotal(doc),
+        "subtotal_max": services.subtotal_max(doc),
         "total": services.total(doc),
         "items": _items(doc),
         "created_at": doc.created_at,
@@ -160,6 +206,9 @@ def quotation_out(q):
             **_base(q),
             "valid_until": q.valid_until,
             "proposal_text": q.proposal_text,
+            "sections": q.sections,
+            "risks": q.risks,
+            "payment_plan": q.payment_plan,
             "sent_at": q.sent_at,
             "decided_at": q.decided_at,
             "invoice_id": invoice.id if invoice else None,

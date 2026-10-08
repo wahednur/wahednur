@@ -61,6 +61,8 @@ class PricedDocument(models.Model):
     prefix = models.CharField(max_length=8, blank=True)
     issue_date = models.DateField(default=timezone.localdate)
     bill_to_address = models.TextField(max_length=500, blank=True)
+    subtitle = models.CharField(max_length=300, blank=True)  # one line under the subject
+    revision = models.CharField(max_length=20, blank=True)  # for example "Rev A"
     # The tax is copied onto the document, so changing a tax rate later never changes old documents.
     tax_name = models.CharField(max_length=40, blank=True)
     tax_rate = models.DecimalField(max_digits=5, decimal_places=2, default=0)
@@ -83,9 +85,30 @@ class PricedDocument(models.Model):
 
 
 class LineItem(models.Model):
+    class Risk(models.TextChoices):
+        NONE = "", "Not stated"
+        LOW = "low", "Low"
+        MID = "mid", "Medium"
+        HIGH = "high", "High"
+
+    class WorkState(models.TextChoices):
+        NONE = "", "Not stated"
+        NEW = "new", "To do"
+        PARTIAL = "partial", "Partly done"
+        DONE = "done", "Done"
+
     description = models.CharField(max_length=300)
     quantity = models.DecimalField(max_digits=10, decimal_places=2, default=1)
     unit_price = models.DecimalField(**MONEY)
+    # A quotation can describe each part of the work like a sheet: what it covers, how long it
+    # takes, how risky it is, and a range for the price. Only unit_price is ever billed.
+    details = models.TextField(max_length=2000, blank=True)  # one point per line
+    time_estimate = models.CharField(max_length=60, blank=True)
+    risk = models.CharField(max_length=4, choices=Risk.choices, blank=True)
+    work_state = models.CharField(max_length=7, choices=WorkState.choices, blank=True)
+    note = models.CharField(max_length=300, blank=True)
+    unit_price_max = models.DecimalField(null=True, blank=True, **MONEY)  # top of an estimate range
+    counted = models.BooleanField(default=True)  # False: shown, but not in the total
     # The billing rhythm is recorded now; recurring billing itself arrives with subscriptions.
     cycle = models.CharField(max_length=10, choices=Cycle.choices, default=Cycle.ONE_TIME)
     position = models.PositiveIntegerField(default=0)
@@ -114,6 +137,10 @@ class Quotation(PricedDocument):
     status = models.CharField(max_length=10, choices=Status.choices, default=Status.DRAFT)
     valid_until = models.DateField(null=True, blank=True)
     proposal_text = models.TextField(max_length=5000, blank=True)  # the written proposal
+    # Extra parts of the proposal: [{heading, body}], [{risk, impact}], [{label, percent, note}]
+    sections = models.JSONField(default=list, blank=True)
+    risks = models.JSONField(default=list, blank=True)
+    payment_plan = models.JSONField(default=list, blank=True)
     sent_at = models.DateTimeField(null=True, blank=True)
     decided_at = models.DateTimeField(null=True, blank=True)
 

@@ -79,7 +79,16 @@ def _resolve_number(model, prefix: str, wanted: str, current=None) -> str:
 
 # --- totals ---------------------------------------------------------------------
 def subtotal(doc) -> Decimal:
-    return sum((i.amount for i in doc.items.all()), ZERO)
+    """Only counted items are billed; an item marked 'not counted' is shown but adds nothing."""
+    return sum((i.amount for i in doc.items.all() if i.counted), ZERO)
+
+
+def subtotal_max(doc) -> Decimal | None:
+    """The top of the estimate if any item has a price range, else None."""
+    items = [i for i in doc.items.all() if i.counted]
+    if not any(i.unit_price_max for i in items):
+        return None
+    return sum((money(i.quantity * (i.unit_price_max or i.unit_price)) for i in items), ZERO)
 
 
 def taxable(doc) -> Decimal:
@@ -106,8 +115,14 @@ def _check_tax(data):
         data["tax_rate"] = Decimal(0)
 
 
+def _gross(items) -> Decimal:
+    return sum(
+        (money(i["quantity"] * i["unit_price"]) for i in items if i.get("counted", True)), ZERO
+    )
+
+
 def _grand_total(items, discount, tax_rate) -> Decimal:
-    gross = sum((money(i["quantity"] * i["unit_price"]) for i in items), ZERO)
+    gross = _gross(items)
     base = money(gross - discount)
     return base + (money(base * tax_rate / 100) if tax_rate else ZERO)
 
@@ -118,7 +133,10 @@ def _check_items(items, discount):
     for item in items:
         if item["quantity"] <= 0 or item["unit_price"] < 0:
             _fail("items", "Quantity must be above zero and price cannot be negative.")
-    gross = sum((money(i["quantity"] * i["unit_price"]) for i in items), ZERO)
+        top = item.get("unit_price_max")
+        if top is not None and top < item["unit_price"]:
+            _fail("items", "The top of a price range cannot be below the price.")
+    gross = _gross(items)
     if discount < 0 or discount > gross:
         _fail("discount", "The discount cannot be negative or more than the subtotal.")
     if gross - discount <= 0:
@@ -236,11 +254,25 @@ def _common(doc, data, *, model, default_prefix, project=None):
     return data
 
 
+def _clean_blocks(data):
+    """The proposal's extra parts, as plain JSON (no Decimals), with the payment plan checked."""
+    data["sections"] = [dict(x) for x in data.get("sections", [])]
+    data["risks"] = [dict(x) for x in data.get("risks", [])]
+    plan = [
+        {"label": x["label"], "percent": str(x["percent"]), "note": x.get("note", "")}
+        for x in data.get("payment_plan", [])
+    ]
+    if plan and sum(Decimal(x["percent"]) for x in plan) != 100:
+        _fail("payment_plan", "The payment steps must add up to 100%.")
+    data["payment_plan"] = plan
+
+
 @transaction.atomic
 def save_quotation(*, user, items, quotation=None, project=None, **data) -> Quotation:
     _check_items(items, data.get("discount", ZERO))
     _check_currency(project or quotation.project, data.get("currency", "BDT"))
     data = _common(quotation, data, model=Quotation, default_prefix="QUO", project=project)
+    _clean_blocks(data)
     if quotation is None:
         quotation = Quotation(project=project, created_by=user, **data)
     else:
@@ -362,9 +394,20 @@ def convert_quotation(
             "quantity": i.quantity,
             "unit_price": i.unit_price,
             "cycle": i.cycle,
+            "details": i.details,
+            "time_estimate": i.time_estimate,
+            "risk": i.risk,
+            "work_state": i.work_state,
+            "note": i.note,
+            "unit_price_max": None,  # the invoice bills the agreed price, not a range
+            "counted": i.counted,
         }
         for i in quotation.items.all()
     ]
+    if not installments and quotation.payment_plan:
+        installments = [
+            {"label": x["label"], "percent": Decimal(x["percent"])} for x in quotation.payment_plan
+        ]
     invoice = save_invoice(
         user=user,
         items=items,
@@ -378,6 +421,8 @@ def convert_quotation(
         tax_name=quotation.tax_name,
         tax_rate=quotation.tax_rate,
         bill_to_address=quotation.bill_to_address,
+        subtitle=quotation.subtitle,
+        revision=quotation.revision,
         due_date=due_date,
     )
     record("invoice_from_quotation", request=request, user=user)

@@ -1,0 +1,205 @@
+{
+ "_how_to_use": "python manage.py load_quote content/quotes/emis.template.json --client CLIENT_EMAIL [--apply]. Without --apply it only previews. The client's company name and address come from the client's profile. Edit the wording and prices here or in the admin afterwards.",
+ "title": "EMIS — Education Management Information System",
+ "subtitle": "পলিটেকনিক ইনস্টিটিউট ম্যানেজমেন্ট সিস্টেম — Admin, Student, Teacher, Guardian ও Alumni প্যানেল সহ সম্পূর্ণ প্ল্যাটফর্ম",
+ "revision": "Rev A",
+ "prefix": "QUO",
+ "currency": "BDT",
+ "proposal_text": "একটি EMIS-কে বরফখণ্ডের মতো ভাবুন। জলের উপরে যা দেখা যায় — স্ক্রিনে ক্লিক করে দেখা পেজ, বাটন, ডিজাইন — সেটা সহজে তৈরি মনে হয়। কিন্তু জলের নিচে যা আছে — ডেটাবেস, সিকিউরিটি, সার্ভার — সেটাই আসল কাজ এবং সময়ের বড় অংশ এখানে যায়।\n\nবর্তমান অবস্থা: Admin, Student ও Teacher প্যানেলের UI নমুনা (mock) ডেটায় তৈরি হয়ে গেছে। কিন্তু এর পেছনে কোনো রিয়েল ডেটাবেস, লগইন সিকিউরিটি বা সার্ভার এখনো যুক্ত হয়নি। নিচের শিটগুলোতে ধাপে ধাপে দেখানো হয়েছে কী কাজ বাকি, কত সময় ও কত খরচ।",
+ "items": [
+  {
+   "description": "UI/UX ডিজাইন ও ফ্রন্টএন্ড স্ট্রাকচার",
+   "details": "পুরো সিস্টেমের লেআউট, কম্পোনেন্ট লাইব্রেরি, থিম তৈরি করা হয়েছে\nPublic সাইট (About, Contact, Departments, Notices) তৈরি\nবাকি: রেসপন্সিভ পলিশ, ফাইনাল রিভিউ, ছোট টাচ-আপ",
+   "time_estimate": "২–৩ দিন (বাকি)",
+   "risk": "low",
+   "work_state": "partial",
+   "unit_price": "15000",
+   "unit_price_max": "25000",
+   "note": "মূল কাঠামো ইতিমধ্যে সম্পন্ন করা হয়েছে (নিচে 'আগেই সম্পন্ন কাজ' দেখুন)।",
+   "counted": true,
+   "quantity": "1"
+  },
+  {
+   "description": "ডেটাবেস ডিজাইন ও নরমালাইজেশন",
+   "details": "Students, Staff, Academics, Attendance, Exam, Routine, Users/Roles, Audit — প্রতিটির জন্য স্কিমা ডিজাইন\nথার্ড নরমাল ফর্ম (3NF) পর্যন্ত নরমালাইজেশন — ডেটা রিপিটিশন ও অসঙ্গতি দূর করতে\nরিলেশনশিপ ম্যাপিং, ইন্ডেক্সিং, মাইগ্রেশন স্ক্রিপ্ট",
+   "time_estimate": "৭–১০ দিন",
+   "risk": "high",
+   "work_state": "new",
+   "unit_price": "30000",
+   "unit_price_max": "45000",
+   "note": "ঝুঁকি উচ্চ: ভুল ডেটাবেস ডিজাইন পরে পুরো সিস্টেম রিবিল্ড করতে বাধ্য করে, খরচ তখন ৩–৪ গুণ বেড়ে যায়।",
+   "counted": true,
+   "quantity": "1"
+  },
+  {
+   "description": "ব্যাকএন্ড API ও অথেনটিকেশন",
+   "details": "Login/Session, Role-based Access Control (Admin/Teacher/Student/Guardian/Alumni)\nপ্রতিটি মডিউলের জন্য CRUD API: Academic, Attendance, Exam, Routine, Staff, Student, Report\nফাইল আপলোড, নোটিফিকেশন সিস্টেম, ইনপুট ভ্যালিডেশন",
+   "time_estimate": "২৫–৩৫ দিন",
+   "risk": "high",
+   "work_state": "new",
+   "unit_price": "80000",
+   "unit_price_max": "120000",
+   "note": "এটি প্রজেক্টের সবচেয়ে বড় ও সময়সাপেক্ষ অংশ, প্রতিটি প্যানেল এই লেয়ারের উপর নির্ভরশীল।",
+   "counted": true,
+   "quantity": "1"
+  },
+  {
+   "description": "অ্যাডমিন প্যানেল — API সংযোগ",
+   "details": "Academics, Attendance, Exam, Results, Routine, Roles, Staff, Students, Users, Audit Logs, Reports, Settings — ১২টি সাব-মডিউল\nপ্রতিটি সাব-মডিউলকে রিয়েল ডেটাবেস ও পারমিশন সিস্টেমের সাথে সংযুক্ত করা",
+   "time_estimate": "১০–১৫ দিন",
+   "risk": "mid",
+   "work_state": "partial",
+   "unit_price": "25000",
+   "unit_price_max": "35000",
+   "note": "UI সম্পন্ন, API বাকি। সাব-মডিউল বেশি হওয়ায় প্রতিটির আলাদা পারমিশন ও এজ-কেস টেস্ট করতে হবে।",
+   "counted": true,
+   "quantity": "1"
+  },
+  {
+   "description": "স্টুডেন্ট প্যানেল — API সংযোগ",
+   "details": "Attendance, Notices, Profile, Resources, Results, Routine — রিয়েল ডেটা সংযোগ",
+   "time_estimate": "৫–৭ দিন",
+   "risk": "low",
+   "work_state": "partial",
+   "unit_price": "15000",
+   "unit_price_max": "20000",
+   "note": "UI সম্পন্ন, API বাকি।",
+   "counted": true,
+   "quantity": "1"
+  },
+  {
+   "description": "টিচার প্যানেল — API সংযোগ",
+   "details": "Attendance নেওয়া, Courses, Marks Entry, Profile, Resources, Routine — রিয়েল ডেটা সংযোগ\nনাম্বার এন্ট্রির কড়া ভ্যালিডেশন",
+   "time_estimate": "৭–১০ দিন",
+   "risk": "mid",
+   "work_state": "partial",
+   "unit_price": "20000",
+   "unit_price_max": "25000",
+   "note": "মার্কস এন্ট্রিতে ভুল হলে রিপোর্ট কার্ডে সরাসরি প্রভাব পড়ে।",
+   "counted": true,
+   "quantity": "1"
+  },
+  {
+   "description": "গার্ডিয়ান প্যানেল (নতুন)",
+   "details": "সন্তানের Attendance, Result, Fee, Notice দেখার ড্যাশবোর্ড\nএকাধিক সন্তান থাকলে মাল্টি-চাইল্ড সাপোর্ট ও সম্পর্ক ম্যাপিং",
+   "time_estimate": "১০–১৪ দিন",
+   "risk": "mid",
+   "work_state": "new",
+   "unit_price": "35000",
+   "unit_price_max": "50000",
+   "note": "এই প্যানেলের UI বা লজিক আগে থেকে কিছুই নেই, শুরু থেকে বানাতে হবে।",
+   "counted": true,
+   "quantity": "1"
+  },
+  {
+   "description": "অ্যালামনাই প্যানেল (নতুন)",
+   "details": "প্রাক্তন শিক্ষার্থীদের প্রোফাইল ও ডিরেক্টরি\nইভেন্ট/নেটওয়ার্কিং তথ্য, সার্টিফিকেট ভেরিফিকেশন",
+   "time_estimate": "৭–১০ দিন",
+   "risk": "mid",
+   "work_state": "new",
+   "unit_price": "25000",
+   "unit_price_max": "35000",
+   "note": "",
+   "counted": true,
+   "quantity": "1"
+  },
+  {
+   "description": "সিকিউরিটি হার্ডেনিং",
+   "details": "পাসওয়ার্ড হ্যাশিং, সেশন/টোকেন সিকিউরিটি\nরোল-বেসড পারমিশন এনফোর্সমেন্ট\nRate limiting, SQL Injection/XSS প্রতিরোধ, HTTPS/SSL, অডিট লগ হার্ডেনিং",
+   "time_estimate": "৭–১০ দিন",
+   "risk": "high",
+   "work_state": "new",
+   "unit_price": "30000",
+   "unit_price_max": "40000",
+   "note": "ঝুঁকি উচ্চ: ফাঁক থাকলে শিক্ষার্থী ও অভিভাবকের ব্যক্তিগত ডেটা লিক হতে পারে।",
+   "counted": true,
+   "quantity": "1"
+  },
+  {
+   "description": "Dockerization (সম্পন্ন)",
+   "details": "মাল্টি-স্টেজ Dockerfile, .dockerignore ও docker-compose\nProduction build ও non-root ইউজার দিয়ে সিকিউর কন্টেইনার",
+   "time_estimate": "০ দিন (সম্পন্ন)",
+   "risk": "low",
+   "work_state": "done",
+   "unit_price": "10000",
+   "unit_price_max": "15000",
+   "note": "এই কাজ প্রমাণ হিসেবে আগেই সম্পন্ন করা হয়েছে, তাই মূল্য মোট হিসাবে যুক্ত হয়নি।",
+   "counted": false,
+   "quantity": "1"
+  },
+  {
+   "description": "Dokploy Deployment (VPS)",
+   "details": "VPS-এ Dokploy ইনস্টল, ডোমেইন পয়েন্টিং, অটো SSL (Let's Encrypt) ও রিভার্স প্রক্সি কনফিগারেশন\nডিপ্লয়মেন্ট পাইপলাইন ও ডেটাবেস ব্যাকআপ স্ট্র্যাটেজি",
+   "time_estimate": "২–৩ দিন",
+   "risk": "mid",
+   "work_state": "new",
+   "unit_price": "12000",
+   "unit_price_max": "18000",
+   "note": "VPS হোস্টিংয়ের মাসিক খরচ এর বাইরে, ক্লায়েন্ট সরাসরি প্রোভাইডারকে পরিশোধ করবেন।",
+   "counted": true,
+   "quantity": "1"
+  },
+  {
+   "description": "টেস্টিং, QA ও বাগ ফিক্সিং",
+   "details": "প্রতিটি প্যানেল টেস্ট, ক্রস-ব্রাউজার ও মোবাইল রেসপন্সিভনেস, ইউজার অ্যাকসেপ্টেন্স টেস্টিং",
+   "time_estimate": "৭–১০ দিন",
+   "risk": "mid",
+   "work_state": "new",
+   "unit_price": "20000",
+   "unit_price_max": "30000",
+   "note": "",
+   "counted": true,
+   "quantity": "1"
+  }
+ ],
+ "sections": [
+  {
+   "heading": "সিস্টেম আর্কিটেকচার",
+   "body": "01 ব্রাউজার / মোবাইল ক্লায়েন্ট\n02 ফ্রন্টএন্ড: Next.js, React, Tailwind (৫টি প্যানেল UI)\n03 ব্যাকএন্ড API: Auth, Role-based Access, Business Logic\n04 ডেটাবেস: নরমালাইজড স্কিমা (Students, Staff, Trade, Exam, Routine…)\n05 Dokploy: SSL, Reverse Proxy, Auto Deploy, VPS (Docker Container)\n\nপাঁচটি প্যানেল (অ্যাডমিন, টিচার, স্টুডেন্ট, গার্ডিয়ান, অ্যালামনাই) একই EMIS কোর ডেটাবেস ও API শেয়ার করবে। প্রতিটির জন্য আলাদা সিস্টেম বানাতে হবে না, যা খরচ ও ভবিষ্যৎ মেইনটেনেন্স দুটোই কমায়।"
+  },
+  {
+   "heading": "কাজগুলো কেন একসাথে শেষ করা যায় না",
+   "body": "ডেটাবেস ছাড়া ব্যাকএন্ড হয় না, ব্যাকএন্ড ছাড়া প্যানেল সংযোগ হয় না। তাই পুরো কাজ সমান্তরালে করা সম্ভব নয়।\n\nডেটাবেস ডিজাইন: ৭–১০ দিন\nব্যাকএন্ড API: ২৫–৩৫ দিন\nপ্যানেল সংযোগ: ৩২–৪৬ দিন\nসিকিউরিটি: ৭–১০ দিন\nDokploy Deploy: ২–৩ দিন\nটেস্টিং: ৭–১০ দিন\n\nএকজন ডেভেলপার একা কাজ করলে বাকি কাজে প্রায় ৮৯–১২৭ কর্মদিবস লাগবে, মানে বাস্তবে প্রায় ৪–৬ মাস।"
+  },
+  {
+   "heading": "আগেই সম্পন্ন কাজ",
+   "body": "UI/UX কাঠামো, Admin/Student/Teacher প্যানেলের ডিজাইন, পাবলিক সাইট এবং Dockerization-এ আনুমানিক ১,৬০,০০০–২,১৫,০০০ ৳ মূল্যের কাজ আগেই করা হয়েছে। এই প্রাক্কলনে তা পুনরায় যুক্ত করা হয়নি।\n\nDRY আর্কিটেকচার: প্রতিটি মডিউল Reusable Component ও Shared Service Layer দিয়ে লেখা হচ্ছে, যাতে ভবিষ্যতে নতুন মডিউল দ্রুত ও কম খরচে যুক্ত করা যায়। এটি আলাদা করে বিল করা হচ্ছে না।"
+  }
+ ],
+ "risks": [
+  {
+   "risk": "ডেটাবেস নরমালাইজেশন স্কিপ",
+   "impact": "ডেটা অসঙ্গতি, পরে পুরো সিস্টেম রিবিল্ড — খরচ ৩–৪ গুণ বেড়ে যায়"
+  },
+  {
+   "risk": "সিকিউরিটি স্কিপ",
+   "impact": "ছাত্র/অভিভাবকের ব্যক্তিগত তথ্য লিক বা হ্যাক হওয়ার ঝুঁকি"
+  },
+  {
+   "risk": "টেস্টিং স্কিপ",
+   "impact": "লাইভে বাগ দেখা দেওয়া, শিক্ষক ও অভিভাবকদের সামনে বিশ্বাসযোগ্যতা হারানো"
+  },
+  {
+   "risk": "তাড়াহুড়ো ডিপ্লয়মেন্ট",
+   "impact": "সার্ভার ডাউনটাইম, ব্যাকআপ ছাড়া ডেটা হারানোর সম্ভাবনা"
+  }
+ ],
+ "payment_plan": [
+  {
+   "label": "অগ্রিম (কাজ শুরুর আগে)",
+   "percent": "40",
+   "note": "চুক্তি স্বাক্ষরের সময়; ডেটাবেস ডিজাইন ও ব্যাকএন্ড শুরুর অগ্রিম"
+  },
+  {
+   "label": "মিডওয়ে ডেলিভারি",
+   "percent": "30",
+   "note": "ব্যাকএন্ড ও সব প্যানেল সংযোগ সম্পন্ন হলে"
+  },
+  {
+   "label": "ফাইনাল ডেলিভারি",
+   "percent": "30",
+   "note": "সিকিউরিটি, Docker, VPS ডিপ্লয়মেন্ট ও টেস্টিং সম্পন্ন হলে; পুরো টাকা পাওয়ার পর ফাইনাল ডেলিভারি"
+  }
+ ],
+ "notes": "পেমেন্ট: কাজ শুরুর আগে ৪০% অগ্রিম, মাঝামাঝি ৩০%, বাকি ৩০% ফাইনাল ডেলিভারির আগে। পুরো টাকা পরিশোধের পর ফাইনাল ডেলিভারি।"
+}

@@ -30,6 +30,57 @@ def _p(text, style):
     return Paragraph(escape(str(text)).replace("\n", "<br/>"), style)
 
 
+def _quotation_blocks(doc, body, small):
+    """Payment plan, risks and extra sections of a written proposal."""
+    story = []
+    if doc.payment_plan:
+        story += [Spacer(1, 6 * mm), _p("Payment plan", body)]
+        rows = [["Step", "Share", "Amount", "Note"]]
+        total = services.total(doc)
+        for step in doc.payment_plan:
+            pct = Decimal(step["percent"])
+            rows.append(
+                [
+                    step["label"],
+                    f"{pct:g}%",
+                    _m(doc, services.money(total * pct / 100)),
+                    step.get("note", ""),
+                ]
+            )
+        t = Table(rows, colWidths=[56 * mm, 18 * mm, 36 * mm, 64 * mm])
+        t.setStyle(
+            TableStyle(
+                [
+                    ("FONTSIZE", (0, 0), (-1, -1), 8.5),
+                    ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+                    ("LINEBELOW", (0, 0), (-1, -1), 0.3, LINE),
+                    ("ALIGN", (1, 0), (2, -1), "RIGHT"),
+                ]
+            )
+        )
+        story.append(t)
+    if doc.risks:
+        story += [Spacer(1, 6 * mm), _p("Risks", body)]
+        rows = [["Risk", "Impact"]] + [
+            [_p(r["risk"], small), _p(r.get("impact", ""), small)] for r in doc.risks
+        ]
+        t = Table(rows, colWidths=[60 * mm, 114 * mm])
+        t.setStyle(
+            TableStyle(
+                [
+                    ("FONTSIZE", (0, 0), (-1, -1), 8.5),
+                    ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+                    ("LINEBELOW", (0, 0), (-1, -1), 0.3, LINE),
+                    ("VALIGN", (0, 0), (-1, -1), "TOP"),
+                ]
+            )
+        )
+        story.append(t)
+    for block in doc.sections:
+        story += [Spacer(1, 5 * mm), _p(block["heading"], body), _p(block.get("body", ""), small)]
+    return story
+
+
 def render(doc, kind: str) -> bytes:
     """kind: 'Quotation' or 'Invoice'."""
     styles = getSampleStyleSheet()
@@ -86,9 +137,22 @@ def render(doc, kind: str) -> bytes:
     rows = [["Description", "Qty", "Unit price", "Amount"]]
     for item in doc.items.all():
         label = item.description + (f" ({item.cycle})" if item.cycle != "one_time" else "")
-        rows.append(
-            [_p(label, body), f"{item.quantity:g}", _m(doc, item.unit_price), _m(doc, item.amount)]
-        )
+        cell = [_p(label, body)]
+        cell += [_p("- " + line, small) for line in item.details.splitlines() if line.strip()]
+        facts = [
+            f"Time: {item.time_estimate}" if item.time_estimate else "",
+            f"Risk: {item.get_risk_display()}" if item.risk else "",
+            item.get_work_state_display() if item.work_state else "",
+        ]
+        if any(facts):
+            cell.append(_p(" | ".join(f for f in facts if f), small))
+        if item.note:
+            cell.append(_p(item.note, small))
+        price = _m(doc, item.unit_price)
+        if item.unit_price_max:
+            price = f"{_m(doc, item.unit_price)} - {_m(doc, item.unit_price_max)}"
+        amount = _m(doc, item.amount) if item.counted else "Included"
+        rows.append([cell, f"{item.quantity:g}", _p(price, small), amount])
     table = Table(rows, colWidths=[86 * mm, 18 * mm, 34 * mm, 36 * mm], repeatRows=1)
     table.setStyle(
         TableStyle(
@@ -105,6 +169,9 @@ def render(doc, kind: str) -> bytes:
     story += [table, Spacer(1, 4 * mm)]
 
     sums = [["Subtotal", _m(doc, services.subtotal(doc))]]
+    top = services.subtotal_max(doc)
+    if top is not None:
+        sums.append(["Estimate up to", _m(doc, top)])
     if doc.discount:
         sums.append(["Discount", "- " + _m(doc, doc.discount)])
     if doc.tax_rate:
@@ -159,9 +226,31 @@ def render(doc, kind: str) -> bytes:
                 _p("How to pay", small),
                 _p(settings.INVOICE_PAYMENT_NOTE, body),
             ]
-    elif getattr(doc, "valid_until", None):
+    else:
+        story += _quotation_blocks(doc, body, small)
+    if kind != "Invoice" and getattr(doc, "valid_until", None):
         story += [Spacer(1, 5 * mm), _p(f"Valid until {doc.valid_until:%d %b %Y}", body)]
     if doc.notes:
         story += [Spacer(1, 5 * mm), _p("Notes", small), _p(doc.notes, body)]
+    story += [
+        Spacer(1, 14 * mm),
+        Table(
+            [
+                [
+                    [
+                        _p("Prepared by", small),
+                        Spacer(1, 10 * mm),
+                        _p(settings.BUSINESS_NAME, body),
+                    ],
+                    [
+                        _p("Client approval", small),
+                        Spacer(1, 10 * mm),
+                        _p("Date and signature", body),
+                    ],
+                ]
+            ],
+            colWidths=[87 * mm, 87 * mm],
+        ),
+    ]
     out.build(story)
     return buf.getvalue()
