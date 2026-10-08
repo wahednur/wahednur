@@ -3,6 +3,7 @@ from decimal import ROUND_HALF_UP, Decimal
 
 from django.conf import settings
 from django.db import models
+from django.utils import timezone
 
 MONEY = {"max_digits": 12, "decimal_places": 2}
 
@@ -26,7 +27,7 @@ class Cycle(models.TextChoices):
 class Counter(models.Model):
     """Last number used per document kind and year, so numbers never repeat or skip."""
 
-    kind = models.CharField(max_length=3)
+    kind = models.CharField(max_length=8)  # the document prefix, for example QUO or INV
     year = models.PositiveIntegerField()
     last = models.PositiveIntegerField(default=0)
 
@@ -37,11 +38,32 @@ class Counter(models.Model):
         return f"{self.kind}-{self.year}: {self.last}"
 
 
+class TaxRate(models.Model):
+    """A named sales tax to pick on a quotation or invoice. The rate is copied onto the document."""
+
+    name = models.CharField(max_length=40, unique=True)
+    rate = models.DecimalField(max_digits=5, decimal_places=2)
+    active = models.BooleanField(default=True)
+    position = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ["position", "name"]
+
+    def __str__(self) -> str:
+        return f"{self.name} ({self.rate}%)"
+
+
 class PricedDocument(models.Model):
     """Fields shared by quotations and invoices."""
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    number = models.CharField(max_length=20, unique=True, editable=False)
+    number = models.CharField(max_length=30, unique=True)
+    prefix = models.CharField(max_length=8, blank=True)
+    issue_date = models.DateField(default=timezone.localdate)
+    bill_to_address = models.TextField(max_length=500, blank=True)
+    # The tax is copied onto the document, so changing a tax rate later never changes old documents.
+    tax_name = models.CharField(max_length=40, blank=True)
+    tax_rate = models.DecimalField(max_digits=5, decimal_places=2, default=0)
     project = models.ForeignKey("projects.Project", on_delete=models.PROTECT, related_name="+")
     title = models.CharField(max_length=200)
     currency = models.CharField(max_length=3, choices=Currency.choices, default=Currency.BDT)
@@ -83,13 +105,15 @@ class LineItem(models.Model):
 class Quotation(PricedDocument):
     class Status(models.TextChoices):
         DRAFT = "draft", "Draft"
-        SENT = "sent", "Sent"
+        SENT = "sent", "Delivered"
         ACCEPTED = "accepted", "Accepted"
-        REJECTED = "rejected", "Rejected"
+        REJECTED = "rejected", "Lost"  # the client turned it down or chose someone else
+        DEAD = "dead", "Dead"  # we dropped it: no answer, no longer relevant
         EXPIRED = "expired", "Expired"
 
     status = models.CharField(max_length=10, choices=Status.choices, default=Status.DRAFT)
     valid_until = models.DateField(null=True, blank=True)
+    proposal_text = models.TextField(max_length=5000, blank=True)  # the written proposal
     sent_at = models.DateTimeField(null=True, blank=True)
     decided_at = models.DateTimeField(null=True, blank=True)
 
@@ -160,3 +184,84 @@ class Payment(models.Model):
 
     def __str__(self) -> str:
         return f"{self.invoice.number} {self.amount}"
+
+
+# --- recurring invoices --------------------------------------------------------------
+class RecurringInvoice(models.Model):
+    """A template that creates an invoice on a schedule (retainers, hosting, maintenance)."""
+
+    class Frequency(models.TextChoices):
+        WEEKLY = "weekly", "Weekly"
+        MONTHLY = "monthly", "Monthly"
+        QUARTERLY = "quarterly", "Every 3 months"
+        YEARLY = "yearly", "Yearly"
+
+    class Status(models.TextChoices):
+        ACTIVE = "active", "Active"
+        PAUSED = "paused", "Paused"
+        ENDED = "ended", "Ended"
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    client = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="+")
+    project = models.ForeignKey("projects.Project", on_delete=models.PROTECT, related_name="+")
+    title = models.CharField(max_length=200)
+    prefix = models.CharField(max_length=8, default="INV")
+    currency = models.CharField(max_length=3, choices=Currency.choices, default=Currency.BDT)
+    discount = models.DecimalField(default=0, **MONEY)
+    tax_name = models.CharField(max_length=40, blank=True)
+    tax_rate = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    notes = models.TextField(max_length=2000, blank=True)
+    bill_to_address = models.TextField(max_length=500, blank=True)
+    frequency = models.CharField(
+        max_length=10, choices=Frequency.choices, default=Frequency.MONTHLY
+    )
+    start_date = models.DateField()
+    next_run = models.DateField()
+    end_date = models.DateField(null=True, blank=True)
+    due_days = models.PositiveIntegerField(default=15)
+    # False: each invoice is a draft for you to check. True: it is issued and emailed by itself.
+    auto_issue = models.BooleanField(default=False)
+    status = models.CharField(max_length=7, choices=Status.choices, default=Status.ACTIVE)
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL, related_name="+"
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self) -> str:
+        return self.title
+
+
+class RecurringItem(models.Model):
+    recurring = models.ForeignKey(RecurringInvoice, on_delete=models.CASCADE, related_name="items")
+    description = models.CharField(max_length=300)
+    quantity = models.DecimalField(max_digits=10, decimal_places=2, default=1)
+    unit_price = models.DecimalField(**MONEY)
+    position = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ["position", "id"]
+
+    def __str__(self) -> str:
+        return self.description
+
+
+class RecurringRun(models.Model):
+    """One invoice made for one date. The unique pair makes running the job twice harmless."""
+
+    recurring = models.ForeignKey(RecurringInvoice, on_delete=models.CASCADE, related_name="runs")
+    run_date = models.DateField()
+    invoice = models.OneToOneField(
+        "Invoice", on_delete=models.PROTECT, related_name="recurring_run"
+    )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["recurring", "run_date"], name="uniq_recurring_run")
+        ]
+        ordering = ["-run_date"]
+
+    def __str__(self) -> str:
+        return f"{self.recurring_id} {self.run_date}"

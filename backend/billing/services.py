@@ -1,5 +1,6 @@
 """Billing rules. Money is Decimal; totals are computed here, never trusted from the UI."""
 
+import re
 from datetime import timedelta
 from decimal import Decimal
 
@@ -31,14 +32,49 @@ def _fail(field, message):
 
 
 # --- numbering ------------------------------------------------------------------
-def next_number(kind: str) -> str:
+PREFIX_RE = re.compile(r"^[A-Z][A-Z0-9]{1,7}$")
+NUMBER_RE = re.compile(r"^[A-Z0-9][A-Z0-9-]{0,29}$")
+
+
+def next_number(prefix: str, year: int | None = None) -> str:
     """QUO-2026-0001 / INV-2026-0001. Locked row, so two requests never get the same number."""
-    year = timezone.localdate().year
+    year = year or timezone.localdate().year
     with transaction.atomic():
-        counter, _ = Counter.objects.select_for_update().get_or_create(kind=kind, year=year)
+        counter, _ = Counter.objects.select_for_update().get_or_create(kind=prefix, year=year)
         counter.last += 1
         counter.save(update_fields=["last"])
-    return f"{kind}-{year}-{counter.last:04d}"
+    return f"{prefix}-{year}-{counter.last:04d}"
+
+
+def preview_number(prefix: str) -> str:
+    """The number the next document with this prefix would get (not reserved)."""
+    year = timezone.localdate().year
+    last = (
+        Counter.objects.filter(kind=prefix, year=year).values_list("last", flat=True).first() or 0
+    )
+    return f"{prefix}-{year}-{last + 1:04d}"
+
+
+def _clean_prefix(prefix: str, default: str) -> str:
+    prefix = (prefix or default).strip().upper()
+    if not PREFIX_RE.match(prefix):
+        _fail("prefix", "Use 2 to 8 capital letters or digits, starting with a letter.")
+    return prefix
+
+
+def _resolve_number(model, prefix: str, wanted: str, current=None) -> str:
+    """The number typed by the owner (checked) or the next free one for this prefix."""
+    wanted = (wanted or "").strip().upper()
+    if not wanted:
+        return current.number if current else next_number(prefix)
+    if not NUMBER_RE.match(wanted):
+        _fail("number", "Use capital letters, digits and dashes only.")
+    taken = model.objects.filter(number=wanted)
+    if current is not None:
+        taken = taken.exclude(pk=current.pk)
+    if taken.exists():
+        _fail("number", f"{wanted} is already used.")
+    return wanted
 
 
 # --- totals ---------------------------------------------------------------------
@@ -46,8 +82,34 @@ def subtotal(doc) -> Decimal:
     return sum((i.amount for i in doc.items.all()), ZERO)
 
 
-def total(doc) -> Decimal:
+def taxable(doc) -> Decimal:
     return money(subtotal(doc) - doc.discount)
+
+
+def tax_amount(doc) -> Decimal:
+    """Sales tax on what is left after the discount. Zero when no tax is chosen."""
+    return money(taxable(doc) * doc.tax_rate / 100) if doc.tax_rate else ZERO
+
+
+def total(doc) -> Decimal:
+    return taxable(doc) + tax_amount(doc)
+
+
+def _check_tax(data):
+    rate = data.get("tax_rate") or Decimal(0)
+    if rate < 0 or rate > 100:
+        _fail("tax_rate", "The tax rate must be between 0 and 100.")
+    if rate and not (data.get("tax_name") or "").strip():
+        _fail("tax_name", "Name the tax, for example VAT.")
+    if not rate:
+        data["tax_name"] = ""
+        data["tax_rate"] = Decimal(0)
+
+
+def _grand_total(items, discount, tax_rate) -> Decimal:
+    gross = sum((money(i["quantity"] * i["unit_price"]) for i in items), ZERO)
+    base = money(gross - discount)
+    return base + (money(base * tax_rate / 100) if tax_rate else ZERO)
 
 
 def _check_items(items, discount):
@@ -114,6 +176,33 @@ def _notify(doc, subject, line, path):
     )
 
 
+def project_for(*, client=None, project=None, user=None):
+    """The project a document belongs to. A client alone gets one 'General billing' project."""
+    from projects.models import Project
+
+    if project is not None:
+        if client is not None and project.client_id != client.pk:
+            _fail("project", "That project belongs to a different client.")
+        return project
+    if client is None:
+        _fail("client", "Choose a client.")
+    found = Project.objects.filter(
+        client=client, title=GENERAL_PROJECT, is_system=False, deleted_at__isnull=True
+    ).first()
+    return found or Project.objects.create(client=client, title=GENERAL_PROJECT, status="active")
+
+
+def default_address(client) -> str:
+    profile = getattr(client, "client_profile", None)
+    if profile is None:
+        return ""
+    lines = [profile.company or profile.full_name, profile.address]
+    return "\n".join(x for x in lines if x)
+
+
+GENERAL_PROJECT = "General billing"
+
+
 def client_currency(project) -> str:
     """Local clients are billed in taka, foreign clients in dollars. Shop orders are exempt."""
     profile = getattr(project.client, "client_profile", None)
@@ -134,12 +223,26 @@ def _check_currency(project, currency):
 
 
 # --- quotations -------------------------------------------------------------------
+def _common(doc, data, *, model, default_prefix, project=None):
+    """Checks shared by quotations and invoices. Fills in the prefix, number and address."""
+    _check_tax(data)
+    data["prefix"] = _clean_prefix(
+        data.get("prefix") or (doc.prefix if doc else ""), default_prefix
+    )
+    wanted = data.pop("number", "")
+    data["number"] = _resolve_number(model, data["prefix"], wanted, doc)
+    if not data.get("bill_to_address") and doc is None and project is not None:
+        data["bill_to_address"] = default_address(project.client)
+    return data
+
+
 @transaction.atomic
 def save_quotation(*, user, items, quotation=None, project=None, **data) -> Quotation:
     _check_items(items, data.get("discount", ZERO))
     _check_currency(project or quotation.project, data.get("currency", "BDT"))
+    data = _common(quotation, data, model=Quotation, default_prefix="QUO", project=project)
     if quotation is None:
-        quotation = Quotation(number=next_number("QUO"), project=project, created_by=user, **data)
+        quotation = Quotation(project=project, created_by=user, **data)
     else:
         if quotation.status != Quotation.Status.DRAFT:
             _fail("detail", "Only a draft quotation can be edited.")
@@ -180,6 +283,17 @@ def decide_quotation(*, quotation: Quotation, accept: bool, user, request=None) 
     return quotation
 
 
+def mark_dead(*, quotation: Quotation, user, request=None) -> Quotation:
+    """We drop a quotation: the client went quiet or it no longer applies."""
+    if quotation.status not in (Quotation.Status.DRAFT, Quotation.Status.SENT):
+        _fail("detail", "Only a draft or delivered quotation can be marked dead.")
+    quotation.status = Quotation.Status.DEAD
+    quotation.decided_at = timezone.now()
+    quotation.save(update_fields=["status", "decided_at"])
+    record("quotation_dead", request=request, user=user)
+    return quotation
+
+
 # --- invoices ---------------------------------------------------------------------
 def _installments(plan, grand_total):
     """plan: [{label, percent | amount, due_date?}]. Must add up to the invoice total exactly."""
@@ -211,9 +325,9 @@ def save_invoice(
 ) -> Invoice:
     _check_items(items, data.get("discount", ZERO))
     _check_currency(project or invoice.project, data.get("currency", "BDT"))
+    data = _common(invoice, data, model=Invoice, default_prefix="INV", project=project)
     if invoice is None:
         invoice = Invoice(
-            number=next_number("INV"),
             project=project,
             quotation=quotation,
             created_by=user,
@@ -226,8 +340,7 @@ def save_invoice(
             setattr(invoice, field, value)
     invoice.save()
     _write_items(InvoiceItem, "invoice", invoice, items)
-    gross = sum((money(i["quantity"] * i["unit_price"]) for i in items), ZERO)
-    rows = _installments(installments, money(gross - invoice.discount))
+    rows = _installments(installments, _grand_total(items, invoice.discount, invoice.tax_rate))
     invoice.installments.all().delete()
     Installment.objects.bulk_create(
         [Installment(invoice=invoice, position=n, **row) for n, row in enumerate(rows)]
@@ -262,6 +375,9 @@ def convert_quotation(
         currency=quotation.currency,
         discount=quotation.discount,
         notes=quotation.notes,
+        tax_name=quotation.tax_name,
+        tax_rate=quotation.tax_rate,
+        bill_to_address=quotation.bill_to_address,
         due_date=due_date,
     )
     record("invoice_from_quotation", request=request, user=user)

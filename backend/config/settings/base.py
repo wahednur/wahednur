@@ -319,6 +319,10 @@ SHOP_PAYMENT_HOURS = env.int("SHOP_PAYMENT_HOURS", default=48)
 ENFORCE_PAYMENT_GATES = env.bool("ENFORCE_PAYMENT_GATES", default=True)
 # Installment reminders: one email this many days before the due date, one more if it passes.
 REMINDER_DAYS_BEFORE = env.int("REMINDER_DAYS_BEFORE", default=3)
+CELERY_BEAT_SCHEDULE["run-recurring-invoices"] = {
+    "task": "billing.tasks.run_recurring_invoices",
+    "schedule": 24 * 60 * 60,
+}
 CELERY_BEAT_SCHEDULE["send-payment-reminders"] = {
     "task": "billing.tasks.send_payment_reminders",
     "schedule": 24 * 60 * 60,

@@ -22,6 +22,10 @@ def _m(doc, value: Decimal) -> str:
     return f"{SYMBOL[doc.currency]}{value:,.2f}"
 
 
+def services_status(doc) -> str:
+    return doc.get_status_display() if hasattr(doc, "get_status_display") else str(doc.status)
+
+
 def _p(text, style):
     return Paragraph(escape(str(text)).replace("\n", "<br/>"), style)
 
@@ -45,7 +49,10 @@ def render(doc, kind: str) -> bytes:
     )
     client = doc.project.client
     profile = getattr(client, "client_profile", None)
-    bill_to = [profile.company or profile.full_name if profile else "", client.email]
+    if doc.bill_to_address:
+        bill_to = [*doc.bill_to_address.splitlines(), client.email]
+    else:
+        bill_to = [profile.company or profile.full_name if profile else "", client.email]
     story = [
         _p(kind.upper(), h1),
         Spacer(1, 3 * mm),
@@ -59,8 +66,8 @@ def render(doc, kind: str) -> bytes:
                     ],
                     [
                         _p(f"{kind} no. {doc.number}", body),
-                        _p(f"Date: {doc.created_at:%d %b %Y}", small),
-                        _p(f"Status: {doc.status}", small),
+                        _p(f"Date: {doc.issue_date:%d %b %Y}", small),
+                        _p(f"Status: {services_status(doc)}", small),
                     ],
                 ]
             ],
@@ -74,6 +81,8 @@ def render(doc, kind: str) -> bytes:
         _p(doc.title, body),
         Spacer(1, 5 * mm),
     ]
+    if getattr(doc, "proposal_text", ""):
+        story += [_p("Proposal", small), _p(doc.proposal_text, body), Spacer(1, 5 * mm)]
     rows = [["Description", "Qty", "Unit price", "Amount"]]
     for item in doc.items.all():
         label = item.description + (f" ({item.cycle})" if item.cycle != "one_time" else "")
@@ -98,6 +107,8 @@ def render(doc, kind: str) -> bytes:
     sums = [["Subtotal", _m(doc, services.subtotal(doc))]]
     if doc.discount:
         sums.append(["Discount", "- " + _m(doc, doc.discount)])
+    if doc.tax_rate:
+        sums.append([f"{doc.tax_name} ({doc.tax_rate:g}%)", _m(doc, services.tax_amount(doc))])
     sums.append(["Total", _m(doc, services.total(doc))])
     if kind == "Invoice":
         sums += [
