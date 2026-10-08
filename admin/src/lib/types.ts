@@ -172,3 +172,17 @@ export type Milestone = {
 };
 export type ProjectUpdate = { id: number; message: string; is_public: boolean; author_email: string | null; created_at: string };
 export type ProjectDetailData = Project & { milestones: Milestone[]; updates: ProjectUpdate[] };
+
+export type VaultDoc = {
+  id: string;
+  title: string;
+  category: string;
+  client: number | null;
+  project: string | null;
+  client_email: string | null;
+  shared_with_client: boolean;
+  original_name: string;
+  content_type: string;
+  size: number;
+  created_at: string;
+};

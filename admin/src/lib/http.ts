@@ -35,10 +35,11 @@ async function call<T>(base: string, method: string, path: string, body?: unknow
       method,
       credentials: "include",
       headers: {
-        ...(body === undefined ? {} : { "Content-Type": "application/json" }),
+        // A FormData body (file upload) sets its own content type with the boundary.
+        ...(body === undefined || body instanceof FormData ? {} : { "Content-Type": "application/json" }),
         ...(method === "GET" ? {} : { "X-CSRFToken": csrfToken() }),
       },
-      body: body === undefined ? undefined : JSON.stringify(body),
+      body: body === undefined ? undefined : body instanceof FormData ? body : JSON.stringify(body),
     });
     let json: unknown = null;
     try {
@@ -79,5 +80,30 @@ export async function download(path: string, fallbackName: string): Promise<stri
     return "";
   } catch {
     return "Could not reach the server. Try again.";
+  }
+}
+
+/** Opens a vault document: asks the API for a short-lived link, then downloads or opens it. */
+export async function openDocument(id: string, fallbackName: string): Promise<string> {
+  const r = await api<{ url: string; filename: string }>("GET", `/documents/${id}/download/`);
+  if (!r.ok || !r.data) return r.error;
+  try {
+    const link = new URL(r.data.url, API_URL || window.location.origin);
+    if (API_URL && link.origin === new URL(API_URL).origin) {
+      // Served by the API itself: the session cookie is needed.
+      const res = await fetch(link, { credentials: "include" });
+      if (!res.ok) return "Could not download the file.";
+      const url = URL.createObjectURL(await res.blob());
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = r.data.filename || fallbackName;
+      a.click();
+      URL.revokeObjectURL(url);
+    } else {
+      window.open(link.toString(), "_blank", "noopener");
+    }
+    return "";
+  } catch {
+    return "Could not open the file.";
   }
 }

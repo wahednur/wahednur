@@ -8,6 +8,7 @@ import Clients from "@/pages/Clients";
 import Content from "@/pages/Content";
 import ContentEditor from "@/pages/ContentEditor";
 import DocumentNew from "@/pages/DocumentNew";
+import Documents from "@/pages/Documents";
 import InvoiceDetail from "@/pages/InvoiceDetail";
 import Login from "@/pages/Login";
 import Overview from "@/pages/Overview";
@@ -49,6 +50,7 @@ export default function App() {
             <Route path="services" element={<Services />} />
             <Route path="shop" element={<Shop />} />
             <Route path="subscriptions" element={<Subscriptions />} />
+            <Route path="documents" element={<Documents />} />
             <Route path="clients" element={<Clients />} />
             <Route path="content" element={<Content />} />
             <Route path="content/new" element={<ContentEditor />} />

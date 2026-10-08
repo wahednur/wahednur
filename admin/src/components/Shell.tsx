@@ -13,6 +13,7 @@ const ITEMS: Item[] = [
   { to: "/requests", label: "Package requests" },
   { to: "/shop", label: "Shop orders" },
   { to: "/subscriptions", label: "Subscriptions" },
+  { to: "/documents", label: "Documents" },
   { to: "/clients", label: "Clients" },
   { to: "/content", label: "Content" },
   { to: "/accounting", label: "Accounting", owner: true },
