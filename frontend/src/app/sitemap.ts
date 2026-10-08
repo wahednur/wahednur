@@ -5,7 +5,7 @@ import { getProducts } from "@/lib/shop";
 import { site } from "@/lib/site";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const pages = ["", "/work", "/services", "/about", "/contact"];
+  const pages = ["", "/work", "/services", "/packages", "/about", "/contact"];
   let posts: Awaited<ReturnType<typeof getPosts>> = [];
   try {
     posts = await getPosts();
