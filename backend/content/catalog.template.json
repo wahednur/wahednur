@@ -1,0 +1,198 @@
+{
+  "_how_to_use": "Copy this file to content/catalog.json, fill in what is true for you, then run: python manage.py load_content content/catalog.json   (preview) and again with --apply. Items with price null are skipped, so fill a little at a time. Do not invent numbers: leave null what you do not know.",
+  "services": [
+    {
+      "slug": "custom-ecommerce-development",
+      "title": "Custom eCommerce development",
+      "summary": "An online store built around how you sell, from the storefront to the admin panel and the backend.",
+      "description": "",
+      "position": 0,
+      "published": true,
+      "packages": [
+        {
+          "name": "Basic",
+          "tagline": "TODO: one line",
+          "features": [],
+          "price": null,
+          "currency": "BDT",
+          "cycle": "one_time",
+          "delivery_days": null,
+          "revisions": null,
+          "position": 0,
+          "published": true
+        }
+      ]
+    },
+    {
+      "slug": "business-management-applications",
+      "title": "Business management applications",
+      "summary": "Inventory, invoicing, payments and reports in one system, shaped to your records.",
+      "description": "",
+      "position": 1,
+      "published": true,
+      "packages": [
+        {
+          "name": "Basic",
+          "tagline": "TODO: one line",
+          "features": [],
+          "price": null,
+          "currency": "BDT",
+          "cycle": "one_time",
+          "delivery_days": null,
+          "revisions": null,
+          "position": 0,
+          "published": true
+        }
+      ]
+    },
+    {
+      "slug": "admin-dashboards",
+      "title": "Admin dashboards",
+      "summary": "Clear internal tools for the people who run the business daily.",
+      "description": "",
+      "position": 2,
+      "published": true,
+      "packages": [
+        {
+          "name": "Basic",
+          "tagline": "TODO: one line",
+          "features": [],
+          "price": null,
+          "currency": "BDT",
+          "cycle": "one_time",
+          "delivery_days": null,
+          "revisions": null,
+          "position": 0,
+          "published": true
+        }
+      ]
+    },
+    {
+      "slug": "backend-api-development-and-integration",
+      "title": "Backend API development and integration",
+      "summary": "Django REST APIs that other apps can rely on.",
+      "description": "",
+      "position": 3,
+      "published": true,
+      "packages": [
+        {
+          "name": "Basic",
+          "tagline": "TODO: one line",
+          "features": [],
+          "price": null,
+          "currency": "BDT",
+          "cycle": "one_time",
+          "delivery_days": null,
+          "revisions": null,
+          "position": 0,
+          "published": true
+        }
+      ]
+    },
+    {
+      "slug": "ai-features-for-business-software",
+      "title": "AI features for business software",
+      "summary": "AI that works from your own data and does not invent facts. Customers get answers taken from your catalog, shoppers find products by what they mean, and you get drafts of descriptions and SEO text that you approve before anything is published.",
+      "description": "",
+      "position": 4,
+      "published": true,
+      "packages": [
+        {
+          "name": "Basic",
+          "tagline": "TODO: one line",
+          "features": [],
+          "price": null,
+          "currency": "BDT",
+          "cycle": "one_time",
+          "delivery_days": null,
+          "revisions": null,
+          "position": 0,
+          "published": true
+        }
+      ]
+    },
+    {
+      "slug": "improve-an-existing-application",
+      "title": "Improve an existing application",
+      "summary": "Review, fix and extend a web application you already run.",
+      "description": "",
+      "position": 5,
+      "published": true,
+      "packages": [
+        {
+          "name": "Basic",
+          "tagline": "TODO: one line",
+          "features": [],
+          "price": null,
+          "currency": "BDT",
+          "cycle": "one_time",
+          "delivery_days": null,
+          "revisions": null,
+          "position": 0,
+          "published": true
+        }
+      ]
+    },
+    {
+      "slug": "deployment-setup",
+      "title": "Deployment setup",
+      "summary": "Getting the application running on your own server.",
+      "description": "",
+      "position": 6,
+      "published": true,
+      "packages": [
+        {
+          "name": "Basic",
+          "tagline": "TODO: one line",
+          "features": [],
+          "price": null,
+          "currency": "BDT",
+          "cycle": "one_time",
+          "delivery_days": null,
+          "revisions": null,
+          "position": 0,
+          "published": true
+        }
+      ]
+    }
+  ],
+  "zones": [
+    {
+      "name": "Example area (rename)",
+      "fee": null,
+      "currency": "BDT",
+      "active": true,
+      "position": 0
+    }
+  ],
+  "products": [
+    {
+      "slug": "example-download",
+      "title": "Example download",
+      "kind": "digital",
+      "summary": "TODO",
+      "description": "",
+      "price": null,
+      "currency": "BDT",
+      "image_url": "",
+      "published": false,
+      "position": 0,
+      "files": [
+        "Exact title of a document you uploaded in the vault"
+      ]
+    },
+    {
+      "slug": "example-product",
+      "title": "Example delivered product",
+      "kind": "physical",
+      "summary": "TODO",
+      "description": "",
+      "price": null,
+      "currency": "BDT",
+      "image_url": "",
+      "published": false,
+      "position": 1,
+      "stock": 0
+    }
+  ]
+}

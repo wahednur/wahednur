@@ -173,3 +173,17 @@ When to move: Gmail SMTP is fine while volume is low (about 500 a day, sender sh
 - Creating things is limited per user: shop orders 20 an hour, package orders 20 an hour, "I paid" reports 20 an hour, file and photo uploads 40 an hour. Viewing is not counted.
 - A request larger than the biggest allowed file plus 2 MB is refused with 413 before it is read.
 - Sign-in, sign-up, password reset and two-factor attempts have their own limits (see AUTH.md).
+
+
+## Loading your real content from one file
+Instead of typing every package, product and delivery area into the screens, fill in one file and load it.
+1. Copy `backend/content/catalog.template.json` to `backend/content/catalog.json` and fill it in. The seven services already carry the text from the website. Fill in only what is true: anything with `"price": null` (or a delivery area with `"fee": null`) is skipped, never invented.
+2. Commit and push `catalog.json` (it is public marketing text; no secrets belong in it), then Deploy in Dokploy.
+3. In the Dokploy terminal (container `api`):
+   ```bash
+   python manage.py load_content content/catalog.json            # preview, saves nothing
+   python manage.py load_content content/catalog.json --apply    # save
+   ```
+   The preview runs the whole load and then undoes it, so it shows real errors (a price below zero, a download with no file...). If anything is wrong nothing is saved.
+4. Safe to repeat: services and products are matched by address, packages by service and name, delivery areas by name, and are updated, not duplicated. Stock in the file is only an opening balance (applied once, when the product has no stock history). Download files are matched by the exact title of a document you uploaded in the vault. Photos: upload in `/app/manage/products` (or paste an address into `image_url`).
+5. Edit the file later and run it again whenever prices or packages change.
