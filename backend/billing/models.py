@@ -124,6 +124,9 @@ class Installment(models.Model):
     amount = models.DecimalField(**MONEY)
     due_date = models.DateField(null=True, blank=True)
     position = models.PositiveIntegerField(default=0)
+    # Each reminder is sent once, so the client is never nagged.
+    reminded_soon_at = models.DateTimeField(null=True, blank=True)
+    reminded_overdue_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         ordering = ["position", "id"]

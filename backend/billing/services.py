@@ -1,5 +1,6 @@
 """Billing rules. Money is Decimal; totals are computed here, never trusted from the UI."""
 
+from datetime import timedelta
 from decimal import Decimal
 
 from django.conf import settings
@@ -291,10 +292,10 @@ def payment_state(invoice) -> str:
     return "partial" if paid > 0 else "unpaid"
 
 
-def schedule(invoice):
+def schedule(invoice, today=None):
     """Spread what was paid over the installments in order. Nothing stored, so it cannot drift."""
     left = paid_total(invoice)
-    today = timezone.localdate()
+    today = today or timezone.localdate()
     rows = []
     for inst in invoice.installments.all():
         paid = min(left, inst.amount)
@@ -324,3 +325,60 @@ def record_payment(*, invoice: Invoice, user, request=None, **data) -> Payment:
     )
     record("payment_recorded", request=request, user=user)
     return payment
+
+
+# --- payment reminders ------------------------------------------------------------
+def _fmt(invoice, amount) -> str:
+    return f"{invoice.currency} {amount:,.2f}"
+
+
+def send_reminders(today=None) -> int:
+    """Daily job: one polite email before an installment is due and one after it is overdue.
+
+    Each reminder goes out once per installment. Shop orders (hidden system project) are left out:
+    they have their own payment flow. Returns how many emails were sent.
+    """
+    today = today or timezone.localdate()
+    ahead = today + timedelta(days=settings.REMINDER_DAYS_BEFORE)
+    sent = 0
+    invoices = Invoice.objects.filter(
+        status=Invoice.Status.ISSUED, project__is_system=False
+    ).select_related("project__client")
+    for invoice in invoices:
+        for row in schedule(invoice, today):
+            inst, state = row["inst"], row["state"]
+            if state == "paid" or not inst.due_date:
+                continue
+            owed = inst.amount - row["paid"]
+            if state == "overdue" and not inst.reminded_overdue_at:
+                field = "reminded_overdue_at"
+                subject = f"Payment past its due date: {invoice.number}"
+                line = (
+                    f"{inst.label} of invoice {invoice.number} ({_fmt(invoice, owed)}) "
+                    f"was due on {inst.due_date:%d %b %Y}. If you have already paid, please "
+                    "ignore this note and send me the reference. If the date does not suit you, "
+                    "reply and we will agree a new one."
+                )
+            elif state != "overdue" and inst.due_date <= ahead and not inst.reminded_soon_at:
+                field = "reminded_soon_at"
+                subject = f"Payment due soon: {invoice.number}"
+                line = (
+                    f"{inst.label} of invoice {invoice.number} ({_fmt(invoice, owed)}) "
+                    f"is due on {inst.due_date:%d %b %Y}."
+                )
+            else:
+                continue
+            try:
+                send_mail(
+                    subject,
+                    f"{line}\n\nOpen it here: {settings.FRONTEND_URL}/app/billing/invoices/"
+                    f"{invoice.pk}\n\n{settings.BUSINESS_NAME}",
+                    settings.DEFAULT_FROM_EMAIL,
+                    [invoice.project.client.email],
+                )
+            except Exception:  # a mail problem: try again tomorrow
+                continue
+            setattr(inst, field, timezone.now())
+            inst.save(update_fields=[field])
+            sent += 1
+    return sent

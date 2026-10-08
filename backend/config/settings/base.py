@@ -315,6 +315,12 @@ REVALIDATE_SECRET = env("REVALIDATE_SECRET", default="")
 # --- Shop ---------------------------------------------------------------------------
 # Unpaid orders are released (stock returns) after this many hours.
 SHOP_PAYMENT_HOURS = env.int("SHOP_PAYMENT_HOURS", default=48)
+# Installment reminders: one email this many days before the due date, one more if it passes.
+REMINDER_DAYS_BEFORE = env.int("REMINDER_DAYS_BEFORE", default=3)
+CELERY_BEAT_SCHEDULE["send-payment-reminders"] = {
+    "task": "billing.tasks.send_payment_reminders",
+    "schedule": 24 * 60 * 60,
+}
 CELERY_BEAT_SCHEDULE["release-unpaid-shop-orders"] = {
     "task": "shop.tasks.release_unpaid_orders",
     "schedule": 60 * 60,
