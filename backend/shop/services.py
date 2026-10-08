@@ -17,10 +17,11 @@ from rest_framework.exceptions import NotFound, ValidationError
 from accounts.signals import record
 from billing import services as billing
 from billing.models import Cycle
+from documents import models as documents_models
 from documents import services as documents
 from projects.models import Project
 
-from .models import OrderItem, Product, ShippingZone, ShopOrder, StockMovement
+from .models import OrderItem, Product, ProductFile, ShippingZone, ShopOrder, StockMovement
 
 MAX_LINES = 20
 MAX_QUANTITY = 50
@@ -333,3 +334,64 @@ def download_links(*, order: ShopOrder, user, request) -> list[dict]:
             link = documents.download_link(user=user, doc=pf.document, request=request)
             links.append({"product": item.title, **link})
     return links
+
+
+# --- staff editing of products, stock, files and delivery areas ----------------------------------
+def adjust_stock(*, product: Product, delta: int, reason: str, note="", user=None, request=None):
+    """Add a stock movement by hand. Stock can never be taken below zero."""
+    if product.kind != Product.Kind.PHYSICAL:
+        _fail("detail", "Only delivered products have stock.")
+    if reason not in (StockMovement.Reason.RESTOCK, StockMovement.Reason.ADJUSTMENT):
+        _fail("reason", "Choose restock or count correction.")
+    if delta == 0:
+        _fail("delta", "Enter how many to add or remove.")
+    if reason == StockMovement.Reason.RESTOCK and delta < 0:
+        _fail("delta", "A restock adds units. Use a count correction to remove some.")
+    with transaction.atomic():
+        locked = Product.objects.select_for_update().get(pk=product.pk)
+        if (locked.stock or 0) + delta < 0:
+            _fail("delta", f"Only {locked.stock} in stock; you cannot remove more than that.")
+        move = StockMovement.objects.create(
+            product=locked, delta=delta, reason=reason, note=note[:200], created_by=user
+        )
+    record("stock_adjusted", request=request, user=user)
+    return move
+
+
+def attach_file(*, product: Product, document_id, user=None, request=None):
+    if product.kind != Product.Kind.DIGITAL:
+        _fail("detail", "Only download products carry files.")
+    doc = documents_models.Document.objects.filter(pk=document_id, deleted_at__isnull=True).first()
+    if doc is None:
+        raise NotFound()
+    ProductFile.objects.get_or_create(product=product, document=doc)
+    record("product_file_attached", request=request, user=user)
+
+
+def detach_file(*, product: Product, document_id, user=None, request=None):
+    if product.published and product.files.count() <= 1:
+        _fail("detail", "Hide this product before removing its last file.")
+    product.files.filter(document_id=document_id).delete()
+    record("product_file_detached", request=request, user=user)
+
+
+def check_can_publish(product: Product):
+    """A download with no file would sell something that cannot be delivered."""
+    no_file = product.pk is None or not product.files.exists()  # a new product has no files yet
+    if product.kind == Product.Kind.DIGITAL and no_file:
+        _fail("published", "Attach a file before you publish a download product.")
+
+
+def delete_product(*, product: Product, user=None, request=None):
+    if OrderItem.objects.filter(product=product).exists():
+        _fail("detail", "This product has orders. Hide it (untick Published) instead of deleting.")
+    StockMovement.objects.filter(product=product).delete()
+    product.delete()
+    record("product_deleted", request=request, user=user)
+
+
+def delete_zone(*, zone: ShippingZone, user=None, request=None):
+    if ShopOrder.objects.filter(shipping_zone=zone).exists():
+        _fail("detail", "Orders use this area. Switch it off (untick Active) instead of deleting.")
+    zone.delete()
+    record("zone_deleted", request=request, user=user)

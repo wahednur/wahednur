@@ -131,3 +131,22 @@ def close_order(*, order: Order, status: str, user, request=None) -> Order:
     order.save(update_fields=["status", "decided_at"])
     record(f"order_{status}", request=request, user=user)
     return order
+
+
+# --- staff editing of the price list --------------------------------------------------------
+def delete_service(*, service: Service, user, request=None):
+    if Order.objects.filter(package__service=service).exists():
+        raise ValidationError(
+            {"detail": "This service has orders. Hide it (untick Published) instead of deleting."}
+        )
+    service.delete()
+    record("service_deleted", request=request, user=user)
+
+
+def delete_package(*, package: Package, user, request=None):
+    if package.orders.exists():
+        raise ValidationError(
+            {"detail": "This package has orders. Hide it (untick Published) instead of deleting."}
+        )
+    package.delete()
+    record("package_deleted", request=request, user=user)
