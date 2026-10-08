@@ -2,7 +2,11 @@
 slug: private-document-vault-for-clients
 title: A private vault for contracts and deliverables
 excerpt: Contracts, briefs and deliverables should not travel as open links in chat. Here is how files are stored and shared with each client.
+cover: /blog/private-document-vault-for-clients.svg
+cover_alt: File flow: upload checked, private storage, short-lived link, visible only to the client
 ---
+> **In short:** Files are private, links expire quickly, and each file is visible only to the client it concerns.
+
 Project files often include contracts, credentials-adjacent documents and source files. They should not sit in a public folder or an old email thread.
 
 ## How the vault works

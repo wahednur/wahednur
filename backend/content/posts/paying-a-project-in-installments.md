@@ -2,7 +2,11 @@
 slug: paying-a-project-in-installments
 title: Paying a software project in installments
 excerpt: Why a project invoice is split into a start, a middle and a final payment, and how that protects both sides.
+cover: /blog/paying-a-project-in-installments.svg
+cover_alt: Three installments: start, middle and final, set per project
 ---
+> **In short:** Splitting payment into start, middle and final shares the risk between you and me, and the parts must add up exactly.
+
 Paying everything upfront is risky for the client. Paying everything at the end is risky for the developer. Installments share the risk.
 
 ## A common shape

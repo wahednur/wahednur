@@ -2,7 +2,11 @@
 slug: docker-vps-vs-managed-hosting
 title: Your own VPS with Docker, or managed hosting? Costs and trade-offs
 excerpt: Where an application runs affects cost, control and who gets woken up at night. A plain comparison.
+cover: /blog/docker-vps-vs-managed-hosting.svg
+cover_alt: Managed hosting compared with your own VPS running Docker
 ---
+> **In short:** Managed hosting is easy. A VPS with Docker gives control and fixed cost, but someone must maintain it.
+
 ## Managed platforms
 Services such as Vercel for a Next.js front end take care of servers for you.
 

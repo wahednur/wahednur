@@ -2,7 +2,11 @@
 slug: security-basics-on-this-site
 title: How accounts are protected on this site
 excerpt: Email sign-in, two-step verification, rate limits and private areas. What is actually in place, stated plainly.
+cover: /blog/security-basics-on-this-site.svg
+cover_alt: Checklist of account protections: email verification, two-step sign-in, private pages, server-side checks, request limits, audit trail
 ---
+> **In short:** Email verification, two-step sign-in, private pages, server-side checks and request limits. No claim of being unhackable.
+
 This site has a client area, so it holds real information. These are the protections that exist today.
 
 ## Sign-in

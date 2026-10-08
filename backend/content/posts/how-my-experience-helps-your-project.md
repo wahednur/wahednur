@@ -2,7 +2,11 @@
 slug: how-my-experience-helps-your-project
 title: How my work experience helps your project
 excerpt: Visual effects, WordPress, my own store, a repair-shop system and Django. What each step taught me, and how it shows up in your project.
+cover: /blog/how-my-experience-helps-your-project.svg
+cover_alt: Timeline: VFX and graphics, client websites, eCommerce logic, MERN training, Django and Next.js
 ---
+> **In short:** Each step of my career left something you can use: clear presentation, client communication, business logic and Django.
+
 My path was not a straight line. Each step left something useful.
 
 ## 2010 to 2019: visual effects, animation and graphics

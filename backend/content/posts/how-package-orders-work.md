@@ -2,7 +2,11 @@
 slug: how-package-orders-work
 title: How ordering a package works, step by step
 excerpt: From clicking "order" to a project with a quotation and invoice. What happens at each step and what stays under your control.
+cover: /blog/how-package-orders-work.svg
+cover_alt: Package order flow: choose, request, accepted, quotation then invoice
 ---
+> **In short:** Choose a package, send a request, I accept, and it follows the usual quotation and invoice path.
+
 Packages are fixed offers with a stated price, such as Basic, Standard and Premium for a service.
 
 ## The steps

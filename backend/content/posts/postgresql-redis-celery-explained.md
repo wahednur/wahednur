@@ -2,7 +2,11 @@
 slug: postgresql-redis-celery-explained
 title: PostgreSQL, Redis and Celery: what each one does in a business system
 excerpt: Three names that sound technical. Here is what they do for your orders, emails and reports, and what they cost to run.
+cover: /blog/postgresql-redis-celery-explained.svg
+cover_alt: PostgreSQL holds the records, Redis is quick short-term memory, Celery does background work
 ---
+> **In short:** PostgreSQL keeps the records, Redis gives quick memory, Celery does work in the background.
+
 ## PostgreSQL: the memory of the business
 It stores orders, customers, stock and payments. It is strict: if two people try to buy the last unit at the same time, it can make sure only one succeeds. For money and stock, strictness is the point.
 

@@ -2,7 +2,11 @@
 slug: nextjs-for-business-websites
 title: Next.js for business websites and stores: what it does well and where it costs you
 excerpt: Fast pages that search engines can read, and the trade-offs that come with a modern React framework.
+cover: /blog/nextjs-for-business-websites.svg
+cover_alt: Next.js strengths and costs side by side
 ---
+> **In short:** Fast, search-friendly pages with one codebase. It changes quickly and needs care with caching.
+
 Next.js is a framework built on React. It renders pages on the server, so a visitor, and a search engine, receives real content instead of an empty page that fills in later.
 
 ## What it is good at

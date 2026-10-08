@@ -2,7 +2,11 @@
 slug: what-i-do-and-do-not-do-with-ai
 title: What I do, and do not do, with AI in client software
 excerpt: AI is useful when it is limited to facts the system already holds. Here are the rules I follow on my own platform.
+cover: /blog/what-i-do-and-do-not-do-with-ai.svg
+cover_alt: AI flow: your data, AI drafts from that data only, numbers are checked, a person approves
 ---
+> **In short:** AI works only from your own data, its output is checked, and a person approves before anything goes live.
+
 AI can write confident text about anything, including things that are false. For business software that is a risk, so I set rules.
 
 ## Rules I follow

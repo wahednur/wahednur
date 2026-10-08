@@ -9,8 +9,8 @@ import { api, SEO_SOURCE_LABEL, type ManagedPage } from "@/lib/api";
 const slugify = (t: string) =>
   t.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 100);
 
-type Draft = Pick<ManagedPage, "kind" | "slug" | "title" | "excerpt" | "body" | "status">;
-const blank: Draft = { kind: "post", slug: "", title: "", excerpt: "", body: "", status: "draft" };
+type Draft = Pick<ManagedPage, "kind" | "slug" | "title" | "excerpt" | "body" | "status" | "cover_image" | "cover_alt">;
+const blank: Draft = { kind: "post", slug: "", title: "", excerpt: "", body: "", status: "draft", cover_image: "", cover_alt: "" };
 
 export default function ContentManager() {
   const [pages, setPages] = useState<ManagedPage[] | null>(null);
@@ -32,7 +32,7 @@ export default function ContentManager() {
 
   function open(p: ManagedPage | null) {
     setCurrent(p);
-    setDraft(p ? { kind: p.kind, slug: p.slug, title: p.title, excerpt: p.excerpt, body: p.body, status: p.status } : blank);
+    setDraft(p ? { kind: p.kind, slug: p.slug, title: p.title, excerpt: p.excerpt, body: p.body, status: p.status, cover_image: p.cover_image, cover_alt: p.cover_alt } : blank);
     setSeoHand(p ? { title: p.seo_title, description: p.seo_description } : { title: "", description: "" });
     setSlugTouched(!!p);
     setError("");
@@ -165,6 +165,16 @@ export default function ContentManager() {
             Short summary (optional, used as the description if you do not write one)
             <input maxLength={300} value={draft.excerpt} className={field} onChange={(e) => setDraft({ ...draft, excerpt: e.target.value })} />
           </label>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <label className="block">
+              Cover picture (path like /blog/name.svg, or an https address)
+              <input maxLength={300} value={draft.cover_image} className={field} onChange={(e) => setDraft({ ...draft, cover_image: e.target.value })} />
+            </label>
+            <label className="block">
+              What the picture shows (for screen readers and search)
+              <input maxLength={200} value={draft.cover_alt} className={field} onChange={(e) => setDraft({ ...draft, cover_alt: e.target.value })} />
+            </label>
+          </div>
           <div className="grid gap-4 lg:grid-cols-2">
             <label className="block">
               Content (Markdown)

@@ -2,7 +2,11 @@
 slug: wordpress-or-custom-development
 title: WordPress or custom development? An honest comparison
 excerpt: I started my web career on WordPress and Joomla. Here is when a ready-made platform is the better choice, and when it is not.
+cover: /blog/wordpress-or-custom-development.svg
+cover_alt: WordPress for standard sites compared with a custom build when your process is the product
 ---
+> **In short:** WordPress for standard sites. Custom development when your process is the product.
+
 I built my first client websites with WordPress and Joomla, so this is not a comparison from the outside.
 
 ## Where WordPress is the right answer

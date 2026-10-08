@@ -269,6 +269,8 @@ export type ManagedPage = {
   title: string;
   excerpt: string;
   body: string;
+  cover_image: string;
+  cover_alt: string;
   status: "draft" | "published";
   published_at: string | null;
   seo_title: string;

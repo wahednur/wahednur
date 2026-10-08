@@ -2,7 +2,11 @@
 slug: choosing-a-technology-stack
 title: Choosing a technology stack: a plain guide for business owners
 excerpt: You do not need to know the tools. You need to know what to ask. Here is how I choose, and the reasons I give you.
+cover: /blog/choosing-a-technology-stack.svg
+cover_alt: Which tool fits which need: Django, PostgreSQL, Celery with Redis, Next.js, React with TypeScript
 ---
+> **In short:** Start from the work, not the tool. Each choice should come with a reason and a downside.
+
 A technology stack is the set of tools a system is built with. Good choices are boring and well matched to the job.
 
 ## Start from the work, not the tool

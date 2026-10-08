@@ -2,7 +2,11 @@
 slug: django-rest-framework-pros-and-cons
 title: Django REST Framework for business backends: features, strengths and weaknesses
 excerpt: Why I use Django REST Framework for orders, payments and permissions, and the situations where I would pick something else.
+cover: /blog/django-rest-framework-pros-and-cons.svg
+cover_alt: Django REST Framework strengths and costs side by side
 ---
+> **In short:** Great structure and permissions for business rules. Not the fastest runtime, and real-time features need extras.
+
 Django is a Python web framework. Django REST Framework (DRF) adds the tools to build an API on top of it. A backend is where a business's rules live: who may see what, how stock changes, when an order counts as paid.
 
 ## What it gives you

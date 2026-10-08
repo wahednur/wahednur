@@ -2,7 +2,11 @@
 slug: react-and-typescript-admin-dashboards
 title: React and TypeScript for admin dashboards: why, and what to watch for
 excerpt: Admin panels are used all day by staff. Here is why I build them in React with TypeScript, and the trade-offs.
+cover: /blog/react-and-typescript-admin-dashboards.svg
+cover_alt: Built-in admin for rarely used data compared with a React dashboard for daily screens
 ---
+> **In short:** Use the built-in admin for rarely used data and a React dashboard for screens people use all day.
+
 An admin dashboard is where the team lives: orders, stock, customers, reports. It needs to be clear, quick and hard to misuse.
 
 ## Why React

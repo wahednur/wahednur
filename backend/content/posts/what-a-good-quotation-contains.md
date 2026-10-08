@@ -2,7 +2,11 @@
 slug: what-a-good-quotation-contains
 title: What a good quotation for a software project contains
 excerpt: A quotation is a promise in writing. Here is what I put in mine, and what you should expect to see before you say yes.
+cover: /blog/what-a-good-quotation-contains.svg
+cover_alt: Checklist of what a good quotation contains: number and date, itemised work, clear total, one currency, payment plan, terms
 ---
+> **In short:** A quotation should be a written offer with a number, itemised work, a clear total, one currency, a payment plan and plain terms.
+
 A quotation is not a rough guess sent over chat. It is a written offer: this work, for this price, on these terms. If it is vague, the project will be vague too.
 
 ## What I put in every quotation

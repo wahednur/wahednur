@@ -7,6 +7,8 @@ export type CmsItem = {
   slug: string;
   title: string;
   excerpt: string;
+  cover_image: string;
+  cover_alt: string;
   published_at: string | null;
   updated_at: string;
   seo_title: string;
@@ -35,4 +37,14 @@ export async function getPage(slug: string): Promise<CmsPage | null> {
   if (res.status === 404) return null;
   if (!res.ok) throw new Error(`CMS page failed: ${res.status}`);
   return (await res.json()) as CmsPage;
+}
+
+/** The social-preview copy of a cover: social sites do not show SVG, so a PNG sits next to it. */
+export function socialCover(cover: string): string | null {
+  return cover.endsWith(".svg") && cover.startsWith("/") ? cover.replace(/\.svg$/, ".png") : cover || null;
+}
+
+/** Whole minutes to read, at an ordinary pace. */
+export function readingMinutes(text: string): number {
+  return Math.max(1, Math.round(text.trim().split(/\s+/).length / 200));
 }

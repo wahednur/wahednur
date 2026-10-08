@@ -2,7 +2,11 @@
 slug: dollars-and-taka-never-mixed
 title: Why I never mix dollars and taka in one invoice
 excerpt: One document, one currency. The reasoning behind it, and what it means for clients paying from abroad or from Bangladesh.
+cover: /blog/dollars-and-taka-never-mixed.svg
+cover_alt: A dollar invoice and a taka invoice, each in one currency with no exchange rate inside
 ---
+> **In short:** One document, one currency. No hidden exchange rate, and fees stay outside your price.
+
 I work with clients in Bangladesh and abroad. Every quotation and every invoice is in **one currency**, US dollars or Bangladeshi taka.
 
 ## Why

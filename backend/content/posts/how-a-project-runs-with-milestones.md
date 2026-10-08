@@ -2,7 +2,11 @@
 slug: how-a-project-runs-with-milestones
 title: How a project runs: milestones, progress and updates you can see
 excerpt: You should not have to ask "how is it going?". Each project has milestones, a progress bar worked out from them, and written updates.
+cover: /blog/how-a-project-runs-with-milestones.svg
+cover_alt: Project flow: milestones, progress worked out from finished parts, updates, private files
 ---
+> **In short:** You can see milestones, a computed progress bar, written updates and your files at any time.
+
 Most project stress comes from not knowing where things stand. So every project I run lives in a client area where you can look any time.
 
 ## What you can see

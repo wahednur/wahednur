@@ -2,7 +2,11 @@
 slug: how-to-read-an-invoice
 title: How to read a software invoice, line by line
 excerpt: Number, dates, lines, discount, total, installments and status. A short guide to every part of the invoice you will receive from me.
+cover: /blog/how-to-read-an-invoice.svg
+cover_alt: Checklist of the parts of an invoice: number, dates, bill to, lines, discount, total, installments, balance
 ---
+> **In short:** Every part of an invoice answers one question: what, how much, by when, and what is still due.
+
 An invoice looks busy the first time. Each part answers one question.
 
 1. **Invoice number** (for example `INV-2026-0001`): the reference to quote in any message about this bill.

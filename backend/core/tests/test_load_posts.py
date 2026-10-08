@@ -67,3 +67,18 @@ def test_publish_reports_published_count_and_missing_secret(tmp_path, owner, set
 def test_draft_load_says_nothing_is_public(tmp_path, owner):
     (tmp_path / "a.md").write_text(POST, encoding="utf-8")
     assert "Nothing is public yet" in run(tmp_path, apply=True)
+
+
+def test_cover_fields_are_loaded_and_unsafe_covers_refused(tmp_path, owner):
+    text = POST.replace("---\nBody", "cover: /blog/x.svg\ncover_alt: A diagram\n---\nBody")
+    (tmp_path / "a.md").write_text(text, encoding="utf-8")
+    run(tmp_path, apply=True)
+    page = Page.objects.get()
+    assert page.cover_image == "/blog/x.svg" and page.cover_alt == "A diagram"
+    from rest_framework.exceptions import ValidationError
+
+    from cms.serializers import clean_cover
+
+    for bad in ("javascript:alert(1)", "//evil.com/x.png", "http://x.com/a.png", '/a" onerror="x'):
+        with pytest.raises(ValidationError):
+            clean_cover(bad)

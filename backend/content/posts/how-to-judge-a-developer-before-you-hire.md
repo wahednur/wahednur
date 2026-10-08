@@ -2,7 +2,11 @@
 slug: how-to-judge-a-developer-before-you-hire
 title: How to judge a developer before you hire, and how I answer each point
 excerpt: I will not tell you I am better than everyone. Here are the checks that matter, and what you can verify about my work.
+cover: /blog/how-to-judge-a-developer-before-you-hire.svg
+cover_alt: Six checks before hiring a developer: real work, business knowledge, honest limits, written scope, visible progress, clear handover
 ---
+> **In short:** Ask for real work, business knowledge, honest limits, a written scope, visible progress and a clear handover.
+
 Every developer says "best quality, best price". That sentence cannot be checked, so it is worth nothing. Instead of claiming to be better than everyone, here are the questions I would ask if I were hiring, with my honest answers.
 
 ## 1. Can I see something real that works?

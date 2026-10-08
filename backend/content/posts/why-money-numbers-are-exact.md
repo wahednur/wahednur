@@ -2,7 +2,11 @@
 slug: why-money-numbers-are-exact
 title: Why money in software must be exact, not approximate
 excerpt: A bill that is off by a cent destroys trust. How the amounts in my billing system are kept exact.
+cover: /blog/why-money-numbers-are-exact.svg
+cover_alt: Approximate numbers give 0.30000000000000004 while exact decimals give 0.30
 ---
+> **In short:** Money is stored as exact decimals and totalled on the server, so any invoice can be added up by hand.
+
 Computers store many decimal numbers approximately. In most places that is fine. In billing it is not.
 
 ## The problem

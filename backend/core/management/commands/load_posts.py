@@ -4,7 +4,8 @@
     python manage.py load_posts content/posts --apply    # save as DRAFTS
     python manage.py load_posts content/posts --apply --publish
 
-Each file starts with a small header between --- lines (slug, title, excerpt), then the post body.
+Each file starts with a small header between --- lines (slug, title, excerpt, cover, cover_alt),
+then the post body.
 Matched by slug, so running it again updates instead of duplicating. Posts are drafts unless
 --publish is given, so nothing goes live before you have read it.
 """
@@ -36,6 +37,8 @@ def parse(text: str) -> dict:
         "slug": meta["slug"],
         "title": meta["title"],
         "excerpt": meta.get("excerpt", ""),
+        "cover_image": meta.get("cover", ""),
+        "cover_alt": meta.get("cover_alt", ""),
         "body": body.strip() + "\n",
     }
 

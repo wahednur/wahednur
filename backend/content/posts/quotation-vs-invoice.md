@@ -2,7 +2,11 @@
 slug: quotation-vs-invoice
 title: Quotation vs invoice: what is the difference?
 excerpt: People mix them up all the time. One is an offer, the other is a request for payment. Here is how they connect.
+cover: /blog/quotation-vs-invoice.svg
+cover_alt: Flow from quotation to accepted to invoice to recorded payments
 ---
+> **In short:** A quotation is an offer. An invoice is a bill. The accepted quotation becomes the invoice, so nothing is retyped.
+
 Both documents list work and prices, so they look alike. They do very different jobs.
 
 | | Quotation | Invoice |

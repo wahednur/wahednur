@@ -26,6 +26,9 @@ class Page(models.Model):
     title = models.CharField(max_length=200)
     excerpt = models.CharField(max_length=300, blank=True)
     body = models.TextField(blank=True)  # Markdown, rendered safely by the website
+    # Picture that explains the post: a path on the website (/blog/x.svg) or an https address.
+    cover_image = models.CharField(max_length=300, blank=True)
+    cover_alt = models.CharField(max_length=200, blank=True)
     status = models.CharField(max_length=10, choices=Status.choices, default=Status.DRAFT)
     published_at = models.DateTimeField(null=True, blank=True)
     author = models.ForeignKey(
