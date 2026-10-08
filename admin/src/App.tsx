@@ -13,6 +13,7 @@ import InvoiceDetail from "@/pages/InvoiceDetail";
 import Login from "@/pages/Login";
 import Overview from "@/pages/Overview";
 import ProjectDetail from "@/pages/ProjectDetail";
+import Products from "@/pages/Products";
 import Projects from "@/pages/Projects";
 import QuotationDetail from "@/pages/QuotationDetail";
 import Requests from "@/pages/Requests";
@@ -49,6 +50,7 @@ export default function App() {
             <Route path="requests" element={<Requests />} />
             <Route path="services" element={<Services />} />
             <Route path="shop" element={<Shop />} />
+            <Route path="products" element={<Products />} />
             <Route path="subscriptions" element={<Subscriptions />} />
             <Route path="documents" element={<Documents />} />
             <Route path="clients" element={<Clients />} />

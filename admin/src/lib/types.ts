@@ -186,3 +186,20 @@ export type VaultDoc = {
   size: number;
   created_at: string;
 };
+
+export type ShopProduct = {
+  id: number;
+  slug: string;
+  title: string;
+  summary: string;
+  description: string;
+  kind: "digital" | "physical";
+  price: string;
+  currency: "BDT" | "USD";
+  image_url: string;
+  published: boolean;
+  position: number;
+  stock: number;
+  files: { document: string; title: string; name: string }[];
+};
+export type Zone = { id: number; name: string; fee: string; currency: "BDT" | "USD"; active: boolean; position: number };

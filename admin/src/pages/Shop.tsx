@@ -64,7 +64,7 @@ export default function Shop() {
           })}
         </Table>
       )}
-      <Card className="mt-4 p-4 text-xs text-muted">Products and stock are managed in the website's Manage area for now.</Card>
+      <Card className="mt-4 p-4 text-xs text-muted">Products, stock and delivery areas are on the Products & delivery page.</Card>
     </>
   );
 }
