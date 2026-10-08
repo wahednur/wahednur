@@ -13,6 +13,14 @@ DATABASES = {"default": env.db("DATABASE_URL")}
 REST_FRAMEWORK = {
     **REST_FRAMEWORK,  # noqa: F405
     "DEFAULT_THROTTLE_CLASSES": [],
+    # High enough that ordinary tests never hit them; the throttle tests lower them on purpose.
+    "DEFAULT_THROTTLE_RATES": {
+        **REST_FRAMEWORK["DEFAULT_THROTTLE_RATES"],  # noqa: F405
+        "shop-order": "100000/hour",
+        "package-order": "100000/hour",
+        "payment-claim": "100000/hour",
+        "uploads": "100000/hour",
+    },
 }
 
 EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"

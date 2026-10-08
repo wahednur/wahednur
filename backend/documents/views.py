@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from accounts.permissions import IsStaffMember, IsVerifiedUser
+from core.throttling import WriteScopedThrottle
 
 from . import services
 from .models import Document
@@ -24,6 +25,8 @@ class DocumentListView(APIView):
     """Staff: all documents, and upload. Clients: only what was shared with them."""
 
     parser_classes = [MultiPartParser]
+    throttle_classes = [WriteScopedThrottle]
+    throttle_scope = "uploads"
 
     def get_permissions(self):
         return [IsStaffMember() if self.request.method == "POST" else IsVerifiedUser()]

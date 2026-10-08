@@ -46,6 +46,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "core.middleware.RequestSizeLimitMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -101,8 +102,20 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
     "DEFAULT_RENDERER_CLASSES": ["rest_framework.renderers.JSONRenderer"],
     "DEFAULT_PARSER_CLASSES": ["rest_framework.parsers.JSONParser"],
-    "DEFAULT_THROTTLE_CLASSES": ["rest_framework.throttling.AnonRateThrottle"],
-    "DEFAULT_THROTTLE_RATES": {"anon": "60/min", "leads": "5/hour"},
+    "DEFAULT_THROTTLE_CLASSES": [
+        "rest_framework.throttling.AnonRateThrottle",
+        "rest_framework.throttling.UserRateThrottle",
+    ],
+    "DEFAULT_THROTTLE_RATES": {
+        "anon": "60/min",
+        "user": "300/min",
+        "leads": "5/hour",
+        # Actions that create things: per signed-in user.
+        "shop-order": "20/hour",
+        "package-order": "20/hour",
+        "payment-claim": "20/hour",
+        "uploads": "40/hour",
+    },
     # Number of reverse proxies in front of the app (Dokploy/Traefik = 1 in prod).
     "NUM_PROXIES": env.int("NUM_PROXIES", default=0),
 }
@@ -266,6 +279,8 @@ R2_PRIVATE_BUCKET = env("R2_PRIVATE_BUCKET", default="")
 DOCUMENTS_MAX_MB = env.int("DOCUMENTS_MAX_MB", default=20)
 DOCUMENTS_URL_TTL = env.int("DOCUMENTS_URL_TTL", default=300)  # seconds a download link lives
 DOCUMENTS_LOCAL_ROOT = BASE_DIR / "private_media"
+# Biggest request body accepted at all: the largest file plus room for the form fields.
+MAX_REQUEST_BYTES = (max(DOCUMENTS_MAX_MB, 5) + 2) * 1024 * 1024
 
 # --- Billing (shown on quotation and invoice PDFs) ----------------------------
 BUSINESS_NAME = env("BUSINESS_NAME", default="Abdul Wahed Nur")

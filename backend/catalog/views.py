@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from accounts.permissions import IsStaffMember, IsVerifiedUser
+from core.throttling import WriteScopedThrottle
 
 from . import services
 from .serializers import OrderIn, order_out, service_out
@@ -32,6 +33,8 @@ class ServiceDetail(APIView):
 
 class OrderList(APIView):
     permission_classes = [IsVerifiedUser]
+    throttle_classes = [WriteScopedThrottle]
+    throttle_scope = "package-order"
 
     def get(self, request):
         rows = services.visible_orders(request.user)

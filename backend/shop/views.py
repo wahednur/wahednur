@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from accounts.permissions import IsStaffMember, IsVerifiedUser
+from core.throttling import WriteScopedThrottle
 
 from . import images, services
 from . import serializers as s
@@ -46,6 +47,8 @@ class ImageUpload(APIView):
 
     permission_classes = [IsStaffMember]
     parser_classes = [MultiPartParser]
+    throttle_classes = [WriteScopedThrottle]
+    throttle_scope = "uploads"
 
     def post(self, request):
         file = request.FILES.get("file")
@@ -69,6 +72,8 @@ class LocalImage(Public):
 
 class OrderList(APIView):
     permission_classes = [IsVerifiedUser]
+    throttle_classes = [WriteScopedThrottle]
+    throttle_scope = "shop-order"
 
     def get(self, request):
         return _private(Response([s.order_out(o) for o in services.visible_orders(request.user)]))
@@ -102,8 +107,14 @@ class OrderAction(APIView):
     action = ""
     STAFF = ("confirm-payment", "ship", "deliver")
 
+    throttle_scope = "payment-claim"
+
     def get_permissions(self):
         return [IsStaffMember() if self.action in self.STAFF else IsVerifiedUser()]
+
+    def get_throttles(self):
+        # Only the customer's "I paid" report is limited; staff actions are not.
+        return [WriteScopedThrottle()] if self.action == "claim" else []
 
     def post(self, request, pk):
         order = services.get_order(request.user, pk)

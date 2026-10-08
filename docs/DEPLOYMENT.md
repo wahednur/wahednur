@@ -148,3 +148,28 @@ Common causes: the domain in `LEADS_FROM_EMAIL` is not verified in Resend (Resen
 7. If it fails, the message names the cause: `401` wrong or revoked key; `403 ... domain is not verified` the sender domain is not verified; `422` the sender format is wrong.
 
 Redis and the worker are not needed for this any more: the sign-in code is sent straight from the request. The worker (which uses Redis as its queue) only retries when Resend is briefly down, and runs the scheduled jobs (subscription billing, shop order release).
+
+
+## Later: Amazon SES for many domains (no code change needed)
+SES speaks SMTP, so the existing SMTP settings are enough: only the values change.
+1. AWS account, SES in a region near you (for example Mumbai `ap-south-1` or Singapore `ap-southeast-1`). A new account starts in the **sandbox** (can send only to verified addresses): open a "production access" request in the SES console and say what the emails are (sign-in codes and receipts).
+2. **Identities**: add each domain you own (Verified identities, Create identity, Domain). SES gives 3 DKIM `CNAME` records per domain; add them in that domain's DNS. One AWS account and one set of credentials can then send as any verified domain. Add a DMARC record (`_dmarc` TXT, start with `p=none`) as well.
+3. **SMTP credentials**: SES console, SMTP settings, Create SMTP credentials (these are not your AWS login). Use them as `EMAIL_HOST_USER` / `EMAIL_HOST_PASSWORD`.
+4. Dokploy environment:
+   ```
+   EMAIL_PROVIDER=smtp
+   EMAIL_HOST=email-smtp.ap-south-1.amazonaws.com
+   EMAIL_PORT=465
+   EMAIL_HOST_USER=<SES SMTP username>
+   EMAIL_HOST_PASSWORD=<SES SMTP password>
+   EMAIL_FROM=Wahed Nur <noreply@wahednur.tech>
+   ```
+5. Handle bounces and complaints (SES console, Configuration sets or SNS) or SES may pause the account. Price is about 0.10 USD per 1,000 emails; the free offer changes, so read the current SES pricing page before relying on it.
+
+When to move: Gmail SMTP is fine while volume is low (about 500 a day, sender shown as the Gmail address). Move to SES when you want your own domain as sender, several domains, or more volume.
+
+## Request limits (abuse protection)
+- Every signed-in user: 300 requests a minute; anonymous visitors 60 a minute.
+- Creating things is limited per user: shop orders 20 an hour, package orders 20 an hour, "I paid" reports 20 an hour, file and photo uploads 40 an hour. Viewing is not counted.
+- A request larger than the biggest allowed file plus 2 MB is refused with 413 before it is read.
+- Sign-in, sign-up, password reset and two-factor attempts have their own limits (see AUTH.md).
