@@ -1,0 +1,36 @@
+const { chromium } = require(process.env.PLAYWRIGHT_PATH || 'playwright');
+const fs = require('fs');
+const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) process.exitCode = 1; };
+const URL = 'http://localhost:5173';
+(async () => {
+  const b = await chromium.launch(process.env.CHROMIUM ? { executablePath: process.env.CHROMIUM } : {});
+  const p = await (await b.newContext({ viewport: { width: 1280, height: 1000 }, acceptDownloads: true })).newPage();
+  p.on('pageerror', e => console.log('PAGEERROR', e.message));
+  p.on('dialog', d => d.accept());
+  await p.goto(URL + '/login');
+  await p.fill('input[name=email]', 'boss@example.com'); await p.fill('input[name=password]', 'a-very-long-pass-123'); await p.click('button[type=submit]');
+  await p.waitForSelector('h1:has-text("Overview")', { timeout: 20000 });
+  await p.click('nav >> text=Documents'); await p.click('button:has-text("Upload a file")');
+  await p.setInputFiles('input[type=file]', (process.env.E2E_TMP || '/tmp') + '/contract.pdf');
+  await p.fill('input[name=title]', 'Project agreement'); await p.selectOption('select[name=category]', 'agreement');
+  await p.selectOption('select[name=client]', { index: 1 }); await p.selectOption('select[name=project]', { index: 1 });
+  await p.check('input[name=shared_with_client]');
+  await p.click('button:has-text("Upload")'); await p.waitForSelector('text=Uploaded.');
+  await p.waitForSelector('tr:has-text("Project agreement"):has-text("shared")');
+  ok(true, 'PDF uploaded and shared with the client');
+  const [dl] = await Promise.all([p.waitForEvent('download', { timeout: 15000 }), p.click('button:has-text("Download")')]);
+  const path = await dl.path(); const bytes = fs.readFileSync(path).toString();
+  ok(bytes.startsWith('%PDF'), 'download returns the same file');
+  await p.click('button:has-text("Stop sharing")'); await p.waitForSelector('text=No longer shared');
+  ok((await p.locator('tr:has-text("Project agreement")').innerText()).includes('private'), 'unshared -> private');
+  // a bad file is refused
+  fs.writeFileSync('' + (process.env.E2E_TMP || '/tmp') + '/fake.pdf', 'this is not a pdf');
+  await p.click('button:has-text("Upload a file")'); await p.setInputFiles('input[type=file]', '' + (process.env.E2E_TMP || '/tmp') + '/fake.pdf'); await p.fill('input[name=title]', 'Fake');
+  await p.click('button:has-text("Upload")'); await p.waitForSelector('[role=alert]');
+  ok(true, 'a file that is not really a PDF is refused: ' + (await p.locator('[role=alert]').innerText()));
+  await p.screenshot({ path: (process.env.E2E_TMP || '/tmp') + '/shot.png' });
+  await p.click('button:has-text("Share")'); await p.waitForSelector('text=Shared with the client');
+  await p.click('button:has-text("Delete")'); await p.waitForSelector('text=Deleted.');
+  ok(true, 'deleted');
+  await b.close();
+})().catch(e => { console.log('ERROR', e.message.split('\n').slice(0, 4).join(' | ')); process.exitCode = 1; });

@@ -61,6 +61,7 @@ export type Project = {
   status: "proposal" | "active" | "on_hold" | "completed" | "cancelled";
   client: number;
   client_email: string;
+  client_currency: "BDT" | "USD";
   progress: number;
   start_date: string | null;
   due_date: string | null;

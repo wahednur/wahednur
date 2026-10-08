@@ -12,6 +12,9 @@ const blank = (): Row => ({ description: "", quantity: "1", unit_price: "", cycl
 export default function NewDocument({ kind, onDone }: { kind: "quotations" | "invoices"; onDone: () => void }) {
   const quote = kind === "quotations";
   const [projects, setProjects] = useState<Project[]>([]);
+  const [projectId, setProjectId] = useState("");
+  // A local client is billed in taka and a foreign client in dollars; the server checks it too.
+  const currency = projects.find((p) => p.id === projectId)?.client_currency ?? "BDT";
   const [rows, setRows] = useState<Row[]>([blank()]);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
@@ -45,6 +48,7 @@ export default function NewDocument({ kind, onDone }: { kind: "quotations" | "in
     setBusy(false);
     if (r.ok) {
       form.reset();
+      setProjectId("");
       setRows([blank()]);
       onDone();
     } else setError(r.error);
@@ -56,7 +60,7 @@ export default function NewDocument({ kind, onDone }: { kind: "quotations" | "in
       {error && <Alert>{error}</Alert>}
       <label className="block">
         Project
-        <select name="project" required defaultValue="" className={field}>
+        <select name="project" required value={projectId} onChange={(e) => setProjectId(e.target.value)} className={field}>
           <option value="" disabled>
             Choose a project
           </option>
@@ -74,10 +78,10 @@ export default function NewDocument({ kind, onDone }: { kind: "quotations" | "in
         </label>
         <label>
           Currency
-          <select name="currency" defaultValue="BDT" className={field}>
-            <option value="BDT">BDT (৳)</option>
-            <option value="USD">USD ($)</option>
-          </select>
+          <input name="currency" value={currency} readOnly className={field} aria-describedby="cur-note" />
+          <span id="cur-note" className="mt-1 block text-xs text-muted">
+            {currency === "USD" ? "Foreign client" : "Local client"}
+          </span>
         </label>
       </div>
       <fieldset className="space-y-2">
