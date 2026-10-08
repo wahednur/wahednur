@@ -9,25 +9,42 @@ export default async function Dashboard() {
 
   return (
     <div className="space-y-8">
-      <header className="relative overflow-hidden rounded-2xl border border-line bg-surface p-6 sm:p-8">
+      <header className="glow-border relative overflow-hidden rounded-2xl border border-line bg-surface p-6 sm:p-8">
         <div aria-hidden className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-brand/10 blur-3xl" />
-        <div className="relative flex items-center gap-4">
-          <span className="grid h-14 w-14 shrink-0 place-items-center rounded-full bg-brand/15 text-xl font-semibold text-brand">
-            {(me.full_name || me.email).charAt(0).toUpperCase()}
-          </span>
-          <div className="min-w-0">
-            <h1 className="text-2xl font-semibold tracking-tight">
-              Welcome{me.full_name ? `, ${me.full_name}` : ""}
-            </h1>
-            <p className="mt-1 flex flex-wrap items-center gap-2 text-sm text-muted">
-              <span className="truncate">{me.email}</span>
-              {me.roles.map((r) => (
-                <span key={r} className="rounded-full border border-brand/40 px-2.5 py-0.5 font-mono text-[11px] text-brand">
-                  {r}
-                </span>
-              ))}
-            </p>
+        <div aria-hidden className="bg-grid pointer-events-none absolute inset-0 opacity-40 [mask-image:linear-gradient(90deg,transparent,#000)]" />
+        <div className="relative flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-4">
+            <span className="grid h-14 w-14 shrink-0 place-items-center rounded-full border border-brand/40 bg-brand/15 text-xl font-semibold text-brand">
+              {(me.full_name || me.email).charAt(0).toUpperCase()}
+            </span>
+            <div className="min-w-0">
+              <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-brand">Your private workspace</p>
+              <h1 className="mt-1 text-2xl font-semibold tracking-tight">
+                Welcome back{me.full_name ? `, ${me.full_name}` : ""}
+              </h1>
+              <p className="mt-1 truncate text-sm text-muted">{me.email}</p>
+            </div>
           </div>
+          <ul className="flex flex-wrap gap-2 text-xs">
+            {[
+              [me.email_verified, "Email verified"],
+              [me.mfa_enabled, "Two-step sign-in"],
+              [true, "Encrypted connection"],
+            ].map(([ok, label]) => (
+              <li
+                key={String(label)}
+                className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 ${
+                  ok ? "border-brand/30 bg-brand/[0.07] text-brand" : "border-line text-muted"
+                }`}
+              >
+                <span aria-hidden>{ok ? "✓" : "–"}</span>
+                {label as string}
+              </li>
+            ))}
+            {me.roles.map((r) => (
+              <li key={r} className="rounded-full border border-line px-3 py-1 font-mono text-muted">{r}</li>
+            ))}
+          </ul>
         </div>
       </header>
 

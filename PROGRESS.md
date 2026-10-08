@@ -151,3 +151,9 @@ Nothing.
 - Messages page: "Reply" opens a prefilled subject and message; sending emails the enquirer (SMTP or Resend, replies come back to LEADS_NOTIFY_TO), keeps a copy (`LeadReply`, migration `leads/0002`), marks the enquiry Replied only if the email went out. A failed send is kept and shows the reason. Tests in `leads/tests/test_inbox.py`; browser check `tools/e2e/admin/12-reply-from-dashboard.cjs`.
 - Deploy: run `python manage.py migrate`, redeploy API and admin. Gmail SMTP must be configured (EMAIL_HOST etc.) for real sending.
 - Home: scroll-driven six-step timeline, "after step 6" care loop (secure, trusted, reliable, long-term support, happy client), tech icons with gap fillers.
+
+## Client area redesigned (frame, navigation, dashboard header)
+- `/app` now has its own frame (`components/auth/AppShell.tsx`): sticky sidebar with grouped, icon navigation and an active-page rail, top bar with breadcrumb, "Secure" chip and user, slide-in menu on phones (Esc closes), and its own footer. The public header/footer are hidden under `/app` (`PublicChrome`).
+- Sidebar "Protected session" card shows only true facts: encrypted connection and whether two-step sign-in is on (link to enable it when off).
+- Dashboard header: "Your private workspace", status chips (email verified, two-step sign-in, encrypted connection).
+- Print/PDF views are unaffected (frame is `no-print`).

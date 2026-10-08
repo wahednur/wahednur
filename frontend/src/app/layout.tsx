@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 import "./globals.css";
+import PublicChrome from "@/components/PublicChrome";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { site } from "@/lib/site";
@@ -20,9 +21,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${GeistSans.variable} ${GeistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <Header />
+        <PublicChrome>
+          <Header />
+        </PublicChrome>
         <div className="flex-1">{children}</div>
-        <Footer />
+        <PublicChrome>
+          <Footer />
+        </PublicChrome>
       </body>
     </html>
   );
