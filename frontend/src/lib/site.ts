@@ -6,6 +6,11 @@ export const site = {
   linkedin: "https://www.linkedin.com/in/wahednur",
   resume: "/Abdul_Wahed_Nur_Resume.pdf",
   url: "https://www.wahednur.tech",
+  // The hours shown in the "your time and mine" tool. Bangladesh has no daylight saving.
+  // CONFIRM with the owner: these are the hours clients are told they can reach me.
+  hours: { tz: "Asia/Dhaka", label: "Bangladesh (UTC+6)", start: 10, end: 19 },
+  startedWeb: 2014,
+  storeSince: 2016,
 };
 
 export type Project = {
