@@ -8,7 +8,7 @@ from accounts.permissions import IsOwner
 from accounts.signals import record
 
 from . import services
-from .serializers import ExpenseSerializer, exact
+from .serializers import ExpenseSerializer, IncomeSerializer, SettlementSerializer, exact
 
 
 def _dates(request):
@@ -90,3 +90,77 @@ class Export(OwnerOnly):
         )
         response["Content-Disposition"] = 'attachment; filename="ledger.csv"'
         return _no_store(response)
+
+
+class _Crud(OwnerOnly):
+    """List + create + edit + soft delete for a simple accounting record."""
+
+    serializer = None
+    queryset = None
+    getter = None
+    saver = None
+    date_field = ""
+
+    def get(self, request):
+        start, end = _dates(request)
+        rows = services.date_range(type(self).queryset(), self.date_field, start, end)[:500]
+        return _no_store(Response(exact(self.serializer(rows, many=True).data)))
+
+    def post(self, request):
+        data = self.serializer(data=request.data)
+        data.is_valid(raise_exception=True)
+        obj = type(self).saver(user=request.user, request=request, **data.validated_data)
+        return Response(exact(self.serializer(obj).data), status=status.HTTP_201_CREATED)
+
+
+class _CrudDetail(OwnerOnly):
+    serializer = None
+    getter = None
+    saver = None
+
+    def put(self, request, pk):
+        obj = type(self).getter(pk)
+        data = self.serializer(obj, data=request.data)
+        data.is_valid(raise_exception=True)
+        obj = type(self).saver(
+            user=request.user, request=request, **{self.name: obj}, **data.validated_data
+        )
+        return Response(exact(self.serializer(obj).data))
+
+    def delete(self, request, pk):
+        services.delete_record(obj=type(self).getter(pk), user=request.user, request=request)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class IncomeList(_Crud):
+    serializer = IncomeSerializer
+    queryset = staticmethod(services.incomes_qs)
+    saver = staticmethod(services.save_income)
+    date_field = "earned_on"
+
+
+class IncomeDetail(_CrudDetail):
+    serializer = IncomeSerializer
+    getter = staticmethod(services.get_income)
+    saver = staticmethod(services.save_income)
+    name = "income"
+
+
+class SettlementList(_Crud):
+    serializer = SettlementSerializer
+    queryset = staticmethod(services.settlements_qs)
+    saver = staticmethod(services.save_settlement)
+    date_field = "settled_on"
+
+
+class SettlementDetail(_CrudDetail):
+    serializer = SettlementSerializer
+    getter = staticmethod(services.get_settlement)
+    saver = staticmethod(services.save_settlement)
+    name = "settlement"
+
+
+class Conversions(OwnerOnly):
+    def get(self, request):
+        start, end = _dates(request)
+        return _no_store(Response(exact(services.conversions(start, end))))
