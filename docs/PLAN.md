@@ -42,3 +42,20 @@ Seven services; the AI service is limited to what exists in the owner's own plat
 - Bangla version: needed now or later?
 - Domain: `wahednur.tech` now, `wahednur.com` when bought. Redirect plan.
 - Booking/calendar link for discovery calls?
+
+## Payment gateway research (8 Oct 2026) — for a seller based in Bangladesh
+Searched the web; the vendors' own pages could not be opened from the build environment, so these are search summaries. **Verify each point in the provider's dashboard before building.**
+
+| Option | Bangladesh seller? | Notes |
+|---|---|---|
+| Stripe (direct) | No (not on the supported-merchant list) | Customers in Bangladesh can still pay Stripe checkouts; a US company (Stripe Atlas) is possible but adds company, tax and foreign-exchange questions. |
+| PayPal (direct) | No standard account | Payoneer lets eligible Bangladeshi freelancers receive PayPal payments. Bank of Bangladesh issued a July 2026 circular opening a bank-mediated route for PayPal/Payoneer-style services; practical effect unclear. |
+| Lemon Squeezy (merchant of record) | Listed for bank payouts | Pays in USD twice a month with a hold; digital products and software; about 5% + 50 cents per sale plus 1.5% on international cards (check current); reports of account reviews and frozen payouts. |
+| Polar (merchant of record) | Listed (payouts via Stripe Connect Express) | Developer-focused, similar model; test the Finance/payout onboarding for Bangladesh. |
+| Creem (merchant of record) | Listed for local bank transfer | Payout fee reported as the larger of 7 USD/EUR or 1%. |
+| Paddle (merchant of record) | Not confirmed | Payout currencies USD/EUR/GBP/AUD/CAD; ask Paddle. |
+| Payoneer | Yes (receiving) | Not a checkout/API for this app; good for marketplace and direct-client payouts. |
+
+Merchant-of-record platforms are built for software and digital goods and subscriptions, not for freelance service invoices: confirm their acceptable-use terms before using one for service work.
+
+**Plan**: (1) owner tests onboarding with Lemon Squeezy and Polar (Bangladesh payout account, identity check) and confirms their terms for the intended products; (2) build one integration for the passing provider: a checkout link per shop order or subscription, and a signed webhook that calls the existing `record_payment` (nothing else in the app changes); (3) the provider's fee goes into a Settlement as the marketplace fee so the books show the true cost.
