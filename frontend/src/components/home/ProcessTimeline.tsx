@@ -2,7 +2,7 @@ import Reveal from "./Reveal";
 
 const STEPS = [
   { n: "01", title: "A short call", text: "You describe the business and the problem. I ask questions, and I tell you honestly if I am the right person." },
-  { n: "02", title: "A written scope and quote", text: "Sheets for each part of the work with time, risk and cost, payment milestones and terms. You accept it online." },
+  { n: "02", title: "A written scope and quote", text: "Each part of the work is listed with its time, risk and cost, plus payment milestones and terms. You accept it online." },
   { n: "03", title: "Advance and kickoff", text: "The first payment reserves the time and work begins. Your client area opens with the plan." },
   { n: "04", title: "Build in visible steps", text: "Milestones you can test. Written updates, and you decide what comes next." },
   { n: "05", title: "Delivery and handover", text: "Final delivery follows full payment: working software, source code and deployment help, as agreed in the scope." },
@@ -12,7 +12,7 @@ const STEPS = [
 /** A vertical timeline whose line draws as each step scrolls into view. */
 export default function ProcessTimeline() {
   return (
-    <ol className="relative mx-auto max-w-3xl">
+    <ol className="relative max-w-3xl">
       <span className="absolute bottom-2 left-[19px] top-2 w-px bg-line" aria-hidden />
       {STEPS.map((s, i) => (
         <Reveal key={s.n} as="li" delay={40} className="relative pb-10 pl-14 last:pb-0">

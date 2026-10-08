@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: { default: `${site.name} — ${site.title}`, template: `%s | ${site.name}` },
   description:
-    "Full-stack developer building eCommerce platforms, business management systems and Django REST APIs. Based in Bangladesh.",
+    "Remote full-stack engineer in Bangladesh for overseas clients: eCommerce platforms, business systems and Django REST APIs. Written scope, milestone delivery, staged payments.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

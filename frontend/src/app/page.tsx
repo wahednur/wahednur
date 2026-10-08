@@ -99,6 +99,7 @@ export default function Home() {
               <p className="mt-2 text-sm leading-6 text-muted">{s.short}</p>
             </div>
           ))}
+          {serviceList.length % 3 === 1 && <div className="hidden bg-surface lg:col-span-2 lg:block" aria-hidden />}
         </div>
       </Section>
 
