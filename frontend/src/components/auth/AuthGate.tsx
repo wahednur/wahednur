@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
-import Link from "next/link";
 import { getMe } from "@/lib/auth/server";
+import AppNav, { type NavItem } from "./AppNav";
 import SignOutButton from "./SignOutButton";
 
 /** Decides on the server, with the API, whether the visitor may see anything inside /app. */
@@ -8,52 +8,26 @@ export default async function AuthGate({ children }: { children: React.ReactNode
   const me = await getMe();
   if (!me) redirect("/login?reason=expired");
 
+  const team = me.roles.includes("owner") || me.roles.includes("staff");
+  const items: NavItem[] = [
+    { href: "/app", label: "Dashboard" },
+    { href: "/app/projects", label: "Projects" },
+    { href: "/app/billing", label: "Billing" },
+    { href: "/app/documents", label: "Documents" },
+    { href: "/app/shop", label: "Orders" },
+    { href: "/app/orders", label: "Package requests" },
+    { href: "/app/subscriptions", label: "Subscriptions" },
+    ...(me.roles.includes("owner") ? [{ href: "/app/accounting", label: "Accounting" }] : []),
+    ...(team ? [{ href: "/app/manage", label: "Manage" }, { href: "/app/content", label: "Content" }] : []),
+    { href: "/app/security", label: "Security" },
+  ];
+
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line pb-4">
-        <nav aria-label="Dashboard" className="flex gap-5 text-sm">
-          <Link href="/app" className="font-medium hover:text-brand">
-            Dashboard
-          </Link>
-          <Link href="/app/projects" className="text-muted hover:text-ink">
-            Projects
-          </Link>
-          <Link href="/app/shop" className="text-muted hover:text-ink">
-            Orders
-          </Link>
-          <Link href="/app/orders" className="text-muted hover:text-ink">
-            Package requests
-          </Link>
-          <Link href="/app/subscriptions" className="text-muted hover:text-ink">
-            Subscriptions
-          </Link>
-          <Link href="/app/billing" className="text-muted hover:text-ink">
-            Billing
-          </Link>
-          {me.roles.includes("owner") && (
-            <Link href="/app/accounting" className="text-muted hover:text-ink">
-              Accounting
-            </Link>
-          )}
-          {(me.roles.includes("owner") || me.roles.includes("staff")) && (
-            <Link href="/app/manage" className="text-muted hover:text-ink">
-              Manage
-            </Link>
-          )}
-          {(me.roles.includes("owner") || me.roles.includes("staff")) && (
-            <Link href="/app/content" className="text-muted hover:text-ink">
-              Content
-            </Link>
-          )}
-          <Link href="/app/documents" className="text-muted hover:text-ink">
-            Documents
-          </Link>
-          <Link href="/app/security" className="text-muted hover:text-ink">
-            Security
-          </Link>
-        </nav>
+        <AppNav items={items} />
         <div className="flex items-center gap-3 text-sm">
-          <span className="text-muted">{me.email}</span>
+          <span className="hidden text-muted sm:inline">{me.email}</span>
           <SignOutButton />
         </div>
       </div>
