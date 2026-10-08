@@ -15,7 +15,7 @@ export default function QuotationDetail() {
   const [steps, setSteps] = useState<Step[]>(presetSteps());
   const [due, setDue] = useState("");
 
-  async function act(action: "send" | "accept" | "reject") {
+  async function act(action: "send" | "accept" | "reject" | "dead") {
     setMsg("");
     const r = await api("POST", `/quotations/${id}/${action}/`, {});
     if (!r.ok) setMsg(r.error);
@@ -41,14 +41,28 @@ export default function QuotationDetail() {
       <div className="mt-3">
         <PageHeader
           title={`${q.number}: ${q.title}`}
-          intro={`${q.client_email} · ${q.project_title}${q.valid_until ? ` · valid until ${day(q.valid_until)}` : ""}`}
+          intro={`${q.client_email} · ${q.project_title} · dated ${day(q.issue_date)}${q.valid_until ? ` · expires ${day(q.valid_until)}` : ""}`}
           action={
             <div className="flex flex-wrap gap-2">
               <Button small onClick={async () => setMsg(await download(`/quotations/${id}/pdf/`, `${q.number}.pdf`))}>PDF</Button>
               {q.status === "draft" && <Button small onClick={() => nav(`/billing/quotation/${id}/edit`)}>Edit</Button>}
-              {q.status === "draft" && <Button small tone="brand" onClick={() => act("send")}>Send to client</Button>}
-              {q.status === "sent" && <Button small onClick={() => act("accept")}>Mark accepted</Button>}
-              {q.status === "sent" && <Button small tone="danger" onClick={() => act("reject")}>Mark rejected</Button>}
+              {(q.status === "draft" || q.status === "sent") && (
+                <select
+                  aria-label="Change status"
+                  value=""
+                  onChange={(e) => {
+                    const v = e.target.value as "send" | "accept" | "reject" | "dead";
+                    if (v && (v !== "dead" || confirm("Mark this quote as dead?"))) void act(v);
+                  }}
+                  className={`${field} mt-0 w-auto py-1.5 text-xs`}
+                >
+                  <option value="">Change status…</option>
+                  {q.status === "draft" && <option value="send">Delivered (email to client)</option>}
+                  {q.status === "sent" && <option value="accept">Accepted</option>}
+                  {q.status === "sent" && <option value="reject">Lost</option>}
+                  <option value="dead">Dead</option>
+                </select>
+              )}
               {q.status === "accepted" && !q.invoice_id && <Button small tone="brand" onClick={() => setConverting((v) => !v)}>Create invoice</Button>}
             </div>
           }
@@ -56,6 +70,13 @@ export default function QuotationDetail() {
       </div>
       {msg && <div className="mb-4"><Notice>{msg}</Notice></div>}
       <Card className="p-5">
+        {q.bill_to_address && <p className="mb-4 whitespace-pre-line text-sm text-muted">{q.bill_to_address}</p>}
+        {q.proposal_text && (
+          <div className="mb-5 rounded-lg border border-line bg-bg/40 p-4">
+            <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted">Proposal</p>
+            <p className="whitespace-pre-line text-sm">{q.proposal_text}</p>
+          </div>
+        )}
         <div className="mb-3 flex items-center gap-3">
           <Badge value={q.status} />
           {q.invoice_id && <Link className="text-sm text-brand hover:underline" to={`/billing/invoices/${q.invoice_id}`}>Open its invoice</Link>}
@@ -78,6 +99,7 @@ export default function QuotationDetail() {
         <dl className="mt-4 space-y-1 border-t border-line pt-3 text-sm">
           <div className="flex justify-between"><dt className="text-muted">Subtotal</dt><dd>{money(q.currency, q.subtotal)}</dd></div>
           {Number(q.discount) > 0 && <div className="flex justify-between"><dt className="text-muted">Discount</dt><dd>-{money(q.currency, q.discount)}</dd></div>}
+          {Number(q.tax) > 0 && <div className="flex justify-between"><dt className="text-muted">{q.tax_name} ({Number(q.tax_rate)}%)</dt><dd>{money(q.currency, q.tax)}</dd></div>}
           <div className="flex justify-between font-semibold"><dt>Total</dt><dd>{money(q.currency, q.total)}</dd></div>
         </dl>
         {q.notes && <p className="mt-4 whitespace-pre-line border-t border-line pt-3 text-sm text-muted">{q.notes}</p>}

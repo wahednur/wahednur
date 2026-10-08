@@ -59,8 +59,44 @@ export type BillRow = {
   invoice_id?: string | null;
   created_at: string;
 };
+export type TaxRate = { id: number; name: string; rate: string; active: boolean; position: number };
+export type RecurringInv = {
+  id: string;
+  client: number;
+  client_email: string;
+  project: string;
+  project_title: string;
+  title: string;
+  prefix: string;
+  currency: "BDT" | "USD";
+  discount: string;
+  tax_name: string;
+  tax_rate: string;
+  notes: string;
+  bill_to_address: string;
+  frequency: "weekly" | "monthly" | "quarterly" | "yearly";
+  start_date: string;
+  next_run: string | null;
+  end_date: string | null;
+  due_days: number;
+  auto_issue: boolean;
+  status: "active" | "paused" | "ended";
+  subtotal: string;
+  tax: string;
+  total: string;
+  items: { description: string; quantity: string; unit_price: string }[];
+  invoices: { id: string; number: string; run_date: string; status: string }[];
+};
 export type Quotation = BillRow & {
   project: string;
+  client: number;
+  number_prefix: string;
+  issue_date: string;
+  bill_to_address: string;
+  tax_name: string;
+  tax_rate: string;
+  tax: string;
+  proposal_text: string;
   discount: string;
   notes: string;
   subtotal: string;
@@ -68,6 +104,13 @@ export type Quotation = BillRow & {
 };
 export type Invoice = BillRow & {
   project: string;
+  client: number;
+  number_prefix: string;
+  issue_date: string;
+  bill_to_address: string;
+  tax_name: string;
+  tax_rate: string;
+  tax: string;
   discount: string;
   notes: string;
   subtotal: string;

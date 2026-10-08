@@ -57,7 +57,7 @@ export default function InvoiceDetail() {
       <div className="mt-3">
         <PageHeader
           title={`${inv.number}: ${inv.title}`}
-          intro={`${inv.client_email} · ${inv.project_title}`}
+          intro={`${inv.client_email} · ${inv.project_title} · dated ${day(inv.issue_date)}`}
           action={
             <div className="flex gap-2">
               <Button small onClick={async () => setMsg(await download(`/invoices/${id}/pdf/`, `${inv.number}.pdf`))}>PDF</Button>
@@ -75,6 +75,7 @@ export default function InvoiceDetail() {
 
       <div className="grid gap-5 lg:grid-cols-3">
         <Card className="p-5 lg:col-span-2">
+          {inv.bill_to_address && <p className="mb-4 whitespace-pre-line text-sm text-muted">{inv.bill_to_address}</p>}
           <div className="mb-3 flex items-center gap-3"><Badge value={inv.state ?? inv.status} /></div>
           <table className="w-full text-sm">
             <thead className="text-xs uppercase text-muted">
@@ -94,6 +95,7 @@ export default function InvoiceDetail() {
           <dl className="mt-4 space-y-1 border-t border-line pt-3 text-sm">
             <Line k="Subtotal" v={money(inv.currency, inv.subtotal)} />
             {Number(inv.discount) > 0 && <Line k="Discount" v={`-${money(inv.currency, inv.discount)}`} />}
+            {Number(inv.tax) > 0 && <Line k={`${inv.tax_name} (${Number(inv.tax_rate)}%)`} v={money(inv.currency, inv.tax)} />}
             <Line k="Total" v={money(inv.currency, inv.total)} bold />
             <Line k="Paid" v={money(inv.currency, inv.paid_total)} />
             <Line k="Still due" v={money(inv.currency, inv.outstanding ?? "0")} bold />

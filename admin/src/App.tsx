@@ -15,6 +15,7 @@ import Overview from "@/pages/Overview";
 import ProjectDetail from "@/pages/ProjectDetail";
 import Products from "@/pages/Products";
 import Projects from "@/pages/Projects";
+import RecurringDetail from "@/pages/RecurringDetail";
 import QuotationDetail from "@/pages/QuotationDetail";
 import Requests from "@/pages/Requests";
 import Services from "@/pages/Services";
@@ -43,6 +44,9 @@ export default function App() {
             <Route path="billing" element={<Billing />} />
             <Route path="billing/invoices/:id" element={<InvoiceDetail />} />
             <Route path="billing/quotations/:id" element={<QuotationDetail />} />
+            <Route path="billing/recurring/:id" element={<RecurringDetail />} />
+            <Route path="billing/new/recurring" element={<DocumentNew kind="recurring" />} />
+            <Route path="billing/recurring/:id/edit" element={<DocumentNew kind="recurring" />} />
             <Route path="billing/new/quotation" element={<DocumentNew kind="quotation" />} />
             <Route path="billing/new/invoice" element={<DocumentNew kind="invoice" />} />
             <Route path="billing/quotation/:id/edit" element={<DocumentNew kind="quotation" />} />

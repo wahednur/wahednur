@@ -46,6 +46,11 @@ const BADGE: Record<string, string> = {
   delivered: "bg-emerald-400/10 text-emerald-300 border-emerald-400/30",
   overdue: "bg-red-400/10 text-red-300 border-red-400/30",
   declined: "bg-red-400/10 text-red-300 border-red-400/30",
+  rejected: "bg-red-400/10 text-red-300 border-red-400/30",
+  dead: "bg-slate-400/10 text-slate-300 border-slate-400/30",
+  ended: "bg-slate-400/10 text-slate-300 border-slate-400/30",
+  paused: "bg-amber-400/10 text-amber-200 border-amber-400/30",
+  sent: "bg-sky-400/10 text-sky-300 border-sky-400/30",
   cancelled: "bg-red-400/10 text-red-300 border-red-400/30",
   partial: "bg-amber-400/10 text-amber-200 border-amber-400/30",
   unpaid: "bg-amber-400/10 text-amber-200 border-amber-400/30",
@@ -56,6 +61,7 @@ const BADGE: Record<string, string> = {
   awaiting_payment: "bg-amber-400/10 text-amber-200 border-amber-400/30",
   payment_reported: "bg-amber-400/10 text-amber-200 border-amber-400/30",
 };
+const NAME: Record<string, string> = { sent: "delivered", rejected: "lost" };
 export function Badge({ value }: { value: string }) {
   return (
     <span
@@ -63,7 +69,7 @@ export function Badge({ value }: { value: string }) {
         BADGE[value] ?? "border-line text-muted"
       }`}
     >
-      {value.replaceAll("_", " ")}
+      {(NAME[value] ?? value).replaceAll("_", " ")}
     </span>
   );
 }

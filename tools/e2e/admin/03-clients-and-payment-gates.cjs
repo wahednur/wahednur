@@ -14,6 +14,7 @@ const URL = 'http://localhost:5173';
   await p.fill('input[name=full_name]', 'Ann Buyer'); await p.fill('input[name=company]', 'Acme Inc');
   await p.click('button:has-text("Create client and send invitation")');
   await p.waitForSelector('text=Client created', { timeout: 15000 });
+  await p.waitForSelector('tr:has-text("Ann Buyer")');  // the list refreshes after the notice appears
   const t = await p.locator('body').innerText();
   ok(t.includes('Ann Buyer') && t.includes('USD'), 'foreign client created, shown with USD');
   await p.fill('input[type=search]', 'Ann'); ok(await p.locator('tr:has-text("buyer@example.com")').count() === 1, 'client search');
@@ -29,13 +30,14 @@ const URL = 'http://localhost:5173';
   await p.click('button:has-text("Create project")'); await p.waitForSelector('text=Foreign build');
   // invoice: currency is locked to the client's
   await p.click('nav >> text=Billing'); await p.click('button:has-text("New invoice")');
-  await p.selectOption('select >> nth=0', { index: 1 });
-  await p.waitForSelector('text=foreign client');
-  ok((await p.locator('body').innerText()).includes('USD (dollars)'), 'invoice currency follows the client: USD');
-  ok((await p.locator('textarea').inputValue()).includes('40% advance'), 'standard payment terms pre-filled');
+  await p.click('button[aria-haspopup=listbox]'); await p.click('[role=option]');
+  await p.waitForSelector('text=this document is billed in USD');
+  ok(true, 'invoice currency follows the client: USD');
+  await p.selectOption('label:has-text("Project") select', { label: 'Foreign build' });
+  ok((await p.locator('textarea').last().inputValue()).includes('40% advance'), 'standard payment terms pre-filled');
   await p.fill('input[maxlength="200"]', 'Build'); await p.fill('input[aria-label=Description]', 'Work'); await p.fill('input[aria-label="Unit price"]', '1000');
   ok((await p.locator('input[aria-label=Label]').count()) === 3, 'default plan has three installments');
-  await p.click('button:has-text("Create draft")'); await p.waitForSelector('text=INV-');
+  await p.click('button:has-text("Save as draft")'); await p.waitForSelector('text=INV-');
   const it = await p.locator('body').innerText();
   ok(it.includes('Advance (before work starts)') && it.includes('$400.00') && it.includes('$300.00'), 'plan: $400 advance, $300 midway, $300 final');
   await p.click('button:has-text("Issue")'); await p.waitForSelector('text=Record a payment');
