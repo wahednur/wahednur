@@ -8,3 +8,13 @@
 		format console
 	}
 }
+
+# The React admin dashboard. Only answers when ADMIN_DOMAIN is set and the `admin` profile is running.
+{$ADMIN_DOMAIN:admin.localhost} {
+	encode zstd gzip
+	reverse_proxy admin:8080
+	log {
+		output stdout
+		format console
+	}
+}

@@ -120,12 +120,26 @@ services:
     expose:
       - "3000"
 
+  admin:
+    profiles: ["admin"]
+    build:
+      context: ./admin
+      args:
+        # Baked into the admin at build time.
+        VITE_API_URL: ${VITE_API_URL:-${NEXT_PUBLIC_API_URL:-}}
+        VITE_SITE_URL: ${VITE_SITE_URL:-}
+    image: wahednur-admin:latest
+    restart: unless-stopped
+    expose:
+      - "8080"
+
   caddy:
     profiles: ["proxy"]
     image: caddy:2-alpine
     restart: unless-stopped
     environment:
       API_DOMAIN: ${API_DOMAIN:-localhost}
+      ADMIN_DOMAIN: ${ADMIN_DOMAIN:-admin.localhost}
     ports:
       - "80:80"
       - "443:443"

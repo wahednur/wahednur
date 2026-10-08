@@ -29,3 +29,11 @@ The API must allow the origin: `CORS_ALLOWED_ORIGINS` already lists `http://loca
 5. Open `https://admin.wahednur.tech` and sign in with the owner account.
 
 If sign-in says "CSRF" or loops back to the login page, the cookie domain or the CORS list is wrong.
+
+## Deploy with Docker (VPS or Dokploy), instead of Vercel
+The admin has its own `admin/Dockerfile` (bun builds the static files, nginx serves them as a non-root user on port 8080) and a compose service `admin` behind the `admin` profile.
+- Tested: the image builds, single-page routes such as `/projects/abc` open the app, `/healthz` answers, hashed files are cached for a year, `index.html` is never cached, and every response carries `noindex`, frame denial and HSTS.
+- Build arguments `VITE_API_URL` and `VITE_SITE_URL` are baked in; change them and rebuild.
+- **Dokploy:** add `admin` to `COMPOSE_PROFILES` (with `frontend` if you host the site there too), set `VITE_API_URL` and `VITE_SITE_URL`, deploy, then add the domain `admin.wahednur.tech` to service `admin`, port `8080`, with HTTPS on.
+- **Plain VPS with Caddy:** add `ADMIN_DOMAIN=admin.wahednur.tech` to `.env`; the Caddyfile proxies it to the service when the `admin` profile is on.
+- Either way the API still needs `https://admin.wahednur.tech` in `CORS_ALLOWED_ORIGINS` and `COOKIE_DOMAIN=.wahednur.tech`.
