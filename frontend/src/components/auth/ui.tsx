@@ -63,4 +63,4 @@ export function Submit({ busy, children }: { busy: boolean; children: React.Reac
   );
 }
 
-export const PASSWORD_HINT = "At least 12 characters. Avoid common passwords.";
+export const PASSWORD_HINT = "At least 10 characters. Three or four random words work well.";

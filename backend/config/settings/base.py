@@ -201,12 +201,11 @@ HEADLESS_FRONTEND_URLS = {
     "account_reset_password_from_key": f"{FRONTEND_URL}/reset-password/{{key}}",
     "socialaccount_login_error": f"{FRONTEND_URL}/login?error=social",
 }
+PASSWORD_MIN_LENGTH_CLIENT = env.int("PASSWORD_MIN_LENGTH_CLIENT", default=10)
+PASSWORD_MIN_LENGTH_STAFF = env.int("PASSWORD_MIN_LENGTH_STAFF", default=12)
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
-    {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
-        "OPTIONS": {"min_length": 12},
-    },
+    {"NAME": "accounts.validators.RoleAwareMinimumLengthValidator"},
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
