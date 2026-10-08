@@ -9,7 +9,7 @@ from rest_framework.test import APIClient
 from accounting.models import Expense
 from billing import services as billing
 from billing.models import Invoice, Payment
-from projects.models import Project
+from projects.models import ClientProfile, Project
 
 User = get_user_model()
 pytestmark = pytest.mark.django_db
@@ -140,7 +140,10 @@ def test_expense_filters(owner):
 # --- reports ----------------------------------------------------------------------
 def test_summary_is_per_currency_and_never_mixes_them(owner, project):
     invoice(owner, project, "50000", paid=[("20000", TODAY)])
-    invoice(owner, project, "300", currency="USD", paid=[("300", TODAY)])
+    abroad = get_user_model().objects.create_user("abroad@example.com", "a-very-long-pass-123")
+    ClientProfile.objects.create(user=abroad, client_type="foreign")
+    foreign = Project.objects.create(client=abroad, title="Abroad")
+    invoice(owner, foreign, "300", currency="USD", paid=[("300", TODAY)])
     spend(owner, "5000")
     spend(owner, "40", currency="USD")
     data = login(owner).get("/api/accounting/summary/").json()

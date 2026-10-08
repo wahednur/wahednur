@@ -9,7 +9,7 @@ from rest_framework.test import APIClient
 from billing import services as billing
 from catalog.models import Order as PackageOrder
 from catalog.models import Package, Service
-from projects.models import Project
+from projects.models import ClientProfile, Project
 from shop.models import Product, ShippingZone, StockMovement
 from subscriptions import services as subs
 
@@ -146,6 +146,7 @@ def test_overdue_amounts_are_split_out_and_money_is_an_exact_string(staff, alice
 def test_currencies_are_never_mixed(staff, alice):
     p = project(alice)
     invoice(staff, p, "1000")
+    ClientProfile.objects.create(user=alice, client_type="foreign")
     invoice(staff, p, "20", currency="USD")
     money = login(alice).get(URL).json()["money"]
     assert money["BDT"]["owed"] == "1000.00" and money["USD"]["owed"] == "20.00"

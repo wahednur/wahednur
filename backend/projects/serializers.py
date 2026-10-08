@@ -24,6 +24,7 @@ class UpdateSerializer(serializers.ModelSerializer):
 
 class ProjectSerializer(serializers.ModelSerializer):
     client_email = serializers.EmailField(source="client.email", read_only=True)
+    client_currency = serializers.SerializerMethodField()
     progress = serializers.IntegerField(read_only=True)
     client = serializers.PrimaryKeyRelatedField(
         queryset=User.objects.filter(is_active=True), required=True
@@ -38,6 +39,7 @@ class ProjectSerializer(serializers.ModelSerializer):
             "status",
             "client",
             "client_email",
+            "client_currency",
             "progress",
             "start_date",
             "due_date",
@@ -45,6 +47,10 @@ class ProjectSerializer(serializers.ModelSerializer):
             "created_at",
         ]
         read_only_fields = ["id", "completed_at", "created_at"]
+
+    def get_client_currency(self, project) -> str:
+        profile = getattr(project.client, "client_profile", None)
+        return profile.currency if profile else "BDT"
 
 
 class ProjectDetailSerializer(ProjectSerializer):
@@ -61,6 +67,15 @@ class ProjectDetailSerializer(ProjectSerializer):
         return UpdateSerializer(qs, many=True).data
 
 
+class ClientCreateSerializer(serializers.Serializer):
+    email = serializers.EmailField(max_length=254)
+    client_type = serializers.ChoiceField(choices=ClientProfile.Type.choices)
+    full_name = serializers.CharField(max_length=150, required=False, allow_blank=True)
+    company = serializers.CharField(max_length=150, required=False, allow_blank=True)
+    phone = serializers.CharField(max_length=30, required=False, allow_blank=True)
+    address = serializers.CharField(max_length=300, required=False, allow_blank=True)
+
+
 class ProjectEditSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
@@ -71,7 +86,19 @@ class ProjectEditSerializer(serializers.ModelSerializer):
 class ClientSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(source="user.id", read_only=True)
     email = serializers.EmailField(source="user.email", read_only=True)
+    currency = serializers.CharField(read_only=True)
 
     class Meta:
         model = ClientProfile
-        fields = ["id", "email", "full_name", "company", "phone", "address", "internal_notes"]
+        fields = [
+            "id",
+            "email",
+            "client_type",
+            "currency",
+            "full_name",
+            "company",
+            "phone",
+            "address",
+            "internal_notes",
+        ]
+        read_only_fields = ["currency"]

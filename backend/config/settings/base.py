@@ -314,6 +314,9 @@ REVALIDATE_SECRET = env("REVALIDATE_SECRET", default="")
 # --- Shop ---------------------------------------------------------------------------
 # Unpaid orders are released (stock returns) after this many hours.
 SHOP_PAYMENT_HOURS = env.int("SHOP_PAYMENT_HOURS", default=48)
+# Work starts after the advance is paid; final delivery follows full payment
+# (only enforced once the project has an issued invoice).
+ENFORCE_PAYMENT_GATES = env.bool("ENFORCE_PAYMENT_GATES", default=True)
 # Installment reminders: one email this many days before the due date, one more if it passes.
 REMINDER_DAYS_BEFORE = env.int("REMINDER_DAYS_BEFORE", default=3)
 CELERY_BEAT_SCHEDULE["send-payment-reminders"] = {

@@ -10,6 +10,13 @@ class ClientProfile(models.Model):
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="client_profile"
     )
+
+    class Type(models.TextChoices):
+        LOCAL = "local", "Local (Bangladesh)"
+        FOREIGN = "foreign", "Foreign"
+
+    # Decides the currency of every quotation and invoice: local = BDT, foreign = USD.
+    client_type = models.CharField(max_length=7, choices=Type.choices, default=Type.LOCAL)
     full_name = models.CharField(max_length=150, blank=True)
     company = models.CharField(max_length=150, blank=True)
     phone = models.CharField(max_length=30, blank=True)
@@ -19,6 +26,10 @@ class ClientProfile(models.Model):
 
     def __str__(self) -> str:
         return self.company or self.full_name or self.user.email
+
+    @property
+    def currency(self) -> str:
+        return "USD" if self.client_type == self.Type.FOREIGN else "BDT"
 
 
 class Project(models.Model):

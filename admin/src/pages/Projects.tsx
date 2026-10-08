@@ -78,7 +78,7 @@ export default function Projects() {
               <option value="">Choose…</option>
               {(clients.data ?? []).map((c) => (
                 <option key={c.id} value={c.id}>
-                  {c.full_name || c.email} ({c.email})
+                  {c.full_name || c.email} ({c.email}, {c.currency})
                 </option>
               ))}
             </select>

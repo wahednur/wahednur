@@ -9,16 +9,19 @@ type Item = { description: string; quantity: string; unit_price: string };
 type Step = { label: string; mode: "percent" | "amount"; value: string; due_date: string };
 
 const blankItem = (): Item => ({ description: "", quantity: "1", unit_price: "" });
+export const STANDARD_NOTE =
+  "Payment: 40% advance before work starts, 30% midway, and the final 30% before final delivery. " +
+  "Final delivery follows full payment.";
 const PRESETS: { name: string; steps: Step[] }[] = [
-  { name: "Full payment", steps: [{ label: "Full payment", mode: "percent", value: "100", due_date: "" }] },
   {
-    name: "Start, middle, final (example split)",
+    name: "Standard: 40% advance, 30% midway, 30% final",
     steps: [
-      { label: "Start", mode: "percent", value: "40", due_date: "" },
-      { label: "Middle", mode: "percent", value: "30", due_date: "" },
-      { label: "Final", mode: "percent", value: "30", due_date: "" },
+      { label: "Advance (before work starts)", mode: "percent", value: "40", due_date: "" },
+      { label: "Midway", mode: "percent", value: "30", due_date: "" },
+      { label: "Final (before final delivery)", mode: "percent", value: "30", due_date: "" },
     ],
   },
+  { name: "Full payment", steps: [{ label: "Full payment", mode: "percent", value: "100", due_date: "" }] },
 ];
 
 /** Cents, for the on-screen preview only. The server works the real numbers out. */
@@ -81,8 +84,9 @@ export default function DocumentEditor({ kind, id }: { kind: "quotation" | "invo
   const [project, setProject] = useState("");
   const [title, setTitle] = useState("");
   const [currency, setCurrency] = useState<"BDT" | "USD">("BDT");
+  const chosen = (projects.data ?? []).find((p) => p.id === project);
   const [discount, setDiscount] = useState("0");
-  const [notes, setNotes] = useState("");
+  const [notes, setNotes] = useState(id ? "" : STANDARD_NOTE);
   const [date, setDate] = useState("");
   const [items, setItems] = useState<Item[]>([blankItem()]);
   const [steps, setSteps] = useState<Step[]>(presetSteps());
@@ -103,6 +107,11 @@ export default function DocumentEditor({ kind, id }: { kind: "quotation" | "invo
       setSteps(d.installments.map((s) => ({ label: s.label, mode: "amount" as const, value: s.amount, due_date: s.due_date ?? "" })));
     }
   }, [id, existing.data, kind]);
+
+  // A local client is billed in taka and a foreign client in dollars; the server checks it too.
+  useEffect(() => {
+    if (!id && chosen) setCurrency(chosen.client_currency);
+  }, [id, chosen]);
 
   const gross = items.reduce((a, i) => a + Math.round(cents(i.unit_price) * Number(i.quantity || 0)), 0);
   const total = Math.max(0, gross - cents(discount));
@@ -146,13 +155,13 @@ export default function DocumentEditor({ kind, id }: { kind: "quotation" | "invo
           Title
           <input required maxLength={200} value={title} onChange={(e) => setTitle(e.target.value)} className={field} />
         </label>
-        <label className="text-sm">
-          Currency (one per document)
-          <select value={currency} onChange={(e) => setCurrency(e.target.value as "BDT" | "USD")} className={field}>
-            <option value="BDT">BDT (taka)</option>
-            <option value="USD">USD (dollars)</option>
-          </select>
-        </label>
+        <div className="text-sm">
+          Currency
+          <p className={`${field} mt-1 flex items-center justify-between`}>
+            <span>{currency === "USD" ? "USD (dollars)" : "BDT (taka)"}</span>
+            <span className="text-xs text-muted">{currency === "USD" ? "foreign client" : "local client"}</span>
+          </p>
+        </div>
         <label className="text-sm">
           {kind === "quotation" ? "Valid until (optional)" : "Due date (optional)"}
           <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className={field} />

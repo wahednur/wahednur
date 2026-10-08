@@ -10,6 +10,7 @@ from accounts.permissions import IsStaffMember, IsVerifiedUser
 from . import services
 from .models import ClientProfile, Milestone
 from .serializers import (
+    ClientCreateSerializer,
     ClientSerializer,
     MilestoneSerializer,
     ProjectDetailSerializer,
@@ -113,6 +114,12 @@ class ClientListView(APIView):
 
     permission_classes = [IsStaffMember]
 
+    def post(self, request):
+        data = ClientCreateSerializer(data=request.data)
+        data.is_valid(raise_exception=True)
+        profile = services.create_client(staff=request.user, request=request, **data.validated_data)
+        return Response(ClientSerializer(profile).data, status=status.HTTP_201_CREATED)
+
     def get(self, request):
         users = User.objects.filter(is_active=True, is_staff=False)
         q = request.query_params.get("q", "").strip()
@@ -130,6 +137,12 @@ class ClientListView(APIView):
 
 class ClientDetailView(APIView):
     permission_classes = [IsStaffMember]
+
+    def post(self, request, pk):
+        """Send the 'choose your password' email again."""
+        user = get_object_or_404(User, pk=pk, is_staff=False)
+        services.invite_client(user=user, request=request)
+        return Response({"sent": True})
 
     def patch(self, request, pk):
         profile, _ = ClientProfile.objects.get_or_create(user=get_object_or_404(User, pk=pk))

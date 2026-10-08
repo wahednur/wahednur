@@ -114,10 +114,30 @@ def _notify(doc, subject, line, path):
     )
 
 
+def client_currency(project) -> str:
+    """Local clients are billed in taka, foreign clients in dollars. Shop orders are exempt."""
+    profile = getattr(project.client, "client_profile", None)
+    return profile.currency if profile else "BDT"
+
+
+def _check_currency(project, currency):
+    if project.is_system:
+        return
+    need = client_currency(project)
+    if currency != need:
+        who = (
+            "A local client is billed in BDT"
+            if need == "BDT"
+            else "A foreign client is billed in USD"
+        )
+        _fail("currency", f"{who}. Change the client's type first if that is wrong.")
+
+
 # --- quotations -------------------------------------------------------------------
 @transaction.atomic
 def save_quotation(*, user, items, quotation=None, project=None, **data) -> Quotation:
     _check_items(items, data.get("discount", ZERO))
+    _check_currency(project or quotation.project, data.get("currency", "BDT"))
     if quotation is None:
         quotation = Quotation(number=next_number("QUO"), project=project, created_by=user, **data)
     else:
@@ -190,6 +210,7 @@ def save_invoice(
     *, user, items, installments, invoice=None, project=None, quotation=None, **data
 ) -> Invoice:
     _check_items(items, data.get("discount", ZERO))
+    _check_currency(project or invoice.project, data.get("currency", "BDT"))
     if invoice is None:
         invoice = Invoice(
             number=next_number("INV"),

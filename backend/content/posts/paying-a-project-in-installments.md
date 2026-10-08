@@ -1,23 +1,21 @@
 ---
 slug: paying-a-project-in-installments
 title: Paying a software project in installments
-excerpt: Why a project invoice is split into a start, a middle and a final payment, and how that protects both sides.
+excerpt: Why a project is paid 40% before work starts, 30% midway and the rest before final delivery, and how that protects both sides.
 cover: /blog/paying-a-project-in-installments.svg
 cover_alt: Three installments: start, middle and final, set per project
 ---
-> **In short:** Splitting payment into start, middle and final shares the risk between you and me, and the parts must add up exactly.
+> **In short:** 40% advance before work starts, 30% midway, and the rest before final delivery. The parts must add up exactly.
 
 Paying everything upfront is risky for the client. Paying everything at the end is risky for the developer. Installments share the risk.
 
-## A common shape
+## My standard split
 
-A project invoice can be split into three parts:
+- **40% advance, before work starts.** It reserves the time, and work begins once it is paid.
+- **30% midway**, at an agreed point such as a working version ready to review.
+- **The final 30%.** When it is paid, the full amount is in and final delivery follows.
 
-- **Start**: paid when the project begins. It reserves the time.
-- **Middle**: paid at an agreed point, such as when a working version is ready to review.
-- **Final**: paid when the work is delivered.
-
-The split is set per project. An example only: 40% / 30% / 30%. Your project may use different shares, or fixed amounts instead of percentages.
+Some projects use a different split, or fixed amounts instead of percentages. Whatever is agreed is written on the quotation and the invoice before work begins.
 
 ## How the numbers are kept honest
 

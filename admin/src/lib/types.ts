@@ -25,12 +25,23 @@ export type Project = {
   status: "proposal" | "active" | "on_hold" | "completed" | "cancelled";
   client: number;
   client_email: string;
+  client_currency: "BDT" | "USD";
   progress: number;
   start_date: string | null;
   due_date: string | null;
   created_at: string;
 };
-export type ClientRow = { id: number; email: string; full_name: string; company: string; phone?: string };
+export type ClientRow = {
+  id: number;
+  email: string;
+  client_type: "local" | "foreign";
+  currency: "BDT" | "USD";
+  full_name: string;
+  company: string;
+  phone: string;
+  address: string;
+  internal_notes: string;
+};
 
 export type BillRow = {
   id: string;
