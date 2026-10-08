@@ -1,10 +1,19 @@
+import Link from "next/link";
+import { mainNav } from "@/lib/nav";
 import { site } from "@/lib/site";
 import Year from "./Year";
 
 export default function Footer() {
   return (
     <footer className="border-t border-line">
-      <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-8 text-sm text-muted sm:flex-row sm:items-center sm:justify-between sm:px-6">
+      <nav aria-label="Footer" className="mx-auto flex max-w-6xl flex-wrap gap-x-6 gap-y-2 px-4 pt-8 text-sm text-muted sm:px-6">
+        {mainNav.map((n) => (
+          <Link key={n.href} href={n.href} className="hover:text-ink">
+            {n.label}
+          </Link>
+        ))}
+      </nav>
+      <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-6 text-sm text-muted sm:flex-row sm:items-center sm:justify-between sm:px-6">
         <p>
           © 2012 - <Year /> {site.name}
         </p>
