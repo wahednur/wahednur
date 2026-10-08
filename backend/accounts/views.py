@@ -1,8 +1,13 @@
 from allauth.account.models import EmailAddress
 from allauth.mfa.utils import is_mfa_enabled
+from django.shortcuts import get_object_or_404
+from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
+from . import profile
+from .models import Address
 
 
 class MeView(APIView):
@@ -37,3 +42,54 @@ class MeView(APIView):
                 "has_package_orders": packages.exists(),
             }
         )
+
+
+class ProfileView(APIView):
+    """Your own name, phone and company. Email and password are changed in Security."""
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        return Response(profile.profile_out(request.user))
+
+    def patch(self, request):
+        data = request.data
+        errors = {f: "Up to 150 characters." for f in ("full_name", "company") if len(str(data.get(f, ""))) > 150}
+        if len(str(data.get("phone", ""))) > 30:
+            errors["phone"] = "Up to 30 characters."
+        if errors:
+            return Response(errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(profile.update_profile(request.user, data))
+
+
+class AddressListView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        return Response([profile.address_out(a) for a in request.user.addresses.all()])
+
+    def post(self, request):
+        if request.user.addresses.count() >= profile.MAX_ADDRESSES:
+            return Response({"detail": "You have reached the limit of saved addresses."}, status=status.HTTP_400_BAD_REQUEST)
+        values, errors = profile.clean_address(request.data)
+        if errors:
+            return Response(errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(profile.address_out(profile.save_address(request.user, values)), status=status.HTTP_201_CREATED)
+
+
+class AddressDetailView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def _get(self, request, pk):
+        return get_object_or_404(Address, pk=pk, user=request.user)  # never someone else's
+
+    def patch(self, request, pk):
+        address = self._get(request, pk)
+        values, errors = profile.clean_address(request.data, partial=True)
+        if errors:
+            return Response(errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(profile.address_out(profile.save_address(request.user, values, address)))
+
+    def delete(self, request, pk):
+        profile.delete_address(self._get(request, pk))
+        return Response(status=status.HTTP_204_NO_CONTENT)

@@ -38,6 +38,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     email = models.EmailField("email address", max_length=254, unique=True)
     full_name = models.CharField(max_length=150, blank=True)
+    phone = models.CharField(max_length=30, blank=True)
+    company = models.CharField(max_length=150, blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
@@ -84,3 +86,39 @@ class AuditEvent(models.Model):
 
     def __str__(self) -> str:
         return f"{self.created_at:%Y-%m-%d %H:%M} {self.action} {self.email or self.user_id}"
+
+
+class Address(models.Model):
+    """A saved postal address. One user can keep several, for delivery or for invoices."""
+
+    class Kind(models.TextChoices):
+        SHIPPING = "shipping", "Delivery address"
+        BILLING = "billing", "Billing address"
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="addresses")
+    kind = models.CharField(max_length=10, choices=Kind.choices, default=Kind.SHIPPING)
+    label = models.CharField(max_length=60, blank=True)  # "Home", "Office"
+    name = models.CharField(max_length=150)  # who it is addressed to
+    company = models.CharField(max_length=150, blank=True)
+    phone = models.CharField(max_length=30, blank=True)
+    line1 = models.CharField(max_length=200)
+    line2 = models.CharField(max_length=200, blank=True)
+    city = models.CharField(max_length=100)
+    region = models.CharField(max_length=100, blank=True)  # district / state
+    postal_code = models.CharField(max_length=20, blank=True)
+    country = models.CharField(max_length=80, default="Bangladesh")
+    tax_id = models.CharField(max_length=60, blank=True)  # VAT / BIN, for billing addresses
+    is_default = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-is_default", "-created_at"]
+        constraints = [
+            # At most one default per user and kind.
+            models.UniqueConstraint(
+                fields=["user", "kind"], condition=models.Q(is_default=True), name="accounts_address_one_default"
+            ),
+        ]
+
+    def __str__(self) -> str:
+        return f"{self.label or self.get_kind_display()}: {self.line1}, {self.city}"
