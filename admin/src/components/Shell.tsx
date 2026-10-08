@@ -1,13 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { useAuth } from "@/lib/auth";
-import { SITE_URL } from "@/lib/http";
+import { api, SITE_URL } from "@/lib/http";
 import { Button } from "./ui";
 
 type Item = { to: string; label: string; owner?: boolean };
 const ITEMS: Item[] = [
   { to: "/", label: "Overview" },
-  { to: "/messages", label: "Messages" },
+  { to: "/conversations", label: "Conversations" },
+  { to: "/messages", label: "Enquiries" },
   { to: "/projects", label: "Projects" },
   { to: "/billing", label: "Billing" },
   { to: "/services", label: "Services & packages" },
@@ -25,6 +26,18 @@ export default function Shell() {
   const { me, signOut, isOwner } = useAuth();
   const [open, setOpen] = useState(false);
   const items = ITEMS.filter((i) => !i.owner || isOwner);
+  const [unread, setUnread] = useState(0);
+  useEffect(() => {
+    // Unread customer chats, shown as a badge on "Conversations". Quiet while the tab is hidden.
+    const check = async () => {
+      if (document.hidden) return;
+      const r = await api<{ unread: number }[]>("GET", "/conversations/");
+      if (r.ok && r.data) setUnread(r.data.reduce((n, c) => n + c.unread, 0));
+    };
+    const first = setTimeout(check, 0);
+    const id = setInterval(check, 60000);
+    return () => { clearTimeout(first); clearInterval(id); };
+  }, []);
 
   const nav = (
     <nav aria-label="Main" className="space-y-1 p-3">
@@ -39,6 +52,9 @@ export default function Shell() {
           }
         >
           {i.label}
+          {i.to === "/conversations" && unread > 0 && (
+            <span className="ml-2 rounded-full bg-amber-400 px-1.5 py-0.5 font-mono text-[10px] font-bold text-bg">{unread}</span>
+          )}
         </NavLink>
       ))}
     </nav>

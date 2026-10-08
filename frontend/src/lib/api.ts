@@ -53,6 +53,18 @@ export type Milestone = {
   status: "todo" | "in_progress" | "done";
   due_date: string | null;
 };
+export type HistoryEvent = {
+  type: "report" | "update" | "milestone";
+  id: number;
+  at: string;
+  title: string;
+  date?: string;
+  items?: string[];
+  next_steps?: string;
+  hours?: string | null;
+  draft?: boolean;
+  internal?: boolean;
+};
 export type Update = { id: number; message: string; is_public: boolean; author_email: string | null; created_at: string };
 export type Project = {
   id: string;
@@ -467,4 +479,17 @@ export function to2(value: string): string {
   const digits = String(cents).padStart(3, "0");
   const text = `${digits.slice(0, -2)}.${digits.slice(-2)}`;
   return negative && cents !== 0 ? `-${text}` : text;
+}
+
+export type AppNotification = { id: number; kind: string; title: string; body: string; url: string; created_at: string; read: boolean };
+export type ChatMessage = { id: number; body: string; from_team: boolean; created_at: string; read: boolean };
+
+/** "5 min ago", "yesterday"... for notification and message times. */
+export function ago(iso: string): string {
+  const s = Math.max(0, (Date.now() - new Date(iso).getTime()) / 1000);
+  if (s < 60) return "just now";
+  if (s < 3600) return `${Math.floor(s / 60)} min ago`;
+  if (s < 86400) return `${Math.floor(s / 3600)} h ago`;
+  if (s < 172800) return "yesterday";
+  return new Date(iso).toLocaleDateString("en-GB", { day: "numeric", month: "short" });
 }

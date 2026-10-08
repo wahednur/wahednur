@@ -157,3 +157,14 @@ Nothing.
 - Sidebar "Protected session" card shows only true facts: encrypted connection and whether two-step sign-in is on (link to enable it when off).
 - Dashboard header: "Your private workspace", status chips (email verified, two-step sign-in, encrypted connection).
 - Print/PDF views are unaffected (frame is `no-print`).
+
+## Customer area: menus, profile, notifications, messages, daily reports, step visual
+- Menus: Shop orders / Package requests (sidebar) and Packages / Shop (public header) show only when there is content (`/api/auth/me/` flags; `lib/nav.ts` checks the public API, cached). Env flags `NEXT_PUBLIC_SHOW_*=false` still force-hide.
+- Avatar menu (Profile, Settings, Security, Sign out), bell with unread count (polls 60 s, only while the tab is visible), `/app/notifications`, `/app/messages`, `/app/profile`, `/app/settings`. The customer is never called "client" in the UI.
+- Profile + addresses: `User.phone/company`, `accounts.Address` (delivery/billing, one default per kind, max 20); API `/api/auth/profile/`, `/api/auth/addresses/`.
+- New app `notifications`: Notification, NotificationSetting (email/push), PushSubscription, Message (one thread per customer). Triggers: public project update, finished milestone, quotation sent, invoice issued, payment recorded, daily report published, message.
+- Daily reports (`projects.DailyReport`): staff draft is pre-filled from the day's finished milestones and public notes, edit, then publish (customer is notified in app, push and email). Customer sees them in "Work history" (reports, notes, finished steps, grouped by day). Admin: project page has "End-of-day report"; new "Conversations" page with unread badge; contact-form inbox renamed "Enquiries".
+- Step visual on the project page: progress ring, "N of M steps finished", horizontal (vertical on phones) track.
+- Web push: needs VAPID keys. Run `python manage.py generate_vapid_keys`, put `VAPID_PUBLIC_KEY` and `VAPID_PRIVATE_KEY` (and optionally `VAPID_SUBJECT=mailto:...`) in the API **and worker** environment, redeploy. Push needs HTTPS; the customer turns it on per device in Settings. Without keys the bell and email still work.
+- Site frame: the website's header/footer are hidden under `/app` by CSS (`body:has(#app-frame)`), no JS.
+- Browser checks: `tools/e2e/website/02-profile-and-addresses.cjs`, `03-notifications-reports-messages.cjs`. Real push delivery was not tested here (needs a real HTTPS origin and device).

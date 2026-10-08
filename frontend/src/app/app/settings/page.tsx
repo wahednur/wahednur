@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import NotificationSettings from "@/components/app/NotificationSettings";
 import { getMe } from "@/lib/auth/server";
 
 export const metadata: Metadata = { title: "Settings" };
@@ -21,6 +22,10 @@ export default async function SettingsPage() {
           <span><span className="block font-medium">Password and two-step sign-in</span>
             <span className="text-muted">{me.mfa_enabled ? "Two-step sign-in is on" : "Two-step sign-in is off"}</span></span><span aria-hidden>→</span>
         </Link>
+      </section>
+      <section className="space-y-3" aria-labelledby="notif">
+        <h2 id="notif" className="text-sm font-semibold uppercase tracking-wide text-muted">Notifications</h2>
+        <NotificationSettings />
       </section>
     </div>
   );

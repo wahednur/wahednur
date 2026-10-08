@@ -155,3 +155,6 @@ body {
   .step-now, .loop-node { animation: none; }
   .loop-node { opacity: 0.25; }
 }
+
+/* The signed-in area has its own frame, so the website's header and footer step aside there. */
+body:has(#app-frame) .site-chrome { display: none; }

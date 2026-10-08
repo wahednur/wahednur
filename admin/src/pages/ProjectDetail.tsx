@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import DailyReport from "@/components/DailyReport";
 import { Badge, Button, Card, field, Loading, Notice, PageHeader, useLoad } from "@/components/ui";
 import { day, money } from "@/lib/format";
 import { api } from "@/lib/http";
@@ -168,6 +169,8 @@ export default function ProjectDetail() {
           )}
         </Card>
       </div>
+
+      <DailyReport projectId={p.id} onDone={reload} />
 
       <Card className="mt-5 p-5">
         <div className="mb-3 flex items-center justify-between">

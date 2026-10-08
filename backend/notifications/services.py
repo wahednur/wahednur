@@ -85,7 +85,8 @@ def post_message(*, customer, sender, body: str) -> Message:
         notify(customer, kind="message", title="New message from Wahed Nur", body=preview, url="/app/messages", email=True)
     else:
         who = customer.full_name or customer.email
-        notify_staff(kind="message", title=f"New message from {who}", body=preview, url=f"/messages/{customer.pk}")
+        notify_staff(kind="message", title=f"New message from {who}", body=preview, url="")
+        _after_commit(lambda: _email(settings.LEADS_NOTIFY_TO, f"New message from {who}", f"{preview}\n\nReply from the admin dashboard, under Conversations.", ""))
     return msg
 
 

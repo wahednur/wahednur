@@ -27,6 +27,8 @@ const paths: Record<string, string> = {
   menu: "M4 7h16M4 12h16M4 17h16",
   close: "M6 6l12 12M18 6L6 18",
   lock: "M6 11h12v9H6zM8 11V8a4 4 0 0 1 8 0v3",
+  bell: "M6 16V11a6 6 0 0 1 12 0v5l2 2H4zM10 20a2 2 0 0 0 4 0",
+  chat: "M4 5h16v11H9l-5 4z",
   arrow: "M5 12h14M13 6l6 6-6 6",
 };
 

@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { Alert } from "@/components/auth/ui";
-import { api, NEXT_STATUS, STATUS_LABEL, type Milestone, type ProjectDetail } from "@/lib/api";
+import { api, NEXT_STATUS, STATUS_LABEL, type HistoryEvent, type Milestone, type ProjectDetail } from "@/lib/api";
 import DocumentsPanel from "./DocumentsPanel";
 import Progress from "./Progress";
+import StepTracker from "./StepTracker";
+import WorkHistory from "./WorkHistory";
 
 const field =
   "mt-2 w-full rounded-md border border-line bg-surface px-3 py-2.5 text-sm text-ink focus:border-brand focus:outline-none";
@@ -14,7 +16,6 @@ const MS_NEXT: Record<Milestone["status"], Milestone["status"]> = {
   done: "todo",
 };
 const MS_LABEL: Record<Milestone["status"], string> = { todo: "To do", in_progress: "In progress", done: "Done" };
-const when = (iso: string) => iso.slice(0, 10);
 
 export default function ProjectView({ id, staff }: { id: string; staff: boolean }) {
   const [p, setP] = useState<ProjectDetail | null>(null);
@@ -22,6 +23,7 @@ export default function ProjectView({ id, staff }: { id: string; staff: boolean 
   const [missing, setMissing] = useState(false);
 
   const [tick, setTick] = useState(0);
+  const [history, setHistory] = useState<HistoryEvent[] | null>(null);
 
   useEffect(() => {
     api<ProjectDetail>("GET", `/projects/${id}/`).then((r) => {
@@ -29,6 +31,7 @@ export default function ProjectView({ id, staff }: { id: string; staff: boolean 
       else if (r.status === 404) setMissing(true);
       else setError(r.error);
     });
+    api<HistoryEvent[]>("GET", `/projects/${id}/history/`).then((r) => r.ok && setHistory(r.data));
   }, [id, tick]);
 
   async function act(method: string, path: string, body?: unknown) {
@@ -56,7 +59,7 @@ export default function ProjectView({ id, staff }: { id: string; staff: boolean 
         <p className="font-mono text-[11px] text-muted">
           {p.start_date ? `Start ${p.start_date}` : ""} {p.due_date ? `· Due ${p.due_date}` : ""}
         </p>
-        <Progress value={p.progress} />
+        {p.milestones.length === 0 && <Progress value={p.progress} />}
         {staff && NEXT_STATUS[p.status].length > 0 && (
           <div className="flex flex-wrap gap-2 pt-1 text-sm">
             {NEXT_STATUS[p.status].map((s) => (
@@ -74,6 +77,8 @@ export default function ProjectView({ id, staff }: { id: string; staff: boolean 
       </header>
 
       {error && <Alert>{error}</Alert>}
+
+      <StepTracker steps={p.milestones} progress={p.progress} />
 
       <section aria-labelledby="ms">
         <h2 id="ms" className="text-lg font-semibold">
@@ -137,22 +142,11 @@ export default function ProjectView({ id, staff }: { id: string; staff: boolean 
         )}
       </section>
 
-      <section aria-labelledby="up">
+      <section id="reports" aria-labelledby="up" className="scroll-mt-20">
         <h2 id="up" className="text-lg font-semibold">
-          Progress notes
+          Work history
         </h2>
-        {p.updates.length === 0 && <p className="mt-3 text-sm text-muted">No notes yet.</p>}
-        <ul className="mt-3 space-y-3">
-          {p.updates.map((u) => (
-            <li key={u.id} className="rounded-xl border border-line p-4 text-sm">
-              <p className="whitespace-pre-wrap leading-6">{u.message}</p>
-              <p className="mt-2 font-mono text-[11px] text-muted">
-                {when(u.created_at)}
-                {staff && ` · ${u.is_public ? "visible to client" : "internal only"}`}
-              </p>
-            </li>
-          ))}
-        </ul>
+        <div className="mt-4">{history ? <WorkHistory events={history} staff={staff} /> : <p className="text-sm text-muted">Loading…</p>}</div>
         {staff && (
           <form
             className="mt-3 space-y-3 text-sm"

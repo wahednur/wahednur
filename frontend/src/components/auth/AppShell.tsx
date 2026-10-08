@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import Icon from "@/components/app/dashboard/Icons";
+import NotificationBell from "@/components/app/NotificationBell";
 import UserMenu from "./UserMenu";
 
 export type ShellItem = { href: string; label: string; icon: string };
@@ -109,7 +110,7 @@ export default function AppShell({ groups, user, children }: { groups: ShellGrou
   );
 
   return (
-    <div className="relative flex min-h-screen bg-bg">
+    <div id="app-frame" className="relative flex min-h-screen bg-bg">
       {/* Desktop sidebar */}
       <aside className="no-print sticky top-0 hidden h-screen w-64 shrink-0 flex-col gap-6 border-r border-line bg-surface/60 px-3 py-5 lg:flex">
         {brand}
@@ -149,6 +150,7 @@ export default function AppShell({ groups, user, children }: { groups: ShellGrou
             <Icon name="lock" size={13} /> Secure
           </span>
           <Link href="/" className="hidden rounded-md px-2.5 py-1.5 text-sm text-muted hover:text-ink md:block">Website</Link>
+          <NotificationBell />
           <div className="border-l border-line pl-3">
             <UserMenu email={user.email} name={user.name} roles={user.roles.filter((r) => r !== "client")} />
           </div>

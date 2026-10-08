@@ -16,6 +16,7 @@ export default async function AuthGate({ children }: { children: React.ReactNode
         { href: "/app", label: "Dashboard", icon: "dashboard" },
         { href: "/app/projects", label: "Projects", icon: "projects" },
         { href: "/app/documents", label: "Documents", icon: "documents" },
+        ...(!team ? [{ href: "/app/messages", label: "Messages", icon: "chat" }] : []),
       ],
     },
     {

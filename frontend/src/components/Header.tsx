@@ -8,7 +8,7 @@ import MobileNav from "./MobileNav";
 export default async function Header() {
   const nav = await getMainNav();
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-bg/80 backdrop-blur">
+    <header className="site-chrome sticky top-0 z-40 border-b border-line bg-bg/80 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
         <Link href="/" className="flex items-center gap-2 font-semibold tracking-tight">
           <span className="grid h-8 w-8 place-items-center rounded-md border border-brand/40 bg-surface font-mono text-sm text-brand">

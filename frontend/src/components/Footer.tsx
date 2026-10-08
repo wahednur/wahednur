@@ -6,7 +6,7 @@ import Year from "./Year";
 export default async function Footer() {
   const mainNav = await getMainNav();
   return (
-    <footer className="border-t border-line">
+    <footer className="site-chrome border-t border-line">
       <nav aria-label="Footer" className="mx-auto flex max-w-6xl flex-wrap gap-x-6 gap-y-2 px-4 pt-8 text-sm text-muted sm:px-6">
         {mainNav.map((n) => (
           <Link key={n.href} href={n.href} className="hover:text-ink">
