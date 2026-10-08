@@ -36,6 +36,11 @@ export default async function AuthGate({ children }: { children: React.ReactNode
             </Link>
           )}
           {(me.roles.includes("owner") || me.roles.includes("staff")) && (
+            <Link href="/app/manage" className="text-muted hover:text-ink">
+              Manage
+            </Link>
+          )}
+          {(me.roles.includes("owner") || me.roles.includes("staff")) && (
             <Link href="/app/content" className="text-muted hover:text-ink">
               Content
             </Link>

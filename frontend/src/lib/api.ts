@@ -337,3 +337,45 @@ export type DashboardData = {
   projects: { id: string; title: string; status: Project["status"]; progress: number; due_date: string | null }[];
   this_month?: Record<string, { received: string; spent: string; net: string }>;
 };
+
+export type ManagedPackage = {
+  id: number;
+  name: string;
+  tagline: string;
+  features: string[];
+  price: string;
+  currency: "BDT" | "USD";
+  cycle: "one_time" | "monthly" | "yearly";
+  delivery_days: number | null;
+  revisions: number | null;
+  position: number;
+  published: boolean;
+};
+export type ManagedService = {
+  id: number;
+  slug: string;
+  title: string;
+  summary: string;
+  description: string;
+  position: number;
+  published: boolean;
+  packages: ManagedPackage[];
+};
+export type ManagedProduct = {
+  id: number;
+  slug: string;
+  title: string;
+  summary: string;
+  description: string;
+  kind: "digital" | "physical";
+  price: string;
+  currency: "BDT" | "USD";
+  image_url: string;
+  published: boolean;
+  position: number;
+  stock: number | null;
+  files: { document: string; title: string; name: string }[];
+};
+export type ManagedZone = { id: number; name: string; fee: string; currency: "BDT" | "USD"; active: boolean; position: number };
+export type StockRow = { id: number; delta: number; reason: string; note: string; by: string | null; at: string };
+export type ClientFull = { id: number; email: string; full_name: string; company: string; phone: string; address: string; internal_notes: string };
