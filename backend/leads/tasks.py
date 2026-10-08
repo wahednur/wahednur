@@ -5,16 +5,8 @@ from . import emailer
 from .models import Lead
 
 
-@shared_task(
-    bind=True,
-    autoretry_for=(emailer.EmailError,),
-    retry_backoff=True,
-    retry_backoff_max=900,
-    max_retries=5,
-)
-def send_lead_notification(self, lead_id: str) -> None:
-    """Email the owner about a new lead. The lead is already saved, so a failing
-    email provider never loses an enquiry; the task just retries."""
+def notify(lead_id: str) -> None:
+    """Email the owner about a lead (once). Raises EmailError if the mail could not be sent."""
     lead = Lead.objects.get(pk=lead_id)
     if lead.notified_at:
         return
@@ -27,3 +19,16 @@ def send_lead_notification(self, lead_id: str) -> None:
     lead.notified_at = timezone.now()
     lead.notify_error = ""
     lead.save(update_fields=["notified_at", "notify_error"])
+
+
+@shared_task(
+    bind=True,
+    autoretry_for=(emailer.EmailError,),
+    retry_backoff=True,
+    retry_backoff_max=900,
+    max_retries=5,
+)
+def send_lead_notification(self, lead_id: str) -> None:
+    """Email the owner about a new lead. The lead is already saved, so a failing
+    email provider never loses an enquiry; the task just retries."""
+    notify(lead_id)

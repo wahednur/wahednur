@@ -50,7 +50,7 @@ def _send_by_smtp(lead: Lead, subject: str, text: str, body_html: str) -> None:
     try:
         message.send(fail_silently=False)
     except Exception as exc:  # noqa: BLE001
-        raise EmailError(f"SMTP send failed: {exc.__class__.__name__}") from exc
+        raise EmailError(f"SMTP send failed: {exc.__class__.__name__}: {str(exc)[:180]}") from exc
 
 
 def send_lead_email(lead: Lead) -> None:

@@ -7,6 +7,7 @@ import { Button } from "./ui";
 type Item = { to: string; label: string; owner?: boolean };
 const ITEMS: Item[] = [
   { to: "/", label: "Overview" },
+  { to: "/messages", label: "Messages" },
   { to: "/projects", label: "Projects" },
   { to: "/billing", label: "Billing" },
   { to: "/services", label: "Services & packages" },

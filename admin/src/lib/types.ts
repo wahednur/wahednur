@@ -269,3 +269,18 @@ export type ShopProduct = {
   files: { document: string; title: string; name: string }[];
 };
 export type Zone = { id: number; name: string; fee: string; currency: "BDT" | "USD"; active: boolean; position: number };
+
+export type Lead = {
+  id: string;
+  name: string;
+  email: string;
+  need: string;
+  need_label: string;
+  budget: string;
+  timeline: string;
+  details: string;
+  status: "new" | "read" | "replied" | "archived";
+  emailed: boolean;
+  email_error: string;
+  created_at: string;
+};

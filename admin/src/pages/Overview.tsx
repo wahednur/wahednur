@@ -17,6 +17,7 @@ const STAT: Record<string, string> = {
 
 /** The old links point at the website's screens; the same work now lives here. */
 const MAP: [RegExp, string][] = [
+  [/\/app\/messages/, "/messages"],
   [/\/app\/billing/, "/billing"],
   [/\/app\/orders/, "/requests"],
   [/\/app\/shop/, "/shop"],

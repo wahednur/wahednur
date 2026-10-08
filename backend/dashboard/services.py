@@ -13,6 +13,7 @@ from billing import services as billing
 from billing.models import Invoice, Quotation
 from catalog import services as catalog
 from catalog.models import Order as PackageOrder
+from leads.models import Lead
 from projects import services as projects
 from projects.models import Project
 from shop import services as shop
@@ -152,6 +153,12 @@ def build(user, *, is_owner: bool) -> dict:
                     "Paid shop orders to ship",
                     sum(1 for o, s in orders if s == "processing" and shop.has_physical(o)),
                     "/app/shop",
+                ),
+                _item(
+                    "enquiries",
+                    "New messages from the contact form",
+                    Lead.objects.filter(status=Lead.Status.NEW).count(),
+                    "/app/messages",
                 ),
                 _item(
                     "requests",

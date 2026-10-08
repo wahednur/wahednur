@@ -11,6 +11,7 @@ import DocumentNew from "@/pages/DocumentNew";
 import Documents from "@/pages/Documents";
 import InvoiceDetail from "@/pages/InvoiceDetail";
 import Login from "@/pages/Login";
+import Messages from "@/pages/Messages";
 import Overview from "@/pages/Overview";
 import ProjectDetail from "@/pages/ProjectDetail";
 import Products from "@/pages/Products";
@@ -50,6 +51,7 @@ export default function App() {
           </Route>
           <Route element={<Guard />}>
             <Route index element={<Overview />} />
+            <Route path="messages" element={<Messages />} />
             <Route path="projects" element={<Projects />} />
             <Route path="projects/:id" element={<ProjectDetail />} />
             <Route path="billing" element={<Billing />} />
