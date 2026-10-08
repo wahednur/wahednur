@@ -5,7 +5,7 @@ A separate app in `admin/` for the owner and staff. It is a single-page app with
 ## Screens
 Overview (what needs you), Projects (create, a detail page with milestones, progress, public and internal updates, edit details, move status, delete, and the project's invoices), Billing (create and edit draft quotations and invoices with a live total and a payment plan; send, mark accepted or rejected, turn an accepted quotation into an invoice; invoice detail with payments, issue, cancel, PDF), Services & packages (add, edit, hide or delete services and their packages: price, currency, billing cycle, delivery days, revisions, what is included), Package requests (accept or decline), Shop orders (confirm payment, ship, deliver), Subscriptions (pause, resume, cancel), Documents (upload, download, share with a client or stop sharing, delete), Clients, Content (list, and a full editor: title, address, summary, cover picture, Markdown with live preview, publish or unpublish, delete, and the search-engine text panel), Accounting (owner only).
 
-Still on the website for now: products and stock, delivery areas, documents. They will move here one at a time.
+Still on the website for now: products and stock, delivery areas (`/app/manage`). They will move here one at a time.
 
 ## Security
 - Only staff and the owner get past the sign-in; the API checks every call again, the screens only mirror it. Staff actions need two-step sign-in (the API refuses without it).
