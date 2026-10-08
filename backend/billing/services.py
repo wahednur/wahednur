@@ -192,6 +192,11 @@ def _notify(doc, subject, line, path):
         [client.email],
         fail_silently=True,  # the document is already saved; a mail problem must not undo it
     )
+    from notifications.services import notify
+
+    if not client.is_staff:
+        kind = "quotation" if subject.startswith("Quotation") else "invoice"
+        notify(client, kind=kind, title=subject, body=line, url=path)
 
 
 def project_for(*, client=None, project=None, user=None):
@@ -506,6 +511,14 @@ def record_payment(*, invoice: Invoice, user, request=None, **data) -> Payment:
         invoice=invoice, recorded_by=user, **{**data, "amount": amount}
     )
     record("payment_recorded", request=request, user=user)
+    from notifications.services import notify
+
+    client = invoice.project.client
+    if not client.is_staff and not invoice.project.is_system:
+        notify(
+            client, kind="payment", title=f"Payment received: {invoice.number}",
+            body=f"We recorded {invoice.currency} {amount:,.2f}. Thank you.", url=f"/app/billing/invoices/{invoice.pk}",
+        )
     return payment
 
 

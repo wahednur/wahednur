@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.db.models import Q
 from rest_framework import status
+from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -107,6 +108,70 @@ class UpdateListView(APIView):
         data.is_valid(raise_exception=True)
         update = services.add_update(project=project, user=request.user, **data.validated_data)
         return Response(UpdateSerializer(update).data, status=status.HTTP_201_CREATED)
+
+
+def _day(value):
+    from datetime import date
+
+    from django.utils import timezone
+
+    try:
+        return date.fromisoformat(str(value)) if value else timezone.localdate()
+    except ValueError:
+        raise ValidationError({"date": "Use the format YYYY-MM-DD."}) from None
+
+
+class HistoryView(APIView):
+    """The project's timeline: daily reports, updates and finished milestones. Clients only see what is public."""
+
+    permission_classes = [IsVerifiedUser]
+
+    def get(self, request, pk):
+        project = services.get_visible(request.user, pk)
+        events = services.history(project=project, user=request.user)
+        return _no_store(Response(events))
+
+
+class ReportDraftView(APIView):
+    """Staff: a ready-made starting point for the day's report, from the day's milestones and updates."""
+
+    permission_classes = [IsStaffMember]
+
+    def get(self, request, pk):
+        project = services.get_visible(request.user, pk)
+        day = _day(request.query_params.get("date"))
+        existing = project.reports.filter(date=day).first()
+        if existing:
+            return Response({"id": existing.pk, "date": day, "summary": existing.summary, "items": existing.items, "next_steps": existing.next_steps, "hours": existing.hours, "published": existing.published_at is not None})
+        return Response({**services.draft_report(project=project, day=day), "id": None, "published": False})
+
+
+class ReportListView(APIView):
+    permission_classes = [IsStaffMember]
+
+    def post(self, request, pk):
+        """Save the day's report (as a draft, or edit one), and publish it when `publish` is true."""
+        project = services.get_visible(request.user, pk)
+        data = request.data
+        items = data.get("items", [])
+        if not isinstance(items, list):
+            raise ValidationError({"items": "Send a list of lines."})
+        hours = data.get("hours")
+        try:
+            hours = None if hours in (None, "") else round(float(hours), 1)
+        except (TypeError, ValueError):
+            raise ValidationError({"hours": "Enter a number."}) from None
+        if hours is not None and not 0 <= hours <= 24:
+            raise ValidationError({"hours": "Hours must be between 0 and 24."})
+        report = services.save_report(
+            project=project, user=request.user, day=_day(data.get("date")),
+            summary=str(data.get("summary", "")), items=items, next_steps=str(data.get("next_steps", "")), hours=hours,
+        )
+        if data.get("publish"):
+            services.publish_report(report=report, user=request.user)
+        return Response(
+            {"id": report.pk, "published": report.published_at is not None}, status=status.HTTP_201_CREATED
+        )
 
 
 class ClientListView(APIView):

@@ -107,3 +107,27 @@ class ProjectUpdate(models.Model):
 
     def __str__(self) -> str:
         return self.message[:60]
+
+
+class DailyReport(models.Model):
+    """The end-of-day note for a project: what was done today and what comes next.
+    Drafts are private to staff; once published the client sees it and is notified."""
+
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="reports")
+    date = models.DateField()
+    summary = models.CharField(max_length=300, blank=True)  # one line: "Checkout page finished"
+    items = models.JSONField(default=list, blank=True)  # list of short strings: what was done
+    next_steps = models.TextField(max_length=1500, blank=True)
+    hours = models.DecimalField(max_digits=4, decimal_places=1, null=True, blank=True)
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL, related_name="+"
+    )
+    published_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-date"]
+        constraints = [models.UniqueConstraint(fields=["project", "date"], name="projects_one_report_per_day")]
+
+    def __str__(self) -> str:
+        return f"{self.project_id} {self.date}"

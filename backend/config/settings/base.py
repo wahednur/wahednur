@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     "core",
     "accounts",
     "leads",
+    "notifications",
     "documents",
     "projects",
     "billing",
@@ -339,3 +340,9 @@ IMAGE_MAX_MB = env.int("IMAGE_MAX_MB", default=5)
 IMAGES_LOCAL_ROOT = BASE_DIR / "public_media"
 # Where this API is reachable (used to build photo addresses in development without R2).
 API_PUBLIC_URL = env("API_PUBLIC_URL", default="http://localhost:8000").rstrip("/")
+
+# Web push (browser notifications). Generate keys once with `python manage.py generate_vapid_keys`
+# and put them in the API's environment. Without them push stays off; the in-app list still works.
+VAPID_PUBLIC_KEY = env("VAPID_PUBLIC_KEY", default="")
+VAPID_PRIVATE_KEY = env("VAPID_PRIVATE_KEY", default="")
+VAPID_SUBJECT = env("VAPID_SUBJECT", default="") or f"mailto:{LEADS_NOTIFY_TO}"

@@ -10,7 +10,7 @@ from rest_framework.exceptions import NotFound, ValidationError
 
 from accounts.signals import record
 
-from .models import ClientProfile, Milestone, Project, ProjectUpdate
+from .models import ClientProfile, DailyReport, Milestone, Project, ProjectUpdate
 
 S = Project.Status
 TRANSITIONS = {
@@ -105,6 +105,7 @@ def add_milestone(*, project: Project, **data) -> Milestone:
 
 
 def edit_milestone(*, milestone: Milestone, **data) -> Milestone:
+    was_done = milestone.status == Milestone.Status.DONE
     for field, value in data.items():
         setattr(milestone, field, value)
     if milestone.status == Milestone.Status.DONE:
@@ -112,13 +113,83 @@ def edit_milestone(*, milestone: Milestone, **data) -> Milestone:
     else:
         milestone.completed_at = None
     milestone.save()
+    if milestone.status == Milestone.Status.DONE and not was_done:
+        _tell_client(
+            milestone.project, kind="milestone", title="Milestone completed",
+            body=f"{milestone.title} is done.", url=f"/app/projects/{milestone.project_id}",
+        )
     return milestone
 
 
+def _tell_client(project: Project, **kw) -> None:
+    """Tell the project's owner (the customer), unless they are staff. Never breaks the action."""
+    from notifications.services import notify
+
+    if not project.is_system and not project.client.is_staff:
+        notify(project.client, **kw)
+
+
 def add_update(*, project: Project, user, message: str, is_public=True) -> ProjectUpdate:
-    return ProjectUpdate.objects.create(
+    update = ProjectUpdate.objects.create(
         project=project, author=user, message=message, is_public=is_public
     )
+    if is_public:
+        _tell_client(
+            project, kind="update", title=f"Update on {project.title}", body=message[:300],
+            url=f"/app/projects/{project.pk}",
+        )
+    return update
+
+
+# --- daily reports ----------------------------------------------------------------------
+def draft_report(*, project: Project, day) -> dict:
+    """A starting point for today's report, built from what the system already knows:
+    milestones finished that day and public updates posted that day. Staff edit it before publishing."""
+    done = project.milestones.filter(completed_at__date=day)
+    notes = project.updates.filter(is_public=True, created_at__date=day)
+    items = [f"Completed: {m.title}" for m in done] + [u.message.strip().splitlines()[0][:200] for u in notes]
+    return {"date": day, "summary": "", "items": items, "next_steps": "", "hours": None}
+
+
+def save_report(*, project: Project, user, day, summary="", items=None, next_steps="", hours=None) -> DailyReport:
+    clean = [str(i).strip()[:300] for i in (items or []) if str(i).strip()][:30]
+    report, _ = DailyReport.objects.update_or_create(
+        project=project, date=day,
+        defaults={"summary": summary.strip()[:300], "items": clean, "next_steps": next_steps.strip(), "hours": hours, "author": user},
+    )
+    return report
+
+
+def publish_report(*, report: DailyReport, user) -> DailyReport:
+    if not report.items and not report.summary:
+        raise ValidationError({"detail": "Add at least one line about what was done."})
+    first = report.published_at is None
+    if first:
+        report.published_at = timezone.now()
+        report.save(update_fields=["published_at"])
+        project = report.project
+        what = report.summary or f"{len(report.items)} things done today"
+        _tell_client(
+            project, kind="report", title=f"Daily report: {project.title}", body=what,
+            url=f"/app/projects/{project.pk}#reports", email=True,
+        )
+    return report
+
+
+def history(*, project: Project, user) -> list[dict]:
+    """One timeline for the project, newest first: reports, updates and finished milestones."""
+    staff = user.is_staff
+    events = []
+    reports = project.reports.all() if staff else project.reports.filter(published_at__isnull=False)
+    for r in reports:
+        events.append({"type": "report", "at": r.published_at or r.created_at, "id": r.pk, "title": r.summary or "Daily report", "date": r.date, "items": r.items, "next_steps": r.next_steps, "hours": r.hours, "draft": r.published_at is None})
+    updates = project.updates.all() if staff else project.updates.filter(is_public=True)
+    for u in updates:
+        events.append({"type": "update", "at": u.created_at, "id": u.pk, "title": u.message, "internal": not u.is_public})
+    for m in project.milestones.filter(completed_at__isnull=False):
+        events.append({"type": "milestone", "at": m.completed_at, "id": m.pk, "title": m.title})
+    events.sort(key=lambda e: e["at"], reverse=True)
+    return events
 
 
 def delete_project(*, project: Project, user, request=None):
