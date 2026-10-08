@@ -80,7 +80,7 @@ export const presetSteps = () => PRESETS[0].steps;
 export default function DocumentEditor({ kind, id }: { kind: "quotation" | "invoice"; id?: string }) {
   const nav = useNavigate();
   const projects = useLoad<Project[]>("/projects/");
-  const existing = useLoad<Quotation | Invoice>(id ? `/${kind}s/${id}/` : "/auth/me/");
+  const existing = useLoad<Quotation | Invoice>(id ? `/${kind}s/${id}/` : "");
   const [project, setProject] = useState("");
   const [title, setTitle] = useState("");
   const [currency, setCurrency] = useState<"BDT" | "USD">("BDT");

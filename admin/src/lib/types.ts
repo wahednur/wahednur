@@ -120,12 +120,18 @@ export type Page = {
   kind: "post" | "page";
   slug: string;
   title: string;
+  excerpt: string;
+  body: string;
   status: "draft" | "published";
   published_at: string | null;
   updated_at: string;
-  seo_source: string;
+  seo_title: string;
+  seo_description: string;
+  seo_source: "none" | "rule" | "ai" | "manual";
+  seo_locked: boolean;
   seo_stale: boolean;
   cover_image: string;
+  cover_alt: string;
 };
 export type Summary = Record<
   string,

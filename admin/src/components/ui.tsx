@@ -156,6 +156,7 @@ export function useLoad<T>(path: string) {
   const [error, setError] = useState("");
   const [tick, setTick] = useState(0);
   useEffect(() => {
+    if (!path) return; // nothing to load (for example a new, unsaved item)
     let live = true;
     api<T>("GET", path).then((r) => {
       if (!live) return;

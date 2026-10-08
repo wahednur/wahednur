@@ -1,10 +1,12 @@
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 /** Renders Markdown without raw HTML (react-markdown ignores it), so content cannot inject scripts. */
 export default function Markdown({ children }: { children: string }) {
   return (
     <div className="space-y-5 leading-8 text-ink/90">
       <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
         components={{
           h1: (p) => <h2 className="mt-10 text-3xl font-semibold tracking-tight" {...p} />,
           h2: (p) => <h2 className="mt-10 text-2xl font-semibold tracking-tight" {...p} />,

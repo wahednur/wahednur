@@ -6,6 +6,7 @@ import Accounting from "@/pages/Accounting";
 import Billing from "@/pages/Billing";
 import Clients from "@/pages/Clients";
 import Content from "@/pages/Content";
+import ContentEditor from "@/pages/ContentEditor";
 import DocumentNew from "@/pages/DocumentNew";
 import InvoiceDetail from "@/pages/InvoiceDetail";
 import Login from "@/pages/Login";
@@ -48,6 +49,8 @@ export default function App() {
             <Route path="subscriptions" element={<Subscriptions />} />
             <Route path="clients" element={<Clients />} />
             <Route path="content" element={<Content />} />
+            <Route path="content/new" element={<ContentEditor />} />
+            <Route path="content/:id" element={<ContentEditor />} />
           </Route>
           <Route element={<Guard owner />}>
             <Route path="accounting" element={<Accounting />} />
