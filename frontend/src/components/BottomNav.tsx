@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Home, Briefcase, Layers, Mail, MoreHorizontal, X } from "lucide-react";
-import { mainNav } from "@/lib/nav";
+import type { NavItem } from "@/lib/nav";
 import { site } from "@/lib/site";
 
 const primary = [
@@ -15,7 +15,7 @@ const primary = [
 ];
 
 /** Phone-only bottom tab bar: gives the site an app feel on small screens. Tablet+ keeps the top nav. */
-export default function BottomNav() {
+export default function BottomNav({ items }: { items: NavItem[] }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
@@ -30,7 +30,7 @@ export default function BottomNav() {
     };
   }, [open]);
 
-  const overflow = mainNav.filter((n) => !primary.some((p) => p.href === n.href));
+  const overflow = items.filter((n) => !primary.some((p) => p.href === n.href));
   const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
   const overflowActive = overflow.some((n) => isActive(n.href));
 

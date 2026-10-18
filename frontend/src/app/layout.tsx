@@ -6,6 +6,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import MobileChrome from "@/components/MobileChrome";
 import { site } from "@/lib/site";
+import { getMainNav } from "@/lib/nav";
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -14,7 +15,8 @@ export const metadata: Metadata = {
     "Remote full-stack engineer in Bangladesh for overseas clients: eCommerce platforms, business systems and Django REST APIs. Written scope, milestone delivery, staged payments.",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const nav = await getMainNav();
   return (
     <html
       lang="en"
@@ -22,7 +24,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         <Header />
-        <MobileChrome>{children}</MobileChrome>
+        <MobileChrome items={nav}>{children}</MobileChrome>
         <Footer />
       </body>
     </html>
