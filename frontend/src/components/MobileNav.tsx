@@ -11,7 +11,7 @@ export default function MobileNav({ items, resume }: { items: NavItem[]; resume:
     if (ref.current) ref.current.open = false;
   };
   return (
-    <details ref={ref} className="relative md:hidden">
+    <details ref={ref} className="relative hidden sm:block md:hidden">
       <summary
         aria-label="Menu"
         className="cursor-pointer list-none rounded-md border border-line px-3 py-2 text-sm text-ink marker:content-none [&::-webkit-details-marker]:hidden"
