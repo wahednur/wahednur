@@ -158,3 +158,9 @@ body {
 
 /* The signed-in area has its own frame, so the website's header and footer step aside there. */
 body:has(#app-frame) .site-chrome { display: none; }
+
+/* Phone bottom tab bar: its clearance space applies on phones only, and neither shows in the dashboard or on sign-in pages. */
+.mobile-pad { padding-bottom: 4rem; }
+@media (min-width: 640px) { .mobile-pad { padding-bottom: 0; } }
+body:has(#app-frame) .mobile-tabs, body:has(#auth-frame) .mobile-tabs { display: none; }
+body:has(#app-frame) .mobile-pad, body:has(#auth-frame) .mobile-pad { padding-bottom: 0; }

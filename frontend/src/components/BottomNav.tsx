@@ -20,7 +20,8 @@ export default function BottomNav({ items }: { items: NavItem[] }) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    setOpen(false);
+    const t = setTimeout(() => setOpen(false), 0); // close the sheet after navigating
+    return () => clearTimeout(t);
   }, [pathname]);
 
   useEffect(() => {
@@ -35,7 +36,7 @@ export default function BottomNav({ items }: { items: NavItem[] }) {
   const overflowActive = overflow.some((n) => isActive(n.href));
 
   return (
-    <>
+    <div className="mobile-tabs">
       {open && (
         <div className="fixed inset-0 z-40 bg-black/50 sm:hidden" onClick={() => setOpen(false)} aria-hidden="true" />
       )}
@@ -108,6 +109,6 @@ export default function BottomNav({ items }: { items: NavItem[] }) {
           </li>
         </ul>
       </nav>
-    </>
+    </div>
   );
 }

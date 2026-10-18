@@ -1,20 +1,18 @@
-"use client";
-
-import { usePathname } from "next/navigation";
-import BottomNav from "./BottomNav";
+import { Suspense } from "react";
 import type { NavItem } from "@/lib/nav";
+import BottomNav from "./BottomNav";
 
-const authPaths = ["/login", "/register", "/forgot-password", "/reset-password", "/verify-email"];
-
-/** Wraps page content so the phone bottom tab bar (and its clearance space) skip the dashboard and auth pages, which have their own flow. */
+/**
+ * Page content plus the phone bottom tab bar. The bar and its clearance space step aside in the
+ * dashboard and on the sign-in pages by CSS (see globals.css), so this needs no route check here.
+ */
 export default function MobileChrome({ children, items }: { children: React.ReactNode; items: NavItem[] }) {
-  const pathname = usePathname();
-  const hideAppNav = pathname.startsWith("/app") || authPaths.some((p) => pathname.startsWith(p));
-
   return (
     <>
-      <div className={`flex-1 ${hideAppNav ? "" : "pb-16 sm:pb-0"}`}>{children}</div>
-      {!hideAppNav && <BottomNav items={items} />}
+      <div className="mobile-pad flex-1">{children}</div>
+      <Suspense fallback={null}>
+        <BottomNav items={items} />
+      </Suspense>
     </>
   );
 }
