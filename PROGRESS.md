@@ -168,3 +168,8 @@ Nothing.
 - Web push: needs VAPID keys. Run `python manage.py generate_vapid_keys`, put `VAPID_PUBLIC_KEY` and `VAPID_PRIVATE_KEY` (and optionally `VAPID_SUBJECT=mailto:...`) in the API **and worker** environment, redeploy. Push needs HTTPS; the customer turns it on per device in Settings. Without keys the bell and email still work.
 - Site frame: the website's header/footer are hidden under `/app` by CSS (`body:has(#app-frame)`), no JS.
 - Browser checks: `tools/e2e/website/02-profile-and-addresses.cjs`, `03-notifications-reports-messages.cjs`. Real push delivery was not tested here (needs a real HTTPS origin and device).
+
+## PDFs: Bengali text and embedded fonts
+- `billing/pdf.py` now builds HTML and renders it with WeasyPrint (Pango + HarfBuzz), so Bengali vowel signs and conjuncts are shaped correctly. Hind Siliguri (Latin + Bengali, 400/700, SIL OFL) lives in `billing/fonts/` and is embedded as a subset in every PDF. Layout is unchanged.
+- Deploy: the API image now installs `libpango-1.0-0 libpangoft2-1.0-0 libharfbuzz-subset0` (Dockerfile). Rebuild the API and worker images. Locally: `pip install -r requirements/base.txt` (adds `weasyprint`), and on Linux install pango if missing; on WSL2/Ubuntu: `sudo apt install libpango-1.0-0 libpangoft2-1.0-0 libharfbuzz-subset0`.
+- Test: `test_bengali_text_is_shaped_and_the_font_is_embedded`.

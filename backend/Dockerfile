@@ -14,6 +14,10 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     DJANGO_SETTINGS_MODULE=config.settings.prod \
     HOME=/tmp
 WORKDIR /app
+# PDFs: WeasyPrint draws text with Pango and HarfBuzz, which is what shapes Bengali correctly.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends libpango-1.0-0 libpangoft2-1.0-0 libharfbuzz-subset0 \
+    && rm -rf /var/lib/apt/lists/*
 RUN useradd --system --uid 10001 --no-create-home app
 COPY --from=builder /opt/venv /opt/venv
 COPY . .
