@@ -118,7 +118,7 @@ export type Quotation = BillRow & {
   tax: string;
   proposal_text: string;
   proposal_html: string;
-  letterhead: { name: string; address: string; email: string; phone: string; website: string };
+  letterhead: { name: string; address: string; email: string; phone: string; website: string; mark: "photo" | "logo" | "none"; photo_url: string; logo_url: string };
   discount: string;
   notes: string;
   subtotal: string;

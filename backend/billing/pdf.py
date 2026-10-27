@@ -14,13 +14,13 @@ from django.conf import settings
 from . import services
 from .richtext import clean_html, from_plain
 
-FONT_DIR = Path(__file__).resolve().parent / "fonts"
+BASE_DIR = Path(__file__).resolve().parent  # fonts/ and brand/ live next to this file
 SYMBOL = {"BDT": "BDT ", "USD": "USD "}
 
 CSS = """
-@font-face { font-family: "Hind Latin"; font-weight: 400; src: url("hind-siliguri-latin-400-normal.woff"); }
-@font-face { font-family: "Hind Latin"; font-weight: 700; src: url("hind-siliguri-latin-700-normal.woff"); }
-@font-face { font-family: "Tiro Bangla"; font-weight: 400; src: url("tiro-bangla-bengali-400-normal.woff"); }
+@font-face { font-family: "Hind Latin"; font-weight: 400; src: url("fonts/hind-siliguri-latin-400-normal.woff"); }
+@font-face { font-family: "Hind Latin"; font-weight: 700; src: url("fonts/hind-siliguri-latin-700-normal.woff"); }
+@font-face { font-family: "Tiro Bangla"; font-weight: 400; src: url("fonts/tiro-bangla-bengali-400-normal.woff"); }
 @page {
   size: A4; margin: 30mm 18mm 22mm;
   @top-left { content: element(lh-small); width: 174mm; vertical-align: middle; }
@@ -28,11 +28,13 @@ CSS = """
   @bottom-right { font-family: "Hind Latin", sans-serif; content: "Page " counter(page) " of " counter(pages); font-size: 8pt; color: #4A5568; vertical-align: top; padding-top: 3mm; }
 }
 @page :first {
-  margin-top: 46mm;
-  @top-left { content: element(lh); width: 174mm; vertical-align: top; padding-top: 12mm; }
+  margin-top: 53mm;
+  @top-left { content: element(lh); width: 174mm; vertical-align: top; padding-top: 10mm; }
 }
 .lh { position: running(lh); border-bottom: 1.2pt solid #0D9488; padding-bottom: 3mm; }
 .lh table { width: 100%; } .lh td { border: 0; padding: 0; vertical-align: bottom; }
+.lh .mark { display: block; height: 15mm; margin-bottom: 2mm; }
+.lh .mark.round { width: 15mm; border-radius: 50%; object-fit: cover; }
 .lh .name { font-size: 19pt; font-weight: 700; letter-spacing: .01em; line-height: 1.1; }
 .lh .side { text-align: right; font-size: 8.5pt; color: #4A5568; line-height: 1.5; }
 .lh-small { position: running(lh-small); border-bottom: .5pt solid #D5DCE3; padding-bottom: 2mm; font-size: 8.5pt; color: #4A5568; }
@@ -120,6 +122,16 @@ def _quotation_blocks(doc) -> str:
     return "".join(out)
 
 
+def _mark() -> str:
+    """The picture above the name on the letterhead: my photo, the WS logo, or nothing (LETTERHEAD_MARK)."""
+    mark = settings.LETTERHEAD_MARK
+    if mark == "photo":
+        return '<img class="mark round" src="brand/wahednur.jpg" alt="">'
+    if mark == "logo":
+        return '<img class="mark" src="brand/ws-logo.svg" alt="">'
+    return ""
+
+
 def build_html(doc, kind: str) -> str:
     """kind: 'Quotation' or 'Invoice'."""
     client = doc.project.client
@@ -131,7 +143,7 @@ def build_html(doc, kind: str) -> str:
 
     contact = " · ".join(x for x in (settings.BUSINESS_WEBSITE, settings.BUSINESS_EMAIL, settings.BUSINESS_PHONE) if x)
     parts = [
-        '<div class="lh"><table><tr><td><div class="name">' + _e(settings.BUSINESS_NAME) + '</div></td>'
+        '<div class="lh"><table><tr><td>' + _mark() + '<div class="name">' + _e(settings.BUSINESS_NAME) + '</div></td>'
         '<td class="side">' + _e(settings.BUSINESS_ADDRESS) + "<br>" + _e(contact) + "</td></tr></table></div>",
         '<div class="lh-small"><b>' + _e(settings.BUSINESS_NAME) + "</b> · " + _e(f"{kind} {doc.number}") + "</div>",
         '<div class="lf">' + _e(settings.BUSINESS_NAME) + " · " + _e(settings.BUSINESS_ADDRESS) + " · " + _e(contact) + "</div>",
@@ -233,4 +245,4 @@ def render(doc, kind: str, *, compress: bool = True) -> bytes:
     """The finished PDF. Fonts are embedded (subset), so Bengali shows correctly everywhere."""
     from weasyprint import HTML
 
-    return HTML(string=build_html(doc, kind), base_url=str(FONT_DIR) + "/").write_pdf(uncompressed_pdf=not compress)
+    return HTML(string=build_html(doc, kind), base_url=str(BASE_DIR) + "/").write_pdf(uncompressed_pdf=not compress)

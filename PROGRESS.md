@@ -184,3 +184,8 @@ Nothing.
 - Letterhead: the server PDF has the business name and contact at the top of page 1 (smaller running header after), a footer line and "Page x of y" on every page. The browser print page (`/print/quotation/:id` in admin, and the quotation page in the client area) repeats a header and footer on every printed page, on white paper. Business details come from `BUSINESS_NAME`, `BUSINESS_ADDRESS`, `BUSINESS_EMAIL`, and new optional `BUSINESS_PHONE`, `BUSINESS_WEBSITE`.
 - No logo yet: send a logo file and it can be added to the letterhead.
 - Browser check: `tools/e2e/admin/13-rich-proposal-letterhead.cjs` (09 updated for the new editor).
+
+## Letterhead picture, clean browser print
+- A picture sits above the name on every printed quotation: my photo (default) or the WS logo, chosen with `LETTERHEAD_MARK=photo|logo|none` in the API environment. Files: `frontend/public/{wahednur.jpg,ws-logo.svg}`, copies in `admin/public/` and `backend/billing/brand/` (the server PDF reads its own copy).
+- Browser print no longer shows the date, page title and web address in the margins: the print styles set `@page { margin: 0 }` and the letterhead pads the page itself. The print page title is now "Quotation <number>", which also becomes the saved PDF's file name.
+- The tiny "®" and ring at the top left of `ws-logo.svg` are part of the supplied file.

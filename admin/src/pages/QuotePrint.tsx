@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import QuoteDocument from "@/components/QuoteDocument";
 import { Button, Loading, Notice, useLoad } from "@/components/ui";
@@ -7,6 +8,10 @@ import type { Quotation } from "@/lib/types";
 export default function QuotePrint() {
   const { id } = useParams();
   const { data: q, error } = useLoad<Quotation>(`/quotations/${id}/`);
+  // The browser prints the page title and web address in the margins and uses the title as the file name, so keep it plain.
+  useEffect(() => {
+    if (q) document.title = `Quotation ${q.number}`;
+  }, [q]);
   if (error) return <div className="p-6"><Notice>{error}</Notice></div>;
   if (!q) return <div className="p-6"><Loading /></div>;
   return (

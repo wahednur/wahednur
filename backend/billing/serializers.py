@@ -210,6 +210,9 @@ def letterhead() -> dict:
         "email": settings.BUSINESS_EMAIL,
         "phone": settings.BUSINESS_PHONE,
         "website": settings.BUSINESS_WEBSITE,
+        "mark": settings.LETTERHEAD_MARK,
+        "photo_url": f"{settings.FRONTEND_URL}/wahednur.jpg",
+        "logo_url": f"{settings.FRONTEND_URL}/ws-logo.svg",
     }
 
 

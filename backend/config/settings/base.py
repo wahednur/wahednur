@@ -288,6 +288,8 @@ BUSINESS_NAME = env("BUSINESS_NAME", default="Abdul Wahed Nur")
 BUSINESS_EMAIL = env("BUSINESS_EMAIL", default="wahednur@gmail.com")
 BUSINESS_ADDRESS = env("BUSINESS_ADDRESS", default="Sherpur, Bangladesh")
 BUSINESS_PHONE = env("BUSINESS_PHONE", default="")  # shown on the letterhead when set
+# Picture above the name on printed documents: "photo", "logo" (the WS mark) or "none".
+LETTERHEAD_MARK = env("LETTERHEAD_MARK", default="photo").lower()
 BUSINESS_WEBSITE = env("BUSINESS_WEBSITE", default="https://www.wahednur.tech")
 INVOICE_PAYMENT_NOTE = env("INVOICE_PAYMENT_NOTE", default="")  # bank / bKash / Nagad details
 

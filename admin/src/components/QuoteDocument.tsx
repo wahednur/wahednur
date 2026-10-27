@@ -21,7 +21,11 @@ function Letterhead({ q }: { q: Quotation }) {
   const l = q.letterhead;
   return (
     <div className="flex items-end justify-between gap-4 border-b-2 border-[#0D9488] pb-3">
-      <p className="text-xl font-bold tracking-tight text-[#163C52]">{l.name}</p>
+      <div>
+        {l.mark === "photo" && <img src="/wahednur.jpg" alt="" className="mb-1.5 h-14 w-14 rounded-full object-cover" />}
+        {l.mark === "logo" && <img src="/ws-logo.svg" alt="" className="mb-1.5 h-12 w-auto" />}
+        <p className="text-xl font-bold tracking-tight text-[#163C52]">{l.name}</p>
+      </div>
       <p className="text-right text-[11px] leading-5 text-[#4C7488]">
         {l.address}
         <br />
@@ -46,7 +50,7 @@ export default function QuoteDocument({ q, from }: { q: Quotation; from?: string
   const paperTitle = "font-semibold tracking-wide text-[#163C52]";
   return (
     <article className="letterhead-sheet mx-auto max-w-4xl bg-[#F4F9FB] p-6 text-[15px] leading-7 text-[#163C52] sm:p-10 print:p-0">
-      <style>{`@media print { @page { size: A4; margin: 12mm 14mm; } .letterhead-sheet { -webkit-print-color-adjust: exact; print-color-adjust: exact; max-width: none !important; width: 100% !important; margin: 0 !important; background: #fff !important; } .lh-wrap { width: 100%; border-collapse: collapse; } .lh-wrap > thead { display: table-header-group; } .lh-wrap > tfoot { display: table-footer-group; } .lh-gap { height: 6mm; } }`}</style>
+      <style>{`@media print { @page { size: A4; margin: 0; } .letterhead-sheet { -webkit-print-color-adjust: exact; print-color-adjust: exact; max-width: none !important; width: 100% !important; margin: 0 !important; background: #fff !important; } .lh-wrap { width: 100%; border-collapse: collapse; } .lh-wrap > thead { display: table-header-group; } .lh-wrap > tfoot { display: table-footer-group; } .lh-gap { height: 6mm; } .lh-wrap > thead td { padding: 12mm 14mm 0; } .lh-wrap > tfoot td { padding: 0 14mm 10mm; } .lh-wrap > tbody td { padding: 0 14mm; } }`}</style>
       <table className="lh-wrap w-full">
         <thead><tr><td><Letterhead q={q} /><div className="lh-gap h-5" /></td></tr></thead>
         <tfoot><tr><td><div className="lh-gap h-5" /><LetterFoot q={q} /></td></tr></tfoot>

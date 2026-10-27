@@ -21,6 +21,11 @@ export default function QuotationView({ id, staff }: { id: string; staff: boolea
     });
   }, [id, tick]);
 
+  // The browser prints the page title in the margin and uses it as the PDF file name.
+  useEffect(() => {
+    if (q) document.title = `Quotation ${q.number}`;
+  }, [q]);
+
   async function act(action: string, body?: unknown) {
     setError("");
     const r = await api<Invoice>("POST", `/quotations/${id}/${action}/`, body ?? {});
