@@ -230,8 +230,9 @@ def build_html(doc, kind: str) -> str:
         parts.append(_quotation_blocks(doc))
     if kind != "Invoice" and getattr(doc, "valid_until", None):
         parts.append(f'<p class="gap">{_e(f"Valid until {doc.valid_until:%d/%m/%Y}")}</p>')
-    if doc.notes:
-        parts += ['<p class="small gap">Notes</p>', _p(doc.notes)]
+    notes = clean_html(doc.notes_html) if doc.notes_html.strip() else from_plain(doc.notes)
+    if notes:
+        parts += ['<p class="small gap">Terms and notes</p>', f'<div class="rich">{notes}</div>']
     parts.append(
         '<table class="sign"><tr><td><p class="small">Prepared by</p><div class="line"></div>'
         + _p(settings.BUSINESS_NAME)

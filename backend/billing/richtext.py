@@ -40,3 +40,8 @@ def points_from_plain(text: str) -> str:
 
     lines = [line.strip() for line in (text or "").splitlines() if line.strip()]
     return "<ul>" + "".join(f"<li>{escape(line)}</li>" for line in lines) + "</ul>" if lines else ""
+
+
+def notes_for(obj) -> str:
+    """Terms and notes as safe HTML. Older plain-text notes are shown as paragraphs."""
+    return clean_html(obj.notes_html) if obj.notes_html.strip() else from_plain(obj.notes)

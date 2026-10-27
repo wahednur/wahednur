@@ -29,6 +29,10 @@ const URL = 'http://localhost:5173';
   await p.keyboard.type('Step'); await p.keyboard.press('Tab'); await p.keyboard.type('Time'); await p.keyboard.press('Tab'); await p.keyboard.type('Cost');
   await p.click('button[aria-label="Add row below"]');
   ok(await p.locator('.doc-rich tr').count() === 4, 'rows can be added');
+  // terms and notes: a rich text editor with the standard payment line already in it
+  const notesBox = p.locator('.doc-rich').last();
+  ok((await notesBox.innerText()).includes('40% advance'), 'the notes editor starts with the standard payment terms');
+  await notesBox.click(); await p.keyboard.press('Control+End'); await p.keyboard.press('Enter'); await p.keyboard.type('Terms apply to all work.');
   await p.locator('label:has-text("Status") select').selectOption('sent').catch(() => {});
   await p.click('button:has-text("Save")'); await p.waitForURL('**/billing/quotations/**', { timeout: 20000 });
   await p.waitForSelector('.doc-rich h2');
@@ -42,6 +46,8 @@ const URL = 'http://localhost:5173';
   ok(true, 'the saved proposal text is back in the editor when editing');
   await p.waitForFunction(() => [...document.querySelectorAll('.doc-rich')].some((e) => e.textContent.includes('Home page and cart')), null, { timeout: 15000 });
   ok(true, 'the saved item details are back in their editor too');
+  await p.waitForFunction(() => { const t = [...document.querySelectorAll('.doc-rich')].map((e) => e.textContent).join('|'); return t.includes('Terms apply to all work.') && t.includes('40% advance'); }, null, { timeout: 15000 });
+  ok(true, 'the saved terms and notes are back in their editor too');
   await p.goBack().catch(() => {});
 
   // the print page is on the letterhead, with the header and footer repeating

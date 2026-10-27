@@ -162,10 +162,10 @@ export default function QuoteDocument({ q, from }: { q: Quotation; from?: string
         </div>
       ))}
 
-      {q.notes && (
+      {q.notes_html && (
         <>
           <h2 className={`mt-10 mb-3 border-l-4 border-[#B06A1F] pl-3 text-lg ${paperTitle}`}>Terms and notes</h2>
-          <p className="whitespace-pre-line text-sm">{q.notes}</p>
+          <div className="doc-rich text-sm" dangerouslySetInnerHTML={{ __html: q.notes_html }} />
         </>
       )}
 

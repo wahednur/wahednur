@@ -376,3 +376,20 @@ def test_section_body_can_be_rich_and_old_text_still_shows(staff, local):
     assert r.status_code == 201, r.content
     s = r.json()["sections"]
     assert s[0]["body_html"] == "<p>Plain words</p>" and s[1]["body_html"] == "<ul><li>One</li></ul>"
+
+
+def test_terms_and_notes_are_rich_text_and_old_notes_still_show(staff, local):
+    from billing import pdf
+
+    r = api(staff).post("/api/quotations/", body(client=local.pk, notes="Pay on time\nNo refunds"), format="json")
+    assert r.json()["notes_html"] == "<p>Pay on time</p><p>No refunds</p>"
+    assert services.get_quotation(staff, r.json()["id"]).notes == "Pay on time\nNo refunds"  # the old text is kept
+    r = api(staff).post(
+        "/api/quotations/",
+        body(client=local.pk, notes_html='<ol><li>Terms</li></ol><script>x()</script><table><tr><td>A</td></tr></table>'),
+        format="json",
+    )
+    assert r.status_code == 201
+    html = r.json()["notes_html"]
+    assert "<ol>" in html and "<script" not in html and "<table>" in html
+    assert pdf.render(services.get_quotation(staff, r.json()["id"]), "Quotation").startswith(b"%PDF")

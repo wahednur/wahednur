@@ -16,6 +16,7 @@ from accounts.signals import record
 
 from . import services
 from .models import RecurringInvoice, RecurringItem, RecurringRun
+from .richtext import notes_for
 
 F = RecurringInvoice.Frequency
 S = RecurringInvoice.Status
@@ -177,6 +178,7 @@ def _run_one(rec: RecurringInvoice, run_date: date) -> bool:
                 currency=rec.currency,
                 discount=rec.discount,
                 notes=rec.notes,
+                notes_html=rec.notes_html,
                 tax_name=rec.tax_name,
                 tax_rate=rec.tax_rate,
                 bill_to_address=rec.bill_to_address,
@@ -232,6 +234,7 @@ def out(rec: RecurringInvoice) -> dict:
             "tax_name": rec.tax_name,
             "tax_rate": rec.tax_rate,
             "notes": rec.notes,
+            "notes_html": notes_for(rec),
             "bill_to_address": rec.bill_to_address,
             "frequency": rec.frequency,
             "start_date": rec.start_date,

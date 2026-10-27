@@ -73,6 +73,7 @@ export type RecurringInv = {
   tax_name: string;
   tax_rate: string;
   notes: string;
+  notes_html: string;
   bill_to_address: string;
   frequency: "weekly" | "monthly" | "quarterly" | "yearly";
   start_date: string;
@@ -122,6 +123,7 @@ export type Quotation = BillRow & {
   letterhead: { name: string; address: string; email: string; phone: string; website: string; mark: "photo" | "logo" | "none"; photo_url: string; logo_url: string };
   discount: string;
   notes: string;
+  notes_html: string;
   subtotal: string;
   items: SheetItem[];
 };
@@ -139,6 +141,7 @@ export type Invoice = BillRow & {
   tax: string;
   discount: string;
   notes: string;
+  notes_html: string;
   subtotal: string;
   items: { description: string; quantity: string; unit_price: string; amount?: string }[];
   paid_total: string;

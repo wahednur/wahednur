@@ -149,6 +149,7 @@ export type BillBase = {
   currency: "BDT" | "USD";
   discount: string;
   notes: string;
+  notes_html: string;
   status: string;
   subtotal: string;
   total: string;

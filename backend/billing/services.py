@@ -436,6 +436,7 @@ def convert_quotation(
         currency=quotation.currency,
         discount=quotation.discount,
         notes=quotation.notes,
+        notes_html=quotation.notes_html,
         tax_name=quotation.tax_name,
         tax_rate=quotation.tax_rate,
         bill_to_address=quotation.bill_to_address,

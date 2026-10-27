@@ -41,6 +41,10 @@ const STANDARD_PLAN: PlanRow[] = [
   { label: "Midway delivery", percent: "30", note: "" },
   { label: "Final delivery", percent: "30", note: "Final delivery follows full payment" },
 ];
+/** Plain lines as HTML paragraphs, for the starting text of a new document. */
+const paragraphs = (text: string) =>
+  text.split("\n").filter((l) => l.trim()).map((l) => `<p>${l.replace(/&/g, "&amp;").replace(/</g, "&lt;")}</p>`).join("");
+
 export const STANDARD_NOTE =
   "Payment: 40% advance before work starts, 30% midway, and the final 30% before final delivery. " +
   "Final delivery follows full payment.";
@@ -151,7 +155,7 @@ export default function DocumentEditor({ kind, id }: { kind: Kind; id?: string }
   const [taxId, setTaxId] = useState("");
   const [discountMode, setDiscountMode] = useState<"amount" | "percent">("amount");
   const [discount, setDiscount] = useState("0");
-  const [notes, setNotes] = useState(id ? "" : STANDARD_NOTE);
+  const [notes, setNotes] = useState(id ? "" : paragraphs(STANDARD_NOTE)); // rich text, as HTML
   const [steps, setSteps] = useState<Step[]>(presetSteps());
   const [frequency, setFrequency] = useState("monthly");
   const [endDate, setEndDate] = useState("");
@@ -199,7 +203,7 @@ export default function DocumentEditor({ kind, id }: { kind: Kind; id?: string }
       })),
     );
     setDiscount(d.discount);
-    setNotes(d.notes);
+    setNotes(d.notes_html ?? "");
     if (kind === "invoice" && d.installments?.length)
       setSteps(d.installments.map((s) => ({ label: s.label, mode: "amount" as const, value: s.amount, due_date: s.due_date ?? "" })));
     if (kind === "recurring") {
@@ -253,7 +257,8 @@ export default function DocumentEditor({ kind, id }: { kind: Kind; id?: string }
       title,
       currency,
       discount: show(totals.disc),
-      notes,
+      notes: "",
+      notes_html: notes,
       bill_to_address: address,
       tax_name: tax?.name ?? "",
       tax_rate: tax?.rate ?? "0",
@@ -570,10 +575,10 @@ export default function DocumentEditor({ kind, id }: { kind: Kind; id?: string }
         )}
 
         <Card className="p-5">
-          <label className={label}>
+          <p className={label}>
             Terms and notes shown to the client <span className="text-muted">(optional)</span>
-            <textarea rows={4} maxLength={2000} value={notes} onChange={(e) => setNotes(e.target.value)} className={field} />
-          </label>
+          </p>
+          <RichTextEditor compact value={notes} onChange={setNotes} placeholder="Payment terms, delivery, what is not included…" />
         </Card>
       </div>
 

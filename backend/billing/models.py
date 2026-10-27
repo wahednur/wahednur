@@ -70,7 +70,8 @@ class PricedDocument(models.Model):
     title = models.CharField(max_length=200)
     currency = models.CharField(max_length=3, choices=Currency.choices, default=Currency.BDT)
     discount = models.DecimalField(default=0, **MONEY)
-    notes = models.TextField(max_length=2000, blank=True)  # shown to the client (terms etc.)
+    notes = models.TextField(max_length=2000, blank=True)  # older notes: plain text
+    notes_html = models.TextField(blank=True)  # terms and notes shown to the client, from the rich text editor (sanitised)
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL, related_name="+"
     )
@@ -240,6 +241,7 @@ class RecurringInvoice(models.Model):
     tax_name = models.CharField(max_length=40, blank=True)
     tax_rate = models.DecimalField(max_digits=5, decimal_places=2, default=0)
     notes = models.TextField(max_length=2000, blank=True)
+    notes_html = models.TextField(blank=True)
     bill_to_address = models.TextField(max_length=500, blank=True)
     frequency = models.CharField(
         max_length=10, choices=Frequency.choices, default=Frequency.MONTHLY

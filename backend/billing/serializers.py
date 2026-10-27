@@ -7,6 +7,7 @@ from projects.models import Project
 
 from . import services
 from .models import Currency, Cycle, Payment, RecurringInvoice, TaxRate
+from .richtext import notes_for
 
 
 class ItemIn(serializers.Serializer):
@@ -52,7 +53,13 @@ class DocumentIn(serializers.Serializer):
     currency = serializers.ChoiceField(choices=Currency.choices, default=Currency.BDT)
     discount = serializers.DecimalField(max_digits=12, decimal_places=2, default=0)
     notes = serializers.CharField(max_length=2000, required=False, allow_blank=True)
+    notes_html = serializers.CharField(max_length=30000, required=False, allow_blank=True)
     items = ItemIn(many=True)
+
+    def validate_notes_html(self, value):
+        from .richtext import clean_html
+
+        return clean_html(value)
 
 
 class SectionIn(serializers.Serializer):
@@ -112,6 +119,7 @@ class RecurringIn(serializers.Serializer):
     tax_name = serializers.CharField(max_length=40, required=False, allow_blank=True)
     tax_rate = serializers.DecimalField(max_digits=5, decimal_places=2, default=0)
     notes = serializers.CharField(max_length=2000, required=False, allow_blank=True)
+    notes_html = serializers.CharField(max_length=30000, required=False, allow_blank=True)
     bill_to_address = serializers.CharField(max_length=500, required=False, allow_blank=True)
     frequency = serializers.ChoiceField(choices=RecurringInvoice.Frequency.choices)
     start_date = serializers.DateField()
@@ -194,6 +202,7 @@ def _base(doc):
         "tax_rate": doc.tax_rate,
         "tax": services.tax_amount(doc),
         "notes": doc.notes,
+        "notes_html": notes_for(doc),
         "status": doc.status,
         "subtotal": services.subtotal(doc),
         "subtotal_max": services.subtotal_max(doc),

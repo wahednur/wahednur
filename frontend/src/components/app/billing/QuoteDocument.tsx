@@ -149,10 +149,10 @@ export default function QuoteDocument({ q }: { q: Quotation }) {
         </div>
       ))}
 
-      {q.notes && (
+      {q.notes_html && (
         <>
           <h2 className={heading}>Terms and notes</h2>
-          <p className="whitespace-pre-line text-sm">{q.notes}</p>
+          <div className="doc-rich text-sm" dangerouslySetInnerHTML={{ __html: q.notes_html }} />
         </>
       )}
 
