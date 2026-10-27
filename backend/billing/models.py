@@ -136,7 +136,8 @@ class Quotation(PricedDocument):
 
     status = models.CharField(max_length=10, choices=Status.choices, default=Status.DRAFT)
     valid_until = models.DateField(null=True, blank=True)
-    proposal_text = models.TextField(max_length=5000, blank=True)  # the written proposal
+    proposal_text = models.TextField(max_length=5000, blank=True)  # older plain-text proposals
+    proposal_html = models.TextField(blank=True)  # the written proposal, from the rich text editor (sanitised)
     # Extra parts of the proposal: [{heading, body}], [{risk, impact}], [{label, percent, note}]
     sections = models.JSONField(default=list, blank=True)
     risks = models.JSONField(default=list, blank=True)

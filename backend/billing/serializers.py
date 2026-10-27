@@ -76,6 +76,7 @@ class QuotationIn(DocumentIn):
     payment_plan = PlanStepIn(many=True, required=False, max_length=8)
     valid_until = serializers.DateField(required=False, allow_null=True)
     proposal_text = serializers.CharField(max_length=5000, required=False, allow_blank=True)
+    proposal_html = serializers.CharField(max_length=60000, required=False, allow_blank=True)
 
 
 class InvoiceIn(DocumentIn):
@@ -199,6 +200,26 @@ def _base(doc):
     }
 
 
+def letterhead() -> dict:
+    """Who the document comes from, for the printed letterhead."""
+    from django.conf import settings
+
+    return {
+        "name": settings.BUSINESS_NAME,
+        "address": settings.BUSINESS_ADDRESS,
+        "email": settings.BUSINESS_EMAIL,
+        "phone": settings.BUSINESS_PHONE,
+        "website": settings.BUSINESS_WEBSITE,
+    }
+
+
+def proposal_html(q) -> str:
+    """The proposal as safe HTML. Older plain-text proposals are shown as paragraphs."""
+    from .richtext import clean_html, from_plain
+
+    return clean_html(q.proposal_html) if q.proposal_html.strip() else from_plain(q.proposal_text)
+
+
 def quotation_out(q):
     invoice = getattr(q, "invoice", None)
     return exact(
@@ -206,6 +227,8 @@ def quotation_out(q):
             **_base(q),
             "valid_until": q.valid_until,
             "proposal_text": q.proposal_text,
+            "proposal_html": proposal_html(q),
+            "letterhead": letterhead(),
             "sections": q.sections,
             "risks": q.risks,
             "payment_plan": q.payment_plan,

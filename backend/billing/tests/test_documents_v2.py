@@ -332,3 +332,22 @@ def test_recurring_is_staff_only(staff, local):
 def test_a_long_gap_never_creates_more_than_twelve_at_once(staff, local):
     make_recurring(staff, local, frequency="weekly", start_date="2024-01-01")
     assert recurring.run_due(date(2026, 1, 1)) == 12
+
+
+def test_proposal_html_is_cleaned_and_shown_in_the_pdf(staff, local):
+    from billing import pdf
+
+    dirty = '<h2>Plan</h2><p onclick="x()">Hi <script>alert(1)</script><a href="javascript:alert(1)">bad</a></p><table><tr><td>A</td></tr></table>'
+    r = api(staff).post("/api/quotations/", body(client=local.pk, proposal_html=dirty), format="json")
+    assert r.status_code == 201
+    out = r.json()
+    assert "<script" not in out["proposal_html"] and "onclick" not in out["proposal_html"]
+    assert "javascript:" not in out["proposal_html"] and "<table>" in out["proposal_html"]
+    assert out["letterhead"]["name"]
+    raw = pdf.render(services.get_quotation(staff, out["id"]), "Quotation", compress=False)
+    assert raw.startswith(b"%PDF")
+
+
+def test_old_plain_text_proposals_still_show(staff, local):
+    r = api(staff).post("/api/quotations/", body(client=local.pk, proposal_text="Line one\nLine two"), format="json")
+    assert "<p>Line one</p>" in r.json()["proposal_html"]

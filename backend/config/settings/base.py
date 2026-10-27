@@ -287,6 +287,8 @@ MAX_REQUEST_BYTES = (max(DOCUMENTS_MAX_MB, 5) + 2) * 1024 * 1024
 BUSINESS_NAME = env("BUSINESS_NAME", default="Abdul Wahed Nur")
 BUSINESS_EMAIL = env("BUSINESS_EMAIL", default="wahednur@gmail.com")
 BUSINESS_ADDRESS = env("BUSINESS_ADDRESS", default="Sherpur, Bangladesh")
+BUSINESS_PHONE = env("BUSINESS_PHONE", default="")  # shown on the letterhead when set
+BUSINESS_WEBSITE = env("BUSINESS_WEBSITE", default="https://www.wahednur.tech")
 INVOICE_PAYMENT_NOTE = env("INVOICE_PAYMENT_NOTE", default="")  # bank / bKash / Nagad details
 
 # --- Scheduled jobs (run by the worker with -B) --------------------------------

@@ -270,6 +270,10 @@ def _clean_blocks(data):
     if plan and sum(Decimal(x["percent"]) for x in plan) != 100:
         _fail("payment_plan", "The payment steps must add up to 100%.")
     data["payment_plan"] = plan
+    if "proposal_html" in data:
+        from .richtext import clean_html
+
+        data["proposal_html"] = clean_html(data["proposal_html"])
 
 
 @transaction.atomic
