@@ -1,8 +1,8 @@
 import type { HistoryEvent } from "@/lib/api";
+import { day } from "@/lib/date";
 
-const DAY = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric" });
 const TIME = new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit" });
-const fmtDay = (iso: string) => DAY.format(new Date(iso.length === 10 ? `${iso}T00:00:00` : iso));
+const fmtDay = (iso: string) => day(iso);
 
 /** Everything that happened on the project, newest first, grouped by day: reports, notes and finished steps. */
 export default function WorkHistory({ events, staff }: { events: HistoryEvent[]; staff: boolean }) {

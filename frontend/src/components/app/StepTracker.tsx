@@ -1,3 +1,4 @@
+import { day } from "@/lib/date";
 import type { Milestone } from "@/lib/api";
 
 /** The project's steps as a track: what is finished, what is being worked on now, what comes next. */
@@ -51,7 +52,7 @@ export default function StepTracker({ steps, progress }: { steps: Milestone[]; p
                 <p className={`text-sm ${state === "todo" ? "text-muted" : "font-medium"}`}>{s.title}</p>
                 <p className="mt-0.5 font-mono text-[11px] text-muted">
                   {state === "done" ? "Done" : state === "now" ? "In progress" : "To do"}
-                  {s.due_date && state !== "done" ? ` · due ${s.due_date}` : ""}
+                  {s.due_date && state !== "done" ? ` · due ${day(s.due_date)}` : ""}
                 </p>
               </div>
             </li>

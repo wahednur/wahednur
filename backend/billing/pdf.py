@@ -12,7 +12,7 @@ from pathlib import Path
 from django.conf import settings
 
 from . import services
-from .richtext import clean_html, from_plain
+from .richtext import clean_html, from_plain, points_from_plain
 
 BASE_DIR = Path(__file__).resolve().parent  # fonts/ and brand/ live next to this file
 SYMBOL = {"BDT": "BDT ", "USD": "USD "}
@@ -118,7 +118,8 @@ def _quotation_blocks(doc) -> str:
             f"{rows}</table>"
         )
     for block in doc.sections:
-        out.append(f'<div class="gap">{_p(block["heading"])}{_p(block.get("body", ""), "small")}</div>')
+        body = clean_html(block.get("body_html", "")) if block.get("body_html", "").strip() else from_plain(block.get("body", ""))
+        out.append(f'<div class="gap">{_p(block["heading"])}<div class="rich small">{body}</div></div>')
     return "".join(out)
 
 
@@ -151,7 +152,7 @@ def build_html(doc, kind: str) -> str:
         '<table class="head"><tr><td>'
         f"{_p('From', 'small')}{_p(settings.BUSINESS_NAME)}"
         "</td><td>"
-        f"{_p(f'{kind} no. {doc.number}')}{_p(f'Date: {doc.issue_date:%d %b %Y}', 'small')}"
+        f"{_p(f'{kind} no. {doc.number}')}{_p(f'Date: {doc.issue_date:%d/%m/%Y}', 'small')}"
         f"{_p(f'Status: {services_status(doc)}', 'small')}</td></tr></table>",
         '<p class="small gap">Bill to</p>',
         _p("\n".join(x for x in bill_to if x)),
@@ -166,7 +167,9 @@ def build_html(doc, kind: str) -> str:
     for item in doc.items.all():
         label = item.description + (f" ({item.cycle})" if item.cycle != "one_time" else "")
         cell = _p(label)
-        cell += "".join(_p("- " + line, "small") for line in item.details.splitlines() if line.strip())
+        points = clean_html(item.details_html) if item.details_html.strip() else points_from_plain(item.details)
+        if points:
+            cell += f'<div class="rich small">{points}</div>'
         facts = [
             f"Time: {item.time_estimate}" if item.time_estimate else "",
             f"Risk: {item.get_risk_display()}" if item.risk else "",
@@ -213,7 +216,7 @@ def build_html(doc, kind: str) -> str:
         for r in services.schedule(doc):
             i = r["inst"]
             sched += (
-                f"<tr><td>{_e(i.label)}</td><td>{_e(f'{i.due_date:%d %b %Y}' if i.due_date else '-')}</td>"
+                f"<tr><td>{_e(i.label)}</td><td>{_e(f'{i.due_date:%d/%m/%Y}' if i.due_date else '-')}</td>"
                 f"<td class='r'>{_e(_m(doc, i.amount))}</td><td class='r'>{_e(_m(doc, r['paid']))}</td>"
                 f"<td>{_e(r['state'])}</td></tr>"
             )
@@ -226,7 +229,7 @@ def build_html(doc, kind: str) -> str:
     else:
         parts.append(_quotation_blocks(doc))
     if kind != "Invoice" and getattr(doc, "valid_until", None):
-        parts.append(f'<p class="gap">{_e(f"Valid until {doc.valid_until:%d %b %Y}")}</p>')
+        parts.append(f'<p class="gap">{_e(f"Valid until {doc.valid_until:%d/%m/%Y}")}</p>')
     if doc.notes:
         parts += ['<p class="small gap">Notes</p>', _p(doc.notes)]
     parts.append(

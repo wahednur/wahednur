@@ -17,6 +17,7 @@ class ItemIn(serializers.Serializer):
         max_digits=12, decimal_places=2, required=False, allow_null=True
     )
     details = serializers.CharField(max_length=2000, required=False, allow_blank=True)
+    details_html = serializers.CharField(max_length=30000, required=False, allow_blank=True)
     time_estimate = serializers.CharField(max_length=60, required=False, allow_blank=True)
     risk = serializers.ChoiceField(choices=["", "low", "mid", "high"], required=False)
     work_state = serializers.ChoiceField(choices=["", "new", "partial", "done"], required=False)
@@ -56,7 +57,8 @@ class DocumentIn(serializers.Serializer):
 
 class SectionIn(serializers.Serializer):
     heading = serializers.CharField(max_length=120)
-    body = serializers.CharField(max_length=3000, allow_blank=True)
+    body = serializers.CharField(max_length=3000, required=False, allow_blank=True)
+    body_html = serializers.CharField(max_length=30000, required=False, allow_blank=True)
 
 
 class RiskIn(serializers.Serializer):
@@ -154,6 +156,7 @@ def _items(doc):
             "amount": i.amount,
             "unit_price_max": i.unit_price_max,
             "details": i.details,
+            "details_html": details_html(i),
             "time_estimate": i.time_estimate,
             "risk": i.risk,
             "work_state": i.work_state,
@@ -216,6 +219,20 @@ def letterhead() -> dict:
     }
 
 
+def details_html(item) -> str:
+    """What a part covers, as safe HTML (older items: their lines become bullets)."""
+    from .richtext import clean_html, points_from_plain
+
+    return clean_html(item.details_html) if item.details_html.strip() else points_from_plain(item.details)
+
+
+def section_html(section: dict) -> str:
+    from .richtext import clean_html, from_plain
+
+    html = section.get("body_html", "")
+    return clean_html(html) if html.strip() else from_plain(section.get("body", ""))
+
+
 def proposal_html(q) -> str:
     """The proposal as safe HTML. Older plain-text proposals are shown as paragraphs."""
     from .richtext import clean_html, from_plain
@@ -232,7 +249,7 @@ def quotation_out(q):
             "proposal_text": q.proposal_text,
             "proposal_html": proposal_html(q),
             "letterhead": letterhead(),
-            "sections": q.sections,
+            "sections": [{**x, "body_html": section_html(x)} for x in q.sections],
             "risks": q.risks,
             "payment_plan": q.payment_plan,
             "sent_at": q.sent_at,

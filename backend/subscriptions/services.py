@@ -63,7 +63,7 @@ def _bill_one(sub: Subscription, today: date) -> bool:
         invoice = billing.save_invoice(
             user=None,
             project=sub.project,
-            title=f"{sub.title} ({period:%d %b %Y})",
+            title=f"{sub.title} ({period:%d/%m/%Y})",
             currency=sub.currency,
             discount=Decimal("0"),
             due_date=today + timedelta(days=PAYMENT_DAYS),

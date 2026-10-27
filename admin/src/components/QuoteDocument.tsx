@@ -91,9 +91,7 @@ export default function QuoteDocument({ q, from }: { q: Quotation; from?: string
               )}
             </div>
             <div className="grid gap-4 px-4 py-3 sm:grid-cols-[1.5fr_1fr]">
-              <ul className="list-disc space-y-1 pl-5 text-sm text-[#4C7488]">
-                {i.details.split("\n").filter((l) => l.trim()).map((l, k) => <li key={k}>{l}</li>)}
-              </ul>
+              <div className="doc-rich text-sm text-[#4C7488]" dangerouslySetInnerHTML={{ __html: i.details_html }} />
               <dl className="space-y-1 border-[#BDD0D8] text-sm sm:border-l sm:pl-4">
                 {i.risk && <div><span className={`rounded px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wider ${RISK[i.risk][1]}`}>Risk: {RISK[i.risk][0]}</span></div>}
                 {i.time_estimate && <div className="flex justify-between gap-2"><dt>Time</dt><dd className="font-mono font-semibold">{i.time_estimate}</dd></div>}
@@ -160,7 +158,7 @@ export default function QuoteDocument({ q, from }: { q: Quotation; from?: string
       {q.sections.map((s, n) => (
         <div key={n} className="break-inside-avoid">
           <h2 className={`mt-10 mb-3 border-l-4 border-[#B06A1F] pl-3 text-lg ${paperTitle}`}>{s.heading}</h2>
-          <p className="whitespace-pre-line">{s.body}</p>
+          <div className="doc-rich" dangerouslySetInnerHTML={{ __html: s.body_html }} />
         </div>
       ))}
 

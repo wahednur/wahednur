@@ -1,5 +1,6 @@
 "use client";
 
+import { day } from "@/lib/date";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Alert } from "@/components/auth/ui";
@@ -37,7 +38,7 @@ export default function SubscriptionsView({ staff }: { staff: boolean }) {
                 <p className="mt-1 text-xs text-muted">
                   {fmt(s.currency, s.unit_price)} {CYCLE_LABEL[s.cycle]}
                   {staff && ` · ${s.client_email}`}
-                  {s.next_billing_date && ` · next invoice ${s.next_billing_date}`}
+                  {s.next_billing_date && ` · next invoice ${day(s.next_billing_date)}`}
                 </p>
               </div>
               <Badge value={s.status} />

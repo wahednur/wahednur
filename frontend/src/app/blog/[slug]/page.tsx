@@ -1,3 +1,4 @@
+import { day } from "@/lib/date";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -89,7 +90,7 @@ async function Post({ params }: Props) {
           <>
             {" · "}
             <time dateTime={page.published_at}>
-              {page.published_at.slice(0, 10)}
+              {day(page.published_at)}
             </time>
           </>
         )}

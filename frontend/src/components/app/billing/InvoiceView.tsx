@@ -1,5 +1,6 @@
 "use client";
 
+import { day } from "@/lib/date";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Alert } from "@/components/auth/ui";
@@ -44,7 +45,7 @@ export default function InvoiceView({ id, staff }: { id: string; staff: boolean 
               {inv.project_title}
             </Link>
             {staff && ` · ${inv.client_email}`}
-            {inv.due_date && ` · due ${inv.due_date}`}
+            {inv.due_date && ` · due ${day(inv.due_date)}`}
           </p>
         </div>
         <Badge value={inv.state} />
@@ -74,7 +75,7 @@ export default function InvoiceView({ id, staff }: { id: string; staff: boolean 
             <li key={i.id} className="flex flex-wrap items-center justify-between gap-3 p-4 text-sm">
               <div>
                 <p className="font-medium">{i.label}</p>
-                <p className="mt-1 font-mono text-[11px] text-muted">{i.due_date ? `Due ${i.due_date}` : "No due date"}</p>
+                <p className="mt-1 font-mono text-[11px] text-muted">{i.due_date ? `Due ${day(i.due_date)}` : "No due date"}</p>
               </div>
               <div className="flex items-center gap-3">
                 <span className="text-muted">
@@ -99,7 +100,7 @@ export default function InvoiceView({ id, staff }: { id: string; staff: boolean 
                 {fmt(cur, p.amount)} · {METHODS.find(([k]) => k === p.method)?.[1]}
                 {p.reference && ` · ${p.reference}`}
               </span>
-              <span className="font-mono text-[11px] text-muted">{p.paid_on}</span>
+              <span className="font-mono text-[11px] text-muted">{day(p.paid_on)}</span>
             </li>
           ))}
         </ul>

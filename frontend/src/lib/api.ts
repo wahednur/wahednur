@@ -1,5 +1,6 @@
 // Calls to the data API (/api/...) from the browser. The session cookie is HttpOnly; the page only
 // echoes the CSRF token. Every answer is re-checked by the server, the UI is just a mirror.
+import { day } from "./date";
 import { API_URL, csrfToken, ensureCsrf } from "./auth/client";
 
 export type Result<T> = { ok: boolean; status: number; data: T | null; error: string };
@@ -157,6 +158,7 @@ export type BillBase = {
 export type SheetItem = BillItem & {
   unit_price_max: string | null;
   details: string;
+  details_html: string;
   time_estimate: string;
   risk: "" | "low" | "mid" | "high";
   work_state: "" | "new" | "partial" | "done";
@@ -179,7 +181,7 @@ export type Quotation = Omit<BillBase, "items"> & {
   proposal_text: string;
   proposal_html: string;
   letterhead: { name: string; address: string; email: string; phone: string; website: string; mark: "photo" | "logo" | "none"; photo_url: string; logo_url: string };
-  sections: { heading: string; body: string }[];
+  sections: { heading: string; body: string; body_html: string }[];
   risks: { risk: string; impact: string }[];
   payment_plan: { label: string; percent: string; note: string }[];
 };
@@ -493,5 +495,5 @@ export function ago(iso: string): string {
   if (s < 3600) return `${Math.floor(s / 60)} min ago`;
   if (s < 86400) return `${Math.floor(s / 3600)} h ago`;
   if (s < 172800) return "yesterday";
-  return new Date(iso).toLocaleDateString("en-GB", { day: "numeric", month: "short" });
+  return day(iso);
 }

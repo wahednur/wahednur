@@ -102,7 +102,8 @@ class LineItem(models.Model):
     unit_price = models.DecimalField(**MONEY)
     # A quotation can describe each part of the work like a sheet: what it covers, how long it
     # takes, how risky it is, and a range for the price. Only unit_price is ever billed.
-    details = models.TextField(max_length=2000, blank=True)  # one point per line
+    details = models.TextField(max_length=2000, blank=True)  # older items: one point per line
+    details_html = models.TextField(blank=True)  # what the part covers, from the rich text editor (sanitised)
     time_estimate = models.CharField(max_length=60, blank=True)
     risk = models.CharField(max_length=4, choices=Risk.choices, blank=True)
     work_state = models.CharField(max_length=7, choices=WorkState.choices, blank=True)

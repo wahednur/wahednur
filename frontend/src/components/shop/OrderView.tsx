@@ -1,5 +1,6 @@
 "use client";
 
+import { dateTime } from "@/lib/date";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Alert } from "@/components/auth/ui";
@@ -87,7 +88,7 @@ export default function OrderView({ id, staff }: { id: string; staff: boolean })
             <>
               <p className="text-muted">
                 After paying, enter the transaction ID below so I can find it.
-                {o.expires_at && ` Your order is held until ${o.expires_at.slice(0, 16).replace("T", " ")} UTC.`}
+                {o.expires_at && ` Your order is held until ${dateTime(o.expires_at)}.`}
               </p>
               {!staff && (
                 <form

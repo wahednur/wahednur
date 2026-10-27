@@ -351,3 +351,28 @@ def test_proposal_html_is_cleaned_and_shown_in_the_pdf(staff, local):
 def test_old_plain_text_proposals_still_show(staff, local):
     r = api(staff).post("/api/quotations/", body(client=local.pk, proposal_text="Line one\nLine two"), format="json")
     assert "<p>Line one</p>" in r.json()["proposal_html"]
+
+
+def test_item_details_are_rich_text_and_old_lines_become_bullets(staff, local):
+    from billing import pdf
+
+    items = [
+        {"description": "Old style", "quantity": "1", "unit_price": "10", "details": "Home page\nCart"},
+        {"description": "New style", "quantity": "1", "unit_price": "10",
+         "details_html": '<p>Covers <strong>all</strong></p><table><tr><td>A</td></tr></table><script>x()</script>'},
+    ]
+    r = api(staff).post("/api/quotations/", body(client=local.pk, items=items, discount="0"), format="json")
+    assert r.status_code == 201, r.content
+    out = r.json()
+    assert out["items"][0]["details_html"] == "<ul><li>Home page</li><li>Cart</li></ul>"
+    assert "<strong>all</strong>" in out["items"][1]["details_html"] and "<script" not in out["items"][1]["details_html"]
+    assert services.get_quotation(staff, out["id"]).items.first().details == "Home page\nCart"  # nothing lost
+    assert pdf.render(services.get_quotation(staff, out["id"]), "Quotation").startswith(b"%PDF")
+
+
+def test_section_body_can_be_rich_and_old_text_still_shows(staff, local):
+    sections = [{"heading": "Old", "body": "Plain words"}, {"heading": "New", "body_html": "<ul><li>One</li></ul><script>1</script>"}]
+    r = api(staff).post("/api/quotations/", body(client=local.pk, sections=sections), format="json")
+    assert r.status_code == 201, r.content
+    s = r.json()["sections"]
+    assert s[0]["body_html"] == "<p>Plain words</p>" and s[1]["body_html"] == "<ul><li>One</li></ul>"

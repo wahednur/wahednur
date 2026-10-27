@@ -12,14 +12,14 @@ type Item = {
   quantity: string;
   unit_price: string;
   unit_price_max: string;
-  details: string;
+  details_html: string; // rich text: what the part covers
   time_estimate: string;
   risk: string;
   work_state: string;
   note: string;
   counted: boolean;
 };
-type Section = { heading: string; body: string };
+type Section = { heading: string; body_html: string };
 type RiskRow = { risk: string; impact: string };
 type PlanRow = { label: string; percent: string; note: string };
 type Step = { label: string; mode: "percent" | "amount"; value: string; due_date: string };
@@ -29,7 +29,7 @@ const blankItem = (): Item => ({
   quantity: "1",
   unit_price: "",
   unit_price_max: "",
-  details: "",
+  details_html: "",
   time_estimate: "",
   risk: "",
   work_state: "",
@@ -181,7 +181,7 @@ export default function DocumentEditor({ kind, id }: { kind: Kind; id?: string }
     setProposal(d.proposal_html ?? "");
     setSubtitle(d.subtitle ?? "");
     setRevision(d.revision ?? "");
-    setSections(d.sections ?? []);
+    setSections((d.sections ?? []).map((x: { heading: string; body_html?: string }) => ({ heading: x.heading, body_html: x.body_html ?? "" })));
     setRisks(d.risks ?? []);
     if (kind === "quotation") setPlan(d.payment_plan?.length ? d.payment_plan : []);
     setItems(
@@ -190,7 +190,7 @@ export default function DocumentEditor({ kind, id }: { kind: Kind; id?: string }
         quantity: i.quantity,
         unit_price: i.unit_price,
         unit_price_max: i.unit_price_max ?? "",
-        details: i.details ?? "",
+        details_html: i.details_html ?? "",
         time_estimate: i.time_estimate ?? "",
         risk: i.risk ?? "",
         work_state: i.work_state ?? "",
@@ -265,7 +265,8 @@ export default function DocumentEditor({ kind, id }: { kind: Kind; id?: string }
           ? {}
           : {
               unit_price_max: i.unit_price_max || null,
-              details: i.details,
+              details: "",
+              details_html: i.details_html,
               time_estimate: i.time_estimate,
               risk: i.risk,
               work_state: i.work_state,
@@ -288,7 +289,7 @@ export default function DocumentEditor({ kind, id }: { kind: Kind; id?: string }
             proposal_text: "",
             subtitle,
             revision,
-            sections: sections.filter((x) => x.heading.trim()),
+            sections: sections.filter((x) => x.heading.trim()).map((x) => ({ heading: x.heading, body: "", body_html: x.body_html })),
             risks: risks.filter((x) => x.risk.trim()),
             payment_plan: plan.filter((x) => x.label.trim()).map((x) => ({ ...x, percent: x.percent || "0" })),
           }
@@ -467,13 +468,13 @@ export default function DocumentEditor({ kind, id }: { kind: Kind; id?: string }
                   <Button small type="button" tone="danger" aria-label="Remove line" disabled={items.length === 1} onClick={() => setItems(items.filter((_, i) => i !== n))}>×</Button>
                 </div>
                 {sheets && (
-                  <details className="mt-2" open={!!(it.details || it.time_estimate || it.risk || it.work_state || it.note || it.unit_price_max || !it.counted)}>
+                  <details className="mt-2" open={!!(it.details_html || it.time_estimate || it.risk || it.work_state || it.note || it.unit_price_max || !it.counted)}>
                     <summary className="cursor-pointer text-xs text-brand">Details, time, risk and price range</summary>
                     <div className="mt-3 grid gap-3 sm:grid-cols-2">
-                      <label className={`${label} sm:col-span-2`}>
-                        What it covers (one point per line)
-                        <textarea aria-label="Details" rows={4} maxLength={2000} value={it.details} onChange={(e) => upd(n, { details: e.target.value })} className={field} />
-                      </label>
+                      <div className="sm:col-span-2">
+                        <p className={label}>What it covers</p>
+                        <RichTextEditor compact value={it.details_html} onChange={(html) => upd(n, { details_html: html })} placeholder="List what is included. Use bullets, bold text or a small table." />
+                      </div>
                       <label className={label}>Time needed<input aria-label="Time needed" maxLength={60} placeholder="for example 7–10 days" value={it.time_estimate} onChange={(e) => upd(n, { time_estimate: e.target.value })} className={field} /></label>
                       <label className={label}>Top of the price range (optional)<input aria-label="Price range top" inputMode="decimal" placeholder="blank: a fixed price" value={it.unit_price_max} onChange={(e) => upd(n, { unit_price_max: e.target.value })} className={field} /></label>
                       <label className={label}>Risk
@@ -552,11 +553,11 @@ export default function DocumentEditor({ kind, id }: { kind: Kind; id?: string }
                       <input aria-label="Section heading" placeholder="Heading" maxLength={120} value={sec.heading} onChange={(e) => setSections(sections.map((x, i) => (i === n ? { ...x, heading: e.target.value } : x)))} className={`${field} mt-0`} />
                       <Button small type="button" tone="danger" aria-label="Remove section" onClick={() => setSections(sections.filter((_, i) => i !== n))}>×</Button>
                     </div>
-                    <textarea aria-label="Section text" rows={4} maxLength={3000} value={sec.body} onChange={(e) => setSections(sections.map((x, i) => (i === n ? { ...x, body: e.target.value } : x)))} className={field} />
+                    <RichTextEditor compact value={sec.body_html} onChange={(html) => setSections((all) => all.map((x, i) => (i === n ? { ...x, body_html: html } : x)))} placeholder="Write this section." />
                   </div>
                 ))}
               </div>
-              <div className="mt-3"><Button small type="button" onClick={() => setSections([...sections, { heading: "", body: "" }])}>+ Add section</Button></div>
+              <div className="mt-3"><Button small type="button" onClick={() => setSections([...sections, { heading: "", body_html: "" }])}>+ Add section</Button></div>
             </Card>
           </>
         )}

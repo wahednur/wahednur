@@ -1,5 +1,6 @@
 "use client";
 
+import { day } from "@/lib/date";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Progress from "@/components/app/Progress";
@@ -228,7 +229,7 @@ export default function DashboardView({ shop = false }: { shop?: boolean }) {
                   <div className="mt-4">
                     <Progress value={p.progress} />
                   </div>
-                  {p.due_date && <p className="mt-3 font-mono text-[11px] text-muted">Due {p.due_date}</p>}
+                  {p.due_date && <p className="mt-3 font-mono text-[11px] text-muted">Due {day(p.due_date)}</p>}
                 </Link>
               </li>
             ))}

@@ -1,3 +1,4 @@
+import { day } from "@/lib/date";
 import Image from "next/image";
 import { fmt, type Quotation, type SheetItem } from "@/lib/api";
 
@@ -57,8 +58,8 @@ export default function QuoteDocument({ q }: { q: Quotation }) {
         {q.subtitle && <p className="text-sm text-[#4C7488]">{q.subtitle}</p>}
         <dl className="mt-4 grid gap-x-8 gap-y-1 text-sm sm:grid-cols-3">
           <div><dt className="text-xs uppercase tracking-wide text-[#4C7488]">Quote no.</dt><dd className="font-mono">{q.number}</dd></div>
-          <div><dt className="text-xs uppercase tracking-wide text-[#4C7488]">Date</dt><dd>{q.issue_date}</dd></div>
-          <div><dt className="text-xs uppercase tracking-wide text-[#4C7488]">Valid until</dt><dd>{q.valid_until ?? "—"}</dd></div>
+          <div><dt className="text-xs uppercase tracking-wide text-[#4C7488]">Date</dt><dd>{day(q.issue_date)}</dd></div>
+          <div><dt className="text-xs uppercase tracking-wide text-[#4C7488]">Valid until</dt><dd>{day(q.valid_until)}</dd></div>
         </dl>
         {q.bill_to_address && <p className="mt-3 whitespace-pre-line text-sm text-[#4C7488]">{q.bill_to_address}</p>}
       </div>
@@ -77,9 +78,7 @@ export default function QuoteDocument({ q }: { q: Quotation }) {
               {i.work_state && <span className={`rounded-full px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider ${STATE[i.work_state][1]}`}>{STATE[i.work_state][0]}</span>}
             </div>
             <div className="grid gap-4 px-4 py-3 sm:grid-cols-[1.5fr_1fr]">
-              <ul className="list-disc space-y-1 pl-5 text-sm text-[#4C7488]">
-                {i.details.split("\n").filter((l) => l.trim()).map((l, k) => <li key={k}>{l}</li>)}
-              </ul>
+              <div className="doc-rich text-sm text-[#4C7488]" dangerouslySetInnerHTML={{ __html: i.details_html }} />
               <dl className="space-y-1 text-sm sm:border-l sm:border-[#BDD0D8] sm:pl-4">
                 {i.risk && <div><span className={`rounded px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wider ${RISK[i.risk][1]}`}>Risk: {RISK[i.risk][0]}</span></div>}
                 {i.time_estimate && <div className="flex justify-between gap-2"><dt>Time</dt><dd className="font-mono font-semibold">{i.time_estimate}</dd></div>}
@@ -146,7 +145,7 @@ export default function QuoteDocument({ q }: { q: Quotation }) {
       {q.sections.map((s, n) => (
         <div key={n} className="break-inside-avoid">
           <h2 className={heading}>{s.heading}</h2>
-          <p className="whitespace-pre-line">{s.body}</p>
+          <div className="doc-rich" dangerouslySetInnerHTML={{ __html: s.body_html }} />
         </div>
       ))}
 

@@ -32,3 +32,11 @@ def from_plain(text: str) -> str:
     from html import escape
 
     return "".join(f"<p>{escape(line)}</p>" for line in (text or "").splitlines() if line.strip())
+
+
+def points_from_plain(text: str) -> str:
+    """Old item details were one point per line. Show them as a bullet list."""
+    from html import escape
+
+    lines = [line.strip() for line in (text or "").splitlines() if line.strip()]
+    return "<ul>" + "".join(f"<li>{escape(line)}</li>" for line in lines) + "</ul>" if lines else ""

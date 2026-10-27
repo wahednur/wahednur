@@ -1,5 +1,6 @@
 "use client";
 
+import { day } from "@/lib/date";
 import { useEffect, useState } from "react";
 import { Alert } from "@/components/auth/ui";
 import { api, NEXT_STATUS, STATUS_LABEL, type HistoryEvent, type Milestone, type ProjectDetail } from "@/lib/api";
@@ -57,7 +58,7 @@ export default function ProjectView({ id, staff }: { id: string; staff: boolean 
         {staff && <p className="text-sm text-muted">Client: {p.client_email}</p>}
         {p.summary && <p className="max-w-3xl text-sm leading-6 text-muted">{p.summary}</p>}
         <p className="font-mono text-[11px] text-muted">
-          {p.start_date ? `Start ${p.start_date}` : ""} {p.due_date ? `· Due ${p.due_date}` : ""}
+          {p.start_date ? `Start ${day(p.start_date)}` : ""} {p.due_date ? `· Due ${day(p.due_date)}` : ""}
         </p>
         {p.milestones.length === 0 && <Progress value={p.progress} />}
         {staff && NEXT_STATUS[p.status].length > 0 && (
@@ -91,7 +92,7 @@ export default function ProjectView({ id, staff }: { id: string; staff: boolean 
               <div>
                 <p className={m.status === "done" ? "text-muted line-through" : "font-medium"}>{m.title}</p>
                 {m.description && <p className="mt-1 text-xs text-muted">{m.description}</p>}
-                {m.due_date && <p className="mt-1 font-mono text-[11px] text-muted">Due {m.due_date}</p>}
+                {m.due_date && <p className="mt-1 font-mono text-[11px] text-muted">Due {day(m.due_date)}</p>}
               </div>
               <div className="flex items-center gap-3">
                 <span className="font-mono text-[11px] text-muted">{MS_LABEL[m.status]}</span>

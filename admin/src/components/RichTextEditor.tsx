@@ -1,10 +1,11 @@
+import { useEffect } from "react";
 import { EditorContent, useEditor, useEditorState, type Editor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { TableKit } from "@tiptap/extension-table";
 import TextAlign from "@tiptap/extension-text-align";
 import Placeholder from "@tiptap/extension-placeholder";
 
-type Props = { value: string; onChange: (html: string) => void; placeholder?: string };
+type Props = { value: string; onChange: (html: string) => void; placeholder?: string; compact?: boolean };
 
 const btn = "grid h-8 min-w-8 place-items-center rounded-md px-2 text-sm text-muted transition-colors hover:bg-surface-2 hover:text-ink disabled:opacity-30";
 const on = "bg-brand/15 text-brand";
@@ -82,7 +83,7 @@ function Toolbar({ editor }: { editor: Editor }) {
 }
 
 /** A word-processor style editor for the proposal: headings, lists, tables, alignment and links. Saves clean HTML. */
-export default function RichTextEditor({ value, onChange, placeholder }: Props) {
+export default function RichTextEditor({ value, onChange, placeholder, compact }: Props) {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({ heading: { levels: [2, 3] }, link: { openOnClick: false, autolink: true } }),
@@ -91,9 +92,16 @@ export default function RichTextEditor({ value, onChange, placeholder }: Props) 
       Placeholder.configure({ placeholder: placeholder ?? "Write the proposal here…" }),
     ],
     content: value,
-    editorProps: { attributes: { class: "doc-rich min-h-[16rem] max-h-[34rem] overflow-y-auto px-4 py-3 text-sm focus:outline-none", "aria-label": "Proposal text" } },
+    editorProps: { attributes: { class: `doc-rich ${compact ? "min-h-[7rem] max-h-[22rem]" : "min-h-[16rem] max-h-[34rem]"} overflow-y-auto px-4 py-3 text-sm focus:outline-none`, "aria-label": "Proposal text" } },
     onUpdate: ({ editor: e }) => onChange(e.isEmpty ? "" : e.getHTML()),
   });
+  // The saved text arrives after the editor is on screen (editing an existing document), so put it in
+  // when it changes from outside. Typing does not trigger this: then value already equals the content.
+  useEffect(() => {
+    if (!editor) return;
+    const current = editor.isEmpty ? "" : editor.getHTML();
+    if (value !== current) editor.commands.setContent(value || "", { emitUpdate: false });
+  }, [editor, value]);
   if (!editor) return <div className="h-64 animate-pulse rounded-lg border border-line bg-surface" />;
   return (
     <div className="mt-1 overflow-hidden rounded-lg border border-line bg-bg focus-within:border-brand">

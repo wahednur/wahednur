@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Badge, Button, Card, Empty, Loading, Notice, PageHeader, Search, Tabs, field, useLoad } from "@/components/ui";
+import { dateTime } from "@/lib/format";
 import { api } from "@/lib/http";
 import type { Lead } from "@/lib/types";
 
@@ -113,7 +114,7 @@ export default function Messages() {
                 </span>
                 <span className="flex shrink-0 flex-col items-end gap-1">
                   <Badge value={l.status === "new" ? "pending" : l.status} />
-                  <span className="font-mono text-[11px] text-muted">{l.created_at.slice(0, 16).replace("T", " ")}</span>
+                  <span className="font-mono text-[11px] text-muted">{dateTime(l.created_at)}</span>
                   {!l.emailed && <span className="text-[11px] text-amber-200">email not sent</span>}
                 </span>
               </button>
@@ -147,7 +148,7 @@ export default function Messages() {
                         <div key={r.id} className="rounded-lg border border-line p-3">
                           <p className="flex flex-wrap justify-between gap-2 text-xs text-muted">
                             <span>{r.subject}</span>
-                            <span>{r.sent ? "sent" : "not sent"} · {r.created_at.slice(0, 16).replace("T", " ")}</span>
+                            <span>{r.sent ? "sent" : "not sent"} · {dateTime(r.created_at)}</span>
                           </p>
                           <p className="mt-1 whitespace-pre-line">{r.body}</p>
                           {!r.sent && r.error && <p className="mt-1 text-xs text-amber-200">{r.error}</p>}

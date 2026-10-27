@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Button, Card, Empty, field, Loading, Notice, PageHeader, useLoad } from "@/components/ui";
+import { dateTime } from "@/lib/format";
 import { api } from "@/lib/http";
 
 type Convo = { customer: number; email: string; name: string; last: string; unread: number };
 type Msg = { id: number; body: string; from_team: boolean; created_at: string };
 type Thread = { email: string; name: string; messages: Msg[] };
-const when = (iso: string) => iso.slice(0, 16).replace("T", " ");
+const when = (iso: string) => dateTime(iso);
 
 function ThreadView({ id, onSent }: { id: string; onSent: () => void }) {
   const [t, setT] = useState<Thread | null>(null);

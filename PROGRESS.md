@@ -189,3 +189,8 @@ Nothing.
 - A picture sits above the name on every printed quotation: my photo (default) or the WS logo, chosen with `LETTERHEAD_MARK=photo|logo|none` in the API environment. Files: `frontend/public/{wahednur.jpg,ws-logo.svg}`, copies in `admin/public/` and `backend/billing/brand/` (the server PDF reads its own copy).
 - Browser print no longer shows the date, page title and web address in the margins: the print styles set `@page { margin: 0 }` and the letterhead pads the page itself. The print page title is now "Quotation <number>", which also becomes the saved PDF's file name.
 - The tiny "®" and ring at the top left of `ws-logo.svg` are part of the supplied file.
+
+## Rich text for item details and sections; saved text shows when editing; dd/mm/yyyy dates
+- Bug fixed: the proposal text did not appear when editing a saved quote (the editor was created before the saved text arrived). The editor now follows its value. Covered by `13-rich-proposal-letterhead.cjs`.
+- Item "What it covers" and extra-section text now use the same rich text editor (bullets, bold, tables...). New `details_html` on quotation and invoice items (migration `billing/0006`); section JSON gets `body_html`. Everything is additive: older quotes keep their plain `details`/`body`/`proposal_text` untouched in the database and open in the editor as bullets/paragraphs, so no quotation data is lost. The editor writes the new HTML field and clears the plain one on save. HTML is sanitised on the server (same rules as the proposal).
+- Dates are shown dd/mm/yyyy everywhere (admin `day()`/`dateTime()`, client area `lib/date.ts`, PDFs, reminder emails, blog). Browsers show their own format inside the date picker boxes (`<input type="date">`); that follows the device's language settings.

@@ -1,5 +1,6 @@
 "use client";
 
+import { dateTime } from "@/lib/date";
 import { useEffect, useState } from "react";
 import { Alert } from "@/components/auth/ui";
 import { btn, field as input, ghost } from "@/components/app/billing/Bits";
@@ -75,7 +76,7 @@ function StockPanel({ product, onChange }: { product: ManagedProduct; onChange: 
                 {m.delta} · {m.reason}
                 {m.note && ` · ${m.note}`}
               </span>
-              <span className="font-mono text-muted">{m.at.slice(0, 16).replace("T", " ")}</span>
+              <span className="font-mono text-muted">{dateTime(m.at)}</span>
             </li>
           ))}
         </ul>

@@ -144,6 +144,9 @@ def _check_items(items, discount):
 
 
 def _write_items(model, fk, doc, items):
+    from .richtext import clean_html
+
+    items = [{**i, "details_html": clean_html(i["details_html"])} if "details_html" in i else i for i in items]
     model.objects.filter(**{fk: doc}).delete()
     model.objects.bulk_create(
         [model(**{fk: doc}, position=n, **item) for n, item in enumerate(items)]
@@ -261,7 +264,12 @@ def _common(doc, data, *, model, default_prefix, project=None):
 
 def _clean_blocks(data):
     """The proposal's extra parts, as plain JSON (no Decimals), with the payment plan checked."""
-    data["sections"] = [dict(x) for x in data.get("sections", [])]
+    from .richtext import clean_html
+
+    data["sections"] = [
+        {**x, "body_html": clean_html(x["body_html"])} if "body_html" in x else dict(x)
+        for x in data.get("sections", [])
+    ]
     data["risks"] = [dict(x) for x in data.get("risks", [])]
     plan = [
         {"label": x["label"], "percent": str(x["percent"]), "note": x.get("note", "")}
@@ -404,6 +412,7 @@ def convert_quotation(
             "unit_price": i.unit_price,
             "cycle": i.cycle,
             "details": i.details,
+            "details_html": i.details_html,
             "time_estimate": i.time_estimate,
             "risk": i.risk,
             "work_state": i.work_state,
@@ -554,7 +563,7 @@ def send_reminders(today=None) -> int:
                 subject = f"Payment past its due date: {invoice.number}"
                 line = (
                     f"{inst.label} of invoice {invoice.number} ({_fmt(invoice, owed)}) "
-                    f"was due on {inst.due_date:%d %b %Y}. If you have already paid, please "
+                    f"was due on {inst.due_date:%d/%m/%Y}. If you have already paid, please "
                     "ignore this note and send me the reference. If the date does not suit you, "
                     "reply and we will agree a new one."
                 )
@@ -563,7 +572,7 @@ def send_reminders(today=None) -> int:
                 subject = f"Payment due soon: {invoice.number}"
                 line = (
                     f"{inst.label} of invoice {invoice.number} ({_fmt(invoice, owed)}) "
-                    f"is due on {inst.due_date:%d %b %Y}."
+                    f"is due on {inst.due_date:%d/%m/%Y}."
                 )
             else:
                 continue

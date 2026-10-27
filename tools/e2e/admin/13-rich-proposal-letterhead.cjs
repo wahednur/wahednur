@@ -15,6 +15,9 @@ const URL = 'http://localhost:5173';
   await p.click('[role=option]:has-text("client@example.com"), li:has-text("client@example.com")');
   await p.fill('input[maxlength="200"]', 'Online shop proposal');
   await p.fill('input[aria-label=Description]', 'Storefront'); await p.fill('input[aria-label="Unit price"]', '1000');
+  // rich text for what the item covers
+  await p.click('summary:has-text("Details, time, risk")');
+  await p.locator('.doc-rich').nth(1).click(); await p.keyboard.type('Home page and cart');
 
   // the editor: heading, bold text, a list and a table
   await p.click('.doc-rich');
@@ -32,10 +35,20 @@ const URL = 'http://localhost:5173';
   const html = await p.locator('.doc-rich').first().innerHTML();
   ok(/<h2[^>]*>প্রস্তাবনা/.test(html) && /<strong>Fast shop<\/strong>/.test(html) && /<li>/.test(html) && /<table/.test(html), 'the saved proposal shows the heading, bold text, list and table');
 
+  // editing an existing quote shows the proposal and the item details again (nothing is lost)
+  const quoteId = p.url().split('/').pop();
+  await p.goto(`${URL}/billing/quotation/${quoteId}/edit`); await p.waitForSelector('.doc-rich');
+  await p.waitForFunction(() => document.querySelector('.doc-rich')?.textContent?.includes('Fast shop'), null, { timeout: 15000 });
+  ok(true, 'the saved proposal text is back in the editor when editing');
+  await p.waitForFunction(() => [...document.querySelectorAll('.doc-rich')].some((e) => e.textContent.includes('Home page and cart')), null, { timeout: 15000 });
+  ok(true, 'the saved item details are back in their editor too');
+  await p.goBack().catch(() => {});
+
   // the print page is on the letterhead, with the header and footer repeating
   const id = p.url().split('/').pop();
   await p.goto(`${URL}/print/quotation/${id}`); await p.waitForSelector('.letterhead-sheet');
   const sheet = await p.locator('.letterhead-sheet').innerText();
+  ok(/\b\d{2}\/\d{2}\/\d{4}\b/.test(sheet), 'dates are written dd/mm/yyyy');
   ok(sheet.includes('Sherpur') && sheet.includes('@'), 'the letterhead carries the business address and contact');
   const css = await p.evaluate(() => { const t = document.querySelector('.lh-wrap'); return [getComputedStyle(t.querySelector('thead')).display, getComputedStyle(t.querySelector('tfoot')).display]; });
   ok(css[0] === 'table-header-group' && css[1] === 'table-footer-group', 'header and footer repeat on every printed page');

@@ -1,3 +1,4 @@
+import { day } from "@/lib/date";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
@@ -49,7 +50,7 @@ async function Posts() {
                   dateTime={p.published_at}
                   className="font-mono text-[11px] text-muted"
                 >
-                  {p.published_at.slice(0, 10)}
+                  {day(p.published_at)}
                 </time>
               )}
               <h2 className="mt-2 text-xl font-semibold tracking-tight">

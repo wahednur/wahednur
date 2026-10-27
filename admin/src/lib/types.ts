@@ -93,6 +93,7 @@ export type SheetItem = {
   unit_price: string;
   unit_price_max: string | null;
   details: string;
+  details_html: string;
   time_estimate: string;
   risk: "" | "low" | "mid" | "high";
   work_state: "" | "new" | "partial" | "done";
@@ -105,7 +106,7 @@ export type Quotation = BillRow & {
   revision: string;
   bill_to_name: string;
   subtotal_max: string | null;
-  sections: { heading: string; body: string }[];
+  sections: { heading: string; body: string; body_html: string }[];
   risks: { risk: string; impact: string }[];
   payment_plan: { label: string; percent: string; note: string }[];
   project: string;
