@@ -344,4 +344,4 @@ def test_bengali_text_is_shaped_and_the_font_is_embedded(staff, alice, project):
     items = [{"description": "ওয়েবসাইট ডিজাইন", "quantity": "1", "unit_price": "10"}]
     r = api.post("/api/invoices/", {"project": str(project.pk), "title": "ই-কমার্স", "items": items}, format="json")
     out = pdf.render(services.get_invoice(staff, r.json()["id"]), "Invoice", compress=False)
-    assert out.startswith(b"%PDF") and b"Hind-Bengali" in out  # the Bengali font travels inside the file
+    assert out.startswith(b"%PDF") and b"Tiro-Bangla" in out  # the Bengali font travels inside the file

@@ -1,7 +1,7 @@
 """Quotation and invoice PDFs.
 
 Built as HTML and turned into a PDF by WeasyPrint, which shapes Bengali text properly (vowel signs,
-conjuncts) and embeds the fonts it uses. Hind Siliguri (SIL Open Font License) ships in
+conjuncts) and embeds the fonts it uses. Hind Siliguri (English) and Tiro Bangla (Bengali), both SIL Open Font License, ship in
 `billing/fonts/`, so a PDF looks the same on any server and opens the same on any device.
 """
 
@@ -19,11 +19,10 @@ SYMBOL = {"BDT": "BDT ", "USD": "USD "}
 CSS = """
 @font-face { font-family: "Hind Latin"; font-weight: 400; src: url("hind-siliguri-latin-400-normal.woff"); }
 @font-face { font-family: "Hind Latin"; font-weight: 700; src: url("hind-siliguri-latin-700-normal.woff"); }
-@font-face { font-family: "Hind Bengali"; font-weight: 400; src: url("hind-siliguri-bengali-400-normal.woff"); }
-@font-face { font-family: "Hind Bengali"; font-weight: 700; src: url("hind-siliguri-bengali-700-normal.woff"); }
+@font-face { font-family: "Tiro Bangla"; font-weight: 400; src: url("tiro-bangla-bengali-400-normal.woff"); }
 @page { size: A4; margin: 16mm 18mm; }
 * { box-sizing: border-box; }
-body { font-family: "Hind Latin", "Hind Bengali", sans-serif; font-size: 9.5pt; line-height: 1.4; color: #1F2E3D; }
+body { font-family: "Hind Latin", "Tiro Bangla", sans-serif; font-size: 9.5pt; line-height: 1.4; color: #1F2E3D; }
 h1 { font-size: 20pt; line-height: 1.2; margin: 0 0 3mm; letter-spacing: .02em; }
 p { margin: 0; }
 .small { font-size: 8.5pt; color: #4A5568; }

@@ -173,3 +173,7 @@ Nothing.
 - `billing/pdf.py` now builds HTML and renders it with WeasyPrint (Pango + HarfBuzz), so Bengali vowel signs and conjuncts are shaped correctly. Hind Siliguri (Latin + Bengali, 400/700, SIL OFL) lives in `billing/fonts/` and is embedded as a subset in every PDF. Layout is unchanged.
 - Deploy: the API image now installs `libpango-1.0-0 libpangoft2-1.0-0 libharfbuzz-subset0` (Dockerfile). Rebuild the API and worker images. Locally: `pip install -r requirements/base.txt` (adds `weasyprint`), and on Linux install pango if missing; on WSL2/Ubuntu: `sudo apt install libpango-1.0-0 libpangoft2-1.0-0 libharfbuzz-subset0`.
 - Test: `test_bengali_text_is_shaped_and_the_font_is_embedded`.
+
+## Bengali typeface: Tiro Bangla everywhere
+- Website, client area, admin and PDFs use Tiro Bangla (SIL OFL) for Bengali letters. English keeps its own font (Geist on the website, Hind Siliguri Latin in PDFs). Site/admin use a `unicode-range` @font-face (`public/fonts/tiro-bangla-bengali.woff2`); PDFs embed `backend/billing/fonts/tiro-bangla-bengali-400-normal.woff`.
+- Tiro Bangla has one weight (regular), so Bengali headings are not bold; the browser may fake a bold on bold Bengali text.
