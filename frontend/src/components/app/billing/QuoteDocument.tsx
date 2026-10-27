@@ -16,10 +16,28 @@ function Price({ cur, i }: { cur: string; i: SheetItem }) {
 }
 
 /** The written proposal as a scope-of-work sheet: what, how long, how risky, how much. Prints cleanly. */
+function Letterhead({ q }: { q: Quotation }) {
+  const l = q.letterhead;
+  return (
+    <div className="flex items-end justify-between gap-4 border-b-2 border-[#0D9488] pb-3">
+      <p className="text-xl font-bold tracking-tight text-[#163C52]">{l.name}</p>
+      <p className="text-right text-[11px] leading-5 text-[#4C7488]">
+        {l.address}
+        <br />
+        {[l.website, l.email, l.phone].filter(Boolean).join(" · ")}
+      </p>
+    </div>
+  );
+}
+
 export default function QuoteDocument({ q }: { q: Quotation }) {
   const cur = q.currency;
   return (
-    <article className="mx-auto max-w-4xl bg-[#F4F9FB] p-6 text-[15px] leading-7 text-[#163C52] sm:p-10 print:p-0">
+    <article className="letterhead-sheet mx-auto max-w-4xl bg-[#F4F9FB] p-6 text-[15px] leading-7 text-[#163C52] sm:p-10 print:p-0">
+      <table className="lh-wrap w-full">
+        <thead><tr><td><Letterhead q={q} /><div className="h-5" /></td></tr></thead>
+        <tfoot><tr><td><div className="h-5" /><p className="border-t border-[#BDD0D8] pt-2 text-center text-[10px] text-[#4C7488]">{[q.letterhead.name, q.letterhead.address, q.letterhead.website, q.letterhead.email, q.letterhead.phone].filter(Boolean).join(" · ")}</p></td></tr></tfoot>
+        <tbody><tr><td className="align-top">
       <div className="border-2 border-[#163C52] p-5">
         <div className="flex items-start justify-between gap-4 border-b border-[#BDD0D8] pb-3">
           <p className="text-xs uppercase tracking-[0.14em] text-[#4C7488]">Scope of Work &amp; Cost Estimate</p>
@@ -39,7 +57,7 @@ export default function QuoteDocument({ q }: { q: Quotation }) {
         {q.bill_to_address && <p className="mt-3 whitespace-pre-line text-sm text-[#4C7488]">{q.bill_to_address}</p>}
       </div>
 
-      {q.proposal_text && <p className="mt-8 whitespace-pre-line">{q.proposal_text}</p>}
+      {q.proposal_html && <div className="doc-rich mt-8" dangerouslySetInnerHTML={{ __html: q.proposal_html }} />}
 
       <h2 className={heading}>Work, time and cost</h2>
       <div className="space-y-4">
@@ -137,6 +155,8 @@ export default function QuoteDocument({ q }: { q: Quotation }) {
         <div><p>Prepared by</p><p className="mt-8 border-t border-[#4C7488] pt-1">Abdul Wahed Nur</p></div>
         <div><p>Client approval</p><p className="mt-8 border-t border-[#4C7488] pt-1">Date and signature</p></div>
       </div>
+        </td></tr></tbody>
+      </table>
     </article>
   );
 }

@@ -52,3 +52,20 @@ body {
   body { background: #fff !important; }
   .no-print { display: none !important; }
 }
+
+/* Rich proposal text: the editor and everywhere the proposal is shown share these rules. */
+.doc-rich > :first-child { margin-top: 0; }
+.doc-rich h2 { font-size: 1.25rem; font-weight: 700; margin: 1.1em 0 .4em; }
+.doc-rich h3 { font-size: 1.05rem; font-weight: 700; margin: 1em 0 .35em; }
+.doc-rich p { margin: 0 0 .7em; line-height: 1.7; }
+.doc-rich ul, .doc-rich ol { margin: 0 0 .8em; padding-left: 1.4rem; }
+.doc-rich ul { list-style: disc; } .doc-rich ol { list-style: decimal; }
+.doc-rich li { margin-bottom: .25em; } .doc-rich li > p { margin: 0; }
+.doc-rich blockquote { margin: .8em 0; padding: .1em 0 .1em 1rem; border-left: 3px solid var(--brand); opacity: .85; }
+.doc-rich hr { border: 0; border-top: 1px solid currentColor; opacity: .25; margin: 1.2em 0; }
+.doc-rich a { color: var(--brand); text-decoration: underline; }
+.doc-rich table { width: 100%; border-collapse: collapse; margin: .8em 0 1.1em; table-layout: fixed; }
+.doc-rich th, .doc-rich td { border: 1px solid rgba(128,140,155,.5); padding: .4rem .6rem; vertical-align: top; text-align: left; position: relative; }
+.doc-rich th { background: rgba(128,140,155,.15); font-weight: 700; }
+.doc-rich .selectedCell::after { content: ""; position: absolute; inset: 0; background: rgba(45,212,191,.2); pointer-events: none; }
+.doc-rich p.is-editor-empty:first-child::before { content: attr(data-placeholder); float: left; height: 0; pointer-events: none; opacity: .45; }

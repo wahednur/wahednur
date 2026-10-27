@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ClientPicker from "@/components/ClientPicker";
+import RichTextEditor from "@/components/RichTextEditor";
 import { Button, Card, field, Notice, useLoad } from "@/components/ui";
 import { money } from "@/lib/format";
 import { api } from "@/lib/http";
@@ -140,7 +141,7 @@ export default function DocumentEditor({ kind, id }: { kind: Kind; id?: string }
   const [issued, setIssued] = useState(new Date().toISOString().slice(0, 10));
   const [date, setDate] = useState(""); // expiry (quote) or due date (invoice)
   const [status, setStatus] = useState<"draft" | "sent">("draft");
-  const [proposal, setProposal] = useState("");
+  const [proposal, setProposal] = useState(""); // rich text, as HTML
   const [subtitle, setSubtitle] = useState("");
   const [revision, setRevision] = useState("");
   const [sections, setSections] = useState<Section[]>([]);
@@ -177,7 +178,7 @@ export default function DocumentEditor({ kind, id }: { kind: Kind; id?: string }
     setNumber(kind === "recurring" ? "" : d.number);
     setIssued(kind === "recurring" ? d.start_date : d.issue_date);
     setDate((kind === "quotation" ? d.valid_until : kind === "invoice" ? d.due_date : d.end_date) ?? "");
-    setProposal(d.proposal_text ?? "");
+    setProposal(d.proposal_html ?? "");
     setSubtitle(d.subtitle ?? "");
     setRevision(d.revision ?? "");
     setSections(d.sections ?? []);
@@ -283,7 +284,8 @@ export default function DocumentEditor({ kind, id }: { kind: Kind; id?: string }
             number,
             issue_date: issued,
             valid_until: date || null,
-            proposal_text: proposal,
+            proposal_html: proposal,
+            proposal_text: "",
             subtitle,
             revision,
             sections: sections.filter((x) => x.heading.trim()),
@@ -441,10 +443,11 @@ export default function DocumentEditor({ kind, id }: { kind: Kind; id?: string }
             )}
           </div>
           {kind === "quotation" && (
-            <label className={`${label} mt-4`}>
-              Proposal text
-              <textarea rows={6} maxLength={5000} value={proposal} onChange={(e) => setProposal(e.target.value)} placeholder="What you will build, how, and why. Shown on the quote." className={field} />
-            </label>
+            <div className="mt-4">
+              <p className={label}>Proposal text</p>
+              <p className="mt-1 text-xs text-muted">Write the full proposal here: headings, lists, tables and links. It prints on your letterhead, above the work and cost.</p>
+              <RichTextEditor value={proposal} onChange={setProposal} placeholder="What you will build, how, and why." />
+            </div>
           )}
         </Card>
 

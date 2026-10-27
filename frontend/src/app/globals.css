@@ -174,3 +174,22 @@ body:has(#app-frame) .site-chrome { display: none; }
 @media (min-width: 640px) { .mobile-pad { padding-bottom: 0; } }
 body:has(#app-frame) .mobile-tabs, body:has(#auth-frame) .mobile-tabs { display: none; }
 body:has(#app-frame) .mobile-pad, body:has(#auth-frame) .mobile-pad { padding-bottom: 0; }
+
+/* Rich proposal text (shown in the quotation) and the letterhead print rules. */
+.doc-rich > :first-child { margin-top: 0; }
+.doc-rich h2 { font-size: 1.25rem; font-weight: 700; margin: 1.1em 0 .4em; }
+.doc-rich h3 { font-size: 1.05rem; font-weight: 700; margin: 1em 0 .35em; }
+.doc-rich p { margin: 0 0 .7em; line-height: 1.7; }
+.doc-rich ul, .doc-rich ol { margin: 0 0 .8em; padding-left: 1.4rem; }
+.doc-rich ul { list-style: disc; } .doc-rich ol { list-style: decimal; }
+.doc-rich li { margin-bottom: .25em; } .doc-rich li > p { margin: 0; }
+.doc-rich blockquote { margin: .8em 0; padding: .1em 0 .1em 1rem; border-left: 3px solid #0d9488; opacity: .85; }
+.doc-rich hr { border: 0; border-top: 1px solid currentColor; opacity: .25; margin: 1.2em 0; }
+.doc-rich a { color: #0d9488; text-decoration: underline; }
+.doc-rich table { width: 100%; border-collapse: collapse; margin: .8em 0 1.1em; }
+.doc-rich th, .doc-rich td { border: 1px solid rgba(128,140,155,.5); padding: .4rem .6rem; vertical-align: top; text-align: left; }
+.doc-rich th { background: rgba(128,140,155,.15); font-weight: 700; }
+@media print {
+  .letterhead-sheet { -webkit-print-color-adjust: exact; print-color-adjust: exact; max-width: none !important; width: 100% !important; margin: 0 !important; background: #fff !important; }
+  .lh-wrap > thead { display: table-header-group; } .lh-wrap > tfoot { display: table-footer-group; }
+}

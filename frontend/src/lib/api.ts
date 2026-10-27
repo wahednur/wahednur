@@ -177,6 +177,8 @@ export type Quotation = Omit<BillBase, "items"> & {
   tax: string;
   subtotal_max: string | null;
   proposal_text: string;
+  proposal_html: string;
+  letterhead: { name: string; address: string; email: string; phone: string; website: string };
   sections: { heading: string; body: string }[];
   risks: { risk: string; impact: string }[];
   payment_plan: { label: string; percent: string; note: string }[];

@@ -177,3 +177,10 @@ Nothing.
 ## Bengali typeface: Tiro Bangla everywhere
 - Website, client area, admin and PDFs use Tiro Bangla (SIL OFL) for Bengali letters. English keeps its own font (Geist on the website, Hind Siliguri Latin in PDFs). Site/admin use a `unicode-range` @font-face (`public/fonts/tiro-bangla-bengali.woff2`); PDFs embed `backend/billing/fonts/tiro-bangla-bengali-400-normal.woff`.
 - Tiro Bangla has one weight (regular), so Bengali headings are not bold; the browser may fake a bold on bold Bengali text.
+
+## Proposal text: rich text editor and letterhead printing
+- Admin: the quote's "Proposal text" is now a word-processor style editor (Tiptap): headings, bold/italic/underline/strike, lists, quote, divider, alignment, links, and tables (insert, add or delete rows and columns, header row, merge cells). Saved as HTML in `Quotation.proposal_html` (migration `billing/0005`); the old plain `proposal_text` is still shown as paragraphs for older quotes.
+- Security: HTML is cleaned on the server (`billing/richtext.py`, nh3): only a short list of tags, links limited to http/https/mailto/tel, only `text-align` allowed as inline style. No scripts or event handlers can be saved or shown.
+- Letterhead: the server PDF has the business name and contact at the top of page 1 (smaller running header after), a footer line and "Page x of y" on every page. The browser print page (`/print/quotation/:id` in admin, and the quotation page in the client area) repeats a header and footer on every printed page, on white paper. Business details come from `BUSINESS_NAME`, `BUSINESS_ADDRESS`, `BUSINESS_EMAIL`, and new optional `BUSINESS_PHONE`, `BUSINESS_WEBSITE`.
+- No logo yet: send a logo file and it can be added to the letterhead.
+- Browser check: `tools/e2e/admin/13-rich-proposal-letterhead.cjs` (09 updated for the new editor).

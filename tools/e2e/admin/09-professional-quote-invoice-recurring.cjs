@@ -35,7 +35,7 @@ const URL = 'http://localhost:5173';
   await p.selectOption('select[aria-label="Discount type"]', 'percent'); await p.fill('input[aria-label=Discount]', '10');
   const sum = await p.locator('main aside').innerText();
   ok(sum.includes('$1,500.00') && sum.includes('$150.00') && sum.includes('$202.50') && sum.includes('$1,552.50'), 'live summary: 1500 - 10% + VAT 15% = $1,552.50');
-  await p.fill('textarea[placeholder^="What you will build"]', 'We will build a fast online shop.');
+  await p.click('.doc-rich'); await p.keyboard.type('We will build a fast online shop.');
   await p.selectOption('select >> nth=-1', 'sent').catch(() => {});
   await p.locator('label:has-text("Status") select').selectOption('sent');
   await p.click('button:has-text("Save and deliver")');
