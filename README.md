@@ -1,5 +1,7 @@
 <div align="center">
-[My Cover Image](/wn.png)
+
+![Homepage Screenshot](./cover.png)
+>>>>>>> 4ac5424 (Add cover image)
 
 # Wahed Nur
 
