@@ -209,6 +209,6 @@ If you're looking for help building an e-commerce platform, a business applicati
 
 ### Building useful software. Solving real problems. Creating better digital experiences.
 
-**Thanks for visiting my profile!**
+** Thanks for visiting my profile! **
 
 </div>
