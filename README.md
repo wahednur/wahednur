@@ -1,5 +1,5 @@
 <div align="center">
-![My Cover Image](wn.png)
+[My Cover Image](wn.png)
 
 # Wahed Nur
 
